@@ -3,6 +3,10 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QLa
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPixmap, QPalette, QPen, QColor
 from PyQt5.QtCore import Qt
 
+HEX_COORD_X = 50
+HEX_COORD_Y = 50
+HEX_WIDTH = 100
+HEX_HEIGHT = int(HEX_WIDTH * (3 ** 0.5 / 2))
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -15,8 +19,12 @@ class MainWindow(QMainWindow):
         self.resize(800, 800)  # размер окна
 
 class Ant(QWidget):
-    def __init__(self):
+    def __init__(self, indexes):
         super().__init__()
+        self.ellipse_diameter = 30
+        self.coord_row = indexes[1] + (HEX_WIDTH - self.ellipse_diameter)//2
+        self.coord_column = indexes[0] + (HEX_HEIGHT - self.ellipse_diameter)//2
+
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -27,8 +35,10 @@ class Ant(QWidget):
         painter.drawRect(50, 50, 100, 50)
 
         painter.setPen(QPen(QColor(0, 255, 0), 2, Qt.SolidLine))
-        painter.drawEllipse(150, 20, 30, 30)
+        painter.drawEllipse(self.coord_row, self.coord_column, self.ellipse_diameter, self.ellipse_diameter)
 
+def index_to_coord(column, row):
+    return matrix[row][column].coord_column, matrix[row][column].coord_row
 
 
 class Hex_button(QPushButton):
@@ -40,13 +50,13 @@ class Hex_button(QPushButton):
         pal.setBrush(QPalette.Normal, QPalette.Button, QBrush(pixmap))
         pal.setBrush(QPalette.Inactive, QPalette.Button, QBrush(pixmap))
         self.setPalette(pal)
-        self.x = coord_row
-        self.y = coord_column
+        self.coord_row = coord_row
+        self.coord_column = coord_column
         self.row = 0
         self.column = 0
         self.button = QPushButton('text', window)
         self.button.setFixedSize(HEX_WIDTH, HEX_HEIGHT)
-        self.button.move(coord_row, coord_column)
+        self.button.move(self.coord_row, self.coord_column)
         #self.button.clicked.connect(QtWidgets.qApp.quit)
         self.button.setPalette(pal)
         self.button.setMask(pixmap.mask())
@@ -57,24 +67,15 @@ class Hex_button(QPushButton):
         pass
 
 
-
-
-
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = MainWindow()
 
-    HEX_COORD_X = 50
-    HEX_COORD_Y = 50
-    HEX_WIDTH = 100
-    HEX_HEIGHT = int(HEX_WIDTH * (3**0.5/2))
-
 
     matrix = []
-    for j in range(8):
+    for i in range(8):
         sub_matrix = []
-        for i in range(6):
+        for j in range(6):
             coord_row = int(HEX_COORD_X + HEX_WIDTH*(j*3/4))
             coord_column = HEX_COORD_Y + i*HEX_HEIGHT
             if j % 2 == 0:
@@ -82,12 +83,13 @@ if __name__ == "__main__":
             hex_1 = Hex_button(win, coord_row, coord_column, HEX_WIDTH, HEX_HEIGHT)
             hex_1.row = i
             hex_1.column = j
-            hex_1.button.setText(f"{hex_1.row};{hex_1.column}")
+            hex_1.button.setText(f"{hex_1.column}:{hex_1.row}")
             #print(i, j, hex_1.row, hex_1.column)
             sub_matrix.append(hex_1)
         matrix.append(sub_matrix)
 
-    ant = Ant()
+    ant = Ant(index_to_coord(5, 7))
+    print(index_to_coord(5, 7))
     win.setCentralWidget(ant)
     win.show()
     sys.exit(app.exec_())
