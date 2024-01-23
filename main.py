@@ -13,18 +13,15 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.initUI()
-        #self.initUI()й
+        self.ant = Ant(index_to_coord(1, 3))
+
     def initUI(self):
         self.setWindowTitle("Ants")  # заголовок окна
         self.move(1000, 100)  # положение окна
         self.resize(800, 800)  # размер окна
 
     def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Q:
-            ant2 = Ant(index_to_coord(4, 4))
-            ant.move(5, 5)
-            print("Press q")
-        event.accept()
+        self.ant.keyPressEvent(event)
 
 
 
@@ -50,8 +47,15 @@ class Ant(QWidget):
     def move(self, x, y):
         self.coord_row = 10
         self.coord_column = 20
+        self.update()
 
-
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_D:
+            # ant2 = Ant(index_to_coord(4, 4))
+            # ant.move(55, 55)
+            print("Press d")
+            #self.show()
+        #event.accept()
 
 def index_to_coord(column, row):
     return matrix[row][column].coord_column, matrix[row][column].coord_row
@@ -104,10 +108,13 @@ if __name__ == "__main__":
             sub_matrix.append(hex_1)
         matrix.append(sub_matrix)
 
-    ant = Ant(index_to_coord(3, 2))
-    print(index_to_coord(5, 7))
-    win.setCentralWidget(ant)
+    #ant = Ant(index_to_coord(3, 2))
+    #print(index_to_coord(5, 7))
+    #win.setCentralWidget(ant)
+    #app.installEventFilter(ant)
+
     win.show()
+    #ant.show()
     sys.exit(app.exec_())
 
 
