@@ -1,7 +1,8 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QPushButton, QGridLayout
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPixmap, QPalette, QPen, QColor
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 
 HEX_COORD_X = 50
 HEX_COORD_Y = 50
@@ -12,11 +13,20 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.initUI()
-        #self.initUI()
+        #self.initUI()й
     def initUI(self):
         self.setWindowTitle("Ants")  # заголовок окна
         self.move(1000, 100)  # положение окна
         self.resize(800, 800)  # размер окна
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Q:
+            ant2 = Ant(index_to_coord(4, 4))
+            ant.move(5, 5)
+            print("Press q")
+        event.accept()
+
+
 
 class Ant(QWidget):
     def __init__(self, indexes):
@@ -36,6 +46,12 @@ class Ant(QWidget):
 
         painter.setPen(QPen(QColor(0, 255, 0), 2, Qt.SolidLine))
         painter.drawEllipse(self.coord_row, self.coord_column, self.ellipse_diameter, self.ellipse_diameter)
+
+    def move(self, x, y):
+        self.coord_row = 10
+        self.coord_column = 20
+
+
 
 def index_to_coord(column, row):
     return matrix[row][column].coord_column, matrix[row][column].coord_row
@@ -88,7 +104,7 @@ if __name__ == "__main__":
             sub_matrix.append(hex_1)
         matrix.append(sub_matrix)
 
-    ant = Ant(index_to_coord(5, 7))
+    ant = Ant(index_to_coord(3, 2))
     print(index_to_coord(5, 7))
     win.setCentralWidget(ant)
     win.show()
