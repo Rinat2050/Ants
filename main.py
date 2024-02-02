@@ -31,10 +31,18 @@ class HexField(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()  # Создаем вертикальный макет
-        for i in range(5):
-            hex = Hex(10, 10)
-            hex.move(i*100, 50)
-            layout.addWidget(hex)
+        # layout.setSpacing(0)
+        # for i in range(5):
+        #     hex = Hex(10, 10)
+        #     hex.move(i*100, 50)
+        #     layout.addWidget(hex)
+        hex = Hex(22, 0)
+        hex2 = Hex(0, 0)
+        hex3 = Hex(50, 12)
+
+        layout.addWidget(hex)
+        layout.addWidget(hex2)
+        layout.addWidget(hex3)
         self.setLayout(layout)  # Устанавливаем макет для виджета
 
 
@@ -61,9 +69,9 @@ def hex_painting(center_x, center_y):
     return coordinates
 
 
-def index_in_coord(i, j):
-    x = HEX_FIELD_X0 + i * math.cos(j * 2 * math.pi / 6)
-    y = HEX_FIELD_Y0 + j * math.sin(j * 2 * math.pi / 6)
+def index_to_coord(i, j):
+    x = int(HEX_FIELD_X0 + i * math.cos(j * 2 * math.pi / 6))
+    y = int(HEX_FIELD_Y0 + j * math.sin(j * 2 * math.pi / 6))
     return x, y
 
 
