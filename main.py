@@ -16,10 +16,13 @@ class MainWindow(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.initUI()  # параметры окна в отдельной функции
-        layout = QVBoxLayout()  # Создаем вертикальный макет
-        hex_field = HexField()
-        layout.addWidget(hex_field)  # Добавляем "поле гексов" в макет
-        self.setLayout(layout)  # Устанавливаем макет для главного окна
+        # layout = QVBoxLayout()  # Создаем вертикальный макет
+
+        # hex = Hex(3, 4)
+        # hex.setGeometry(50, 50, 50, 50)
+
+        # layout.addWidget(hex_field)  # Добавляем "поле гексов" в макет
+        # self.setLayout(layout)  # Устанавливаем макет для главного окна
 
     def initUI(self):
         self.setWindowTitle("Ants")  # заголовок окна
@@ -30,34 +33,39 @@ class MainWindow(QWidget):
 class HexField(QWidget):
     def __init__(self):
         super().__init__()
-        layout = QVBoxLayout()  # Создаем вертикальный макет
+        # layout = QVBoxLayout()  # Создаем вертикальный макет
         # layout.setSpacing(0)
         # for i in range(5):
         #     hex = Hex(10, 10)
         #     hex.move(i*100, 50)
         #     layout.addWidget(hex)
-        hex = Hex(22, 0)
-        hex2 = Hex(0, 0)
-        hex3 = Hex(50, 12)
 
-        layout.addWidget(hex)
-        layout.addWidget(hex2)
-        layout.addWidget(hex3)
-        self.setLayout(layout)  # Устанавливаем макет для виджета
+        self.hex = Hex(22, 0)
+        self.hex2 = Hex(0, 0)
+        self.hex3 = Hex(50, 12)
+
+
+        # layout.addWidget(hex)
+        # layout.addWidget(hex2)
+        # layout.addWidget(hex3)
+        # self.setLayout(layout)  # Устанавливаем макет для виджета
 
 
 class Hex(QWidget):
-    def __init__(self, x, y):
-        super().__init__()
+    def __init__(self, x, y, win):
+        super().__init__(win)
         self.x = x
         self.y = y
+        self.win = win
 
     def paintEvent(self, event):
         self.painter = QPainter(self)
         self.painter.setRenderHint(QPainter.Antialiasing)  # сглаживание углов
         self.painter.setPen(QPen(Qt.green, 5, Qt.SolidLine))
         # self.painter.drawEllipse(self.x, self.y, 50, 100)
+
         self.painter.drawPolygon(hex_painting(self.x, self.y))
+        self.painter.end()
 
 
 def hex_painting(center_x, center_y):
@@ -78,5 +86,7 @@ def index_to_coord(i, j):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     main_window = MainWindow()
+    hex = Hex(10, 4, main_window)
+
     main_window.show()
     sys.exit(app.exec_())
