@@ -17,3 +17,12 @@ pip install -r ../../requirements.txt
 ```
 python main.py
 ```
+
+## Development
+
+There is libs for development
+(Use pip from .venv environment)
+
+```
+pip install requirements.dev.txt
+```
