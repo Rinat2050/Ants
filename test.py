@@ -1,6 +1,5 @@
-import tkinter as tk # Python 2
-import tkinter as tk # Python 3
-from tkinter import Tk, Canvas, Label
+import tkinter as tk  # Python 3
+from tkinter import Canvas
 
 
 root = tk.Tk()
