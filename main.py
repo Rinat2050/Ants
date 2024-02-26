@@ -14,17 +14,17 @@ class Place(Canvas):
     def __init__(self, root):
         super().__init__(root, width=WIDTH_WINDOW, height=HEIGHT_WINDOW)
         self.place(x=0, y=0, anchor='nw')
+        self.create_hex()
+        self.ant = Ant(6, 11, self)
 
+    def create_hex(self):
+        for i in range(12):
+            for j in range(12):
+                if (index_to_coord(i - 6, j)[0]) ** 2 + (index_to_coord(i, j - 6)[1]) ** 2 <= 350 ** 2:
+                    b = Hex(i, j, self)
 
 
 place_hex = Place(window)
-
-for i in range(12):
-    for j in range(12):
-        if (index_to_coord(i - 6, j)[0])**2 + (index_to_coord(i, j - 6)[1])**2 <= 350**2:
-            b = Hex(i, j, place_hex)
-
-ant = Ant(6, 11, window)
 
 
 window.mainloop()
