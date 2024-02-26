@@ -1,8 +1,8 @@
 # Ants
+<img src="/image/ant.png" alt="logo" width="70" height="auto">
 
 Study project
 
-![Logo Ant](./image/ant.png)
 
 ## Building
 
