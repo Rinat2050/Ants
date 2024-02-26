@@ -1,7 +1,7 @@
 from tkinter import Tk, Canvas, Label
 from calculate import index_to_coord
-from constants import *
 from PIL import ImageTk, Image
+import constants
 import os
 
 class Ant(Canvas):
@@ -9,8 +9,9 @@ class Ant(Canvas):
         super().__init__(root, width=30, height=30, bd=0, highlightthickness=0)
         self.i = i
         self.j = j
-        self.x = HEX_FIELD_X0 + index_to_coord(i, j)[0]
-        self.y = HEX_FIELD_Y0 + index_to_coord(i, j)[1]
+        x, y = index_to_coord(i, j)
+        self.x = constants.HEX_FIELD_X0 + x
+        self.y = constants.HEX_FIELD_Y0 + y
         self.radius = 18
         self.image = Image.open("image/ant.png").resize((50, 50))
         self.ant_image = ImageTk.PhotoImage(self.image)

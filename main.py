@@ -1,18 +1,18 @@
 from tkinter import Tk, Canvas
 from ant import Ant
 from hex import Hex
-from constants import *
 from calculate import index_to_coord
+import constants
 
 
 window = Tk()
 window.title('ANTS')
-window.geometry(str(WIDTH_WINDOW) + 'x' + str(HEIGHT_WINDOW) + '+1100+0')
+window.geometry(str(constants.WIDTH_WINDOW) + 'x' + str(constants.HEIGHT_WINDOW) + '+1100+0')
 
 
 class Place(Canvas):
     def __init__(self, root):
-        super().__init__(root, width=WIDTH_WINDOW, height=HEIGHT_WINDOW)
+        super().__init__(root, width=constants.WIDTH_WINDOW, height=constants.HEIGHT_WINDOW)
         self.place(x=0, y=0, anchor='nw')
 
 
