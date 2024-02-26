@@ -2,6 +2,8 @@
 
 Study project
 
+![Logo Ant](./image/ant.png)
+
 ## Building
 
 Create environment (Windows)
