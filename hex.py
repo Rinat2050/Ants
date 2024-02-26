@@ -12,7 +12,7 @@ class Hex:
         self.y = index_to_coord(self.i, self.j)[1]
         self.place_hex = place_hex
         self.place_hex.create_polygon(self.count_coord(self.x, self.y), fill="#80CBC4", outline="#004D40")
-        self.lbl = Label(self.place_hex, text=(i, j))
+        self.lbl = Label(self.place_hex, text=(self.i, self.j))
         self.lbl.place(x=HEX_FIELD_X0 + self.x, y=HEX_FIELD_Y0 + self.y, anchor='center')
 
     @staticmethod
