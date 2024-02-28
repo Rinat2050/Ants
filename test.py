@@ -12,7 +12,7 @@ class MovingObject:
         col = x // self.cell_size
         row = y // self.cell_size
         self.canvas.coords(self.obj, col*self.cell_size, row*self.cell_size, col*self.cell_size+self.cell_size, row*self.cell_size+self.cell_size)
-
+        self.canvas.coords()
 class MainApp:
     def __init__(self, root, rows, columns, cell_size):
         self.root = root

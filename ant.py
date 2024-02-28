@@ -20,9 +20,13 @@ class Ant:
     def move(self, event):
         new_x = event.x
         new_y = event.y
-
+        # print(new_x, new_y)
         self.canvas.coords(self.ant_obj,
                            new_x,
                            new_y
                            )
-
+        self.search_hex(new_x, new_y)
+    def search_hex(self, x, y):
+        for hex in self.canvas.ants_list:
+            if (x - hex.x)**2 + (y - hex.y)**2 <= HEX_h ** 2:
+                print(hex.i, hex.j)

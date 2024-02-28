@@ -11,6 +11,7 @@ window.geometry(str(WIDTH_WINDOW) + 'x' + str(HEIGHT_WINDOW) + '+1100+0')
 
 
 class Place(Canvas):
+    ants_list = []
     def __init__(self, root):
         super().__init__(root, width=WIDTH_WINDOW, height=HEIGHT_WINDOW)
         self.place(x=0, y=0, anchor='nw')
@@ -22,9 +23,10 @@ class Place(Canvas):
             for j in range(12):
                 if (index_to_coord(i - 6, j)[0]) ** 2 + (index_to_coord(i, j - 6)[1]) ** 2 <= 350 ** 2:
                     b = Hex(i, j, self)
+                    self.ants_list.append(b)
 
 
 place_hex = Place(window)
-
+print(place_hex.ants_list)
 
 window.mainloop()
