@@ -27,6 +27,8 @@ class Place(Canvas):
 
 
 place_hex = Place(window)
-print(place_hex.ants_list)
-
+# print(place_hex.ants_list)
+# print(place_hex.ant.x, place_hex.ant.y)
+# place_hex.ant.x = 300
+# print(place_hex.ant.x, place_hex.ant.y)
 window.mainloop()
