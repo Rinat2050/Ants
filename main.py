@@ -25,6 +25,8 @@ class Place(Canvas):
                     b = Hex(i, j, self)
                     self.ants_list.append(b)
 
+def func()
+    pass
 
 place_hex = Place(window)
 # print(place_hex.ants_list)
