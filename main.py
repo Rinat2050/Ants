@@ -1,19 +1,26 @@
 from tkinter import Tk, Canvas
 from ant import Ant
 from hex import Hex
-from constants import *
 from calculate import index_to_coord
+import constants
 
 
 window = Tk()
 window.title('ANTS')
-window.geometry(str(WIDTH_WINDOW) + 'x' + str(HEIGHT_WINDOW) + '+1100+0')
+window.geometry('{w}x{h}+1100+0'.format(
+    w=constants.WIDTH_WINDOW,
+    h=constants.HEIGHT_WINDOW),
+)
 
 
 class Place(Canvas):
     ants_list = []
     def __init__(self, root):
-        super().__init__(root, width=WIDTH_WINDOW, height=HEIGHT_WINDOW)
+        super().__init__(
+            root,
+            width=constants.WIDTH_WINDOW,
+            height=constants.HEIGHT_WINDOW,
+        )
         self.place(x=0, y=0, anchor='nw')
         self.create_hex()
         self.ant = Ant(6, 11, self)
@@ -25,8 +32,7 @@ class Place(Canvas):
                     b = Hex(i, j, self)
                     self.ants_list.append(b)
 
-def func()
-    pass
+
 
 place_hex = Place(window)
 # print(place_hex.ants_list)
@@ -34,3 +40,5 @@ place_hex = Place(window)
 # place_hex.ant.x = 300
 # print(place_hex.ant.x, place_hex.ant.y)
 window.mainloop()
+
+
