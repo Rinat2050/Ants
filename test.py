@@ -1,39 +1,39 @@
-import tkinter as tk  # Python 3
-from tkinter import Canvas
+import tkinter as tk
 
+def select_shape(event):
+    global selected_shape
+    x, y = event.x, event.y
+    if circle_coords[0] <= x <= circle_coords[2] and circle_coords[1] <= y <= circle_coords[3]:
+        canvas.itemconfig(circle, outline='red')
+        canvas.itemconfig(square, outline='')
+        selected_shape = 'circle'
+    elif square_coords[0] <= x <= square_coords[2] and square_coords[1] <= y <= square_coords[3]:
+        canvas.itemconfig(square, outline='red')
+        canvas.itemconfig(circle, outline='')
+        selected_shape = 'square'
 
-class MovingObject:
-    def __init__(self, canvas, cell_size):
-        self.canvas = canvas
-        self.cell_size = cell_size
-        self.obj = self.canvas.create_rectangle(0, 0, cell_size, cell_size, fill='blue')
-        self.canvas.bind('<Button-1>', self.move)
+def move_shape(event):
+    global selected_shape
+    if selected_shape == 'circle':
+        canvas.coords(circle, event.x - 25, event.y - 25, event.x + 25, event.y + 25)
+    elif selected_shape == 'square':
+        canvas.coords(square, event.x - 25, event.y - 25, event.x + 25, event.y + 25)
 
+root = tk.Tk()
+root.title('Select and Move Shapes')
 
-    def move(self, event):
-        x, y = event.x, event.y
-        col = x // self.cell_size
-        row = y // self.cell_size
-        self.canvas.coords(self.obj, col*self.cell_size,
-                           row*self.cell_size,
-                           col*self.cell_size+self.cell_size,
-                           row*self.cell_size+self.cell_size
-                            )
-        self.canvas.coords()
-class MainApp:
-    def __init__(self, root, rows, columns, cell_size):
-        self.root = root
-        self.canvas = tk.Canvas(root, width=columns*cell_size, height=rows*cell_size)
-        self.canvas.pack()
-        self.moving_obj = MovingObject(self.canvas, cell_size)
+canvas = tk.Canvas(root, width=400, height=400)
+canvas.pack()
 
-if __name__ == '__main__':
-    rows = 5
-    columns = 5
-    cell_size = 50
+circle = canvas.create_oval(150, 150, 250, 250, outline='black', width=2)
+square = canvas.create_rectangle(50, 50, 100, 100, outline='black', width=2)
 
-    root = tk.Tk()
-    app = MainApp(root, rows, columns, cell_size)
+circle_coords = canvas.coords(circle)
+square_coords = canvas.coords(square)
 
-    root.mainloop()
+selected_shape = None
 
+canvas.bind('<Button-1>', select_shape)
+canvas.bind('<B1-Motion>', move_shape)
+
+root.mainloop()

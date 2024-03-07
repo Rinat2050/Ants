@@ -4,22 +4,23 @@ from math import cos, sin, pi
 import constants
 
 class Hex:
-    def __init__(self, i, j, place_hex):
+    def __init__(self, i, j, canvas):
 
         self.i = i
         self.j = j
         self.x = index_to_coord(self.i, self.j)[0] + constants.HEX_FIELD_X0
         self.y = index_to_coord(self.i, self.j)[1] + constants.HEX_FIELD_Y0
 
-        self.place_hex = place_hex
-        self.place_hex.create_polygon(
+        self.canvas = canvas
+        self.canvas.create_polygon(
             self.count_coord(self.x, self.y),
             fill="#80CBC4",
             outline="#004D40",
         )
-        self.lbl = Label(self.place_hex, text=(self.i, self.j))
-        self.lbl.place(x=self.x, y=self.y, anchor='center')
-
+        self.canvas.create_text(self.x, self.y,
+                                text=(self.i, self.j),
+                                fill="blue"
+        )
 
     @staticmethod
     def count_coord(center_x, center_y):
