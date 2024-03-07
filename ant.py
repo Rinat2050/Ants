@@ -18,23 +18,18 @@ class Ant:
         self.ant_obj = self.canvas.create_image(self.x, self.y, anchor='center', image=self.ant_img)
         self.canvas.bind('<Button-1>', self.move_obj)
 
-
     def move_obj(self, event):
         new_x = event.x
         new_y = event.y
         self.choise_hex(new_x, new_y)
-
         print(self.i, self.j)
         print(self.x, self.y)
-        self.canvas.coords(self.ant_obj,
-                           self.x,
-                           self.y
-                           )
+        self.canvas.coords(self.ant_obj, self.x, self.y)
 
     def choise_hex(self, x, y):
-
         for hex in self.canvas.hex_list:
-            if (x - hex.x)**2 + (y - hex.y)**2 <= constants.HEX_h ** 2:
+            if ((x - hex.x)**2 + (y - hex.y)**2 <= constants.HEX_h ** 2
+                    and (self.x - hex.x)**2 + (self.y - hex.y)**2 <= 6*constants.HEX_h ** 2): # Позволяет передвигаться ТОЛЬКО на ближайшие хексы
                 self.i = hex.i
                 self.j = hex.j
                 self.x = hex.x

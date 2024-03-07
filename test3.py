@@ -1,20 +1,22 @@
-from tkinter import *
+import tkinter as tk
 
-class Ant:
-    def __init__(self, canvas, x, y):
-        self.canvas = canvas
-        self.ant = self.canvas.create_oval(x, y, x + 10, y + 10, fill='black')
-        self.canvas.bind("<Button-1>", self.move_ant)
+def on_label_click(event):
+    label = event.widget
+    print(f"Clicked: {label['text']}")
 
-    def move_ant(self, event):
-        new_x = event.x - 5
-        new_y = event.y - 5
-        self.canvas.coords(self.ant, new_x, new_y, new_x + 10, new_y + 10)
 
-root = Tk()
-canvas = Canvas(root, width=300, height=300, bg='white')
-canvas.pack()
+root = tk.Tk()
 
-ant = Ant(canvas, 100, 100)
+label1 = tk.Label(root, text="Label 1", bg="red")
+label1.pack()
+
+label2 = tk.Label(root, text="Label 2", bg="blue")
+label2.pack()
+
+def propagate_click(event):
+    event.widget.event_generate("<Button-1>", x=event.x, y=event.y)
+
+label1.bind("<Button-1>", propagate_click)
+label2.bind("<Button-1>", on_label_click)
 
 root.mainloop()

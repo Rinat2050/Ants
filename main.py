@@ -1,6 +1,4 @@
 from tkinter import Tk, Canvas
-
-import calculate
 from ant import Ant
 from hex import Hex
 from calculate import index_to_coord
@@ -14,7 +12,6 @@ window.geometry('{w}x{h}+1100+0'.format(
     h=constants.HEIGHT_WINDOW),
 )
 
-
 class Place(Canvas):
     hex_list = []
     def __init__(self, root):
@@ -25,7 +22,8 @@ class Place(Canvas):
         )
         self.place(x=0, y=0, anchor='nw')
         self.create_hex()
-        self.ant = Ant(6, 11, self)
+        self.ant1 = Ant(6, 11, self)
+        self.ant2 = Ant(6, 1, self)
 
     def create_hex(self):
         for i in range(12):
@@ -34,16 +32,9 @@ class Place(Canvas):
                     b = Hex(i, j, self)
                     self.hex_list.append(b)
 
+    def select_obj(self):
+        pass
 
 place_hex = Place(window)
-# print(place_hex.ants_list)
-# print(place_hex.ant.x, place_hex.ant.y)
-# place_hex.ant.x = 300
-# print(place_hex.ant.x, place_hex.ant.y)
-
-
-
 
 window.mainloop()
-
-
