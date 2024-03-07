@@ -6,3 +6,5 @@ exclude=
     __pycache__,
     manage.py,
     settings.py
+    test.py
+    test3.py
