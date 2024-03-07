@@ -1,7 +1,7 @@
 from calculate import index_to_coord
-from tkinter import Label
 from math import cos, sin, pi
 import constants
+
 
 class Hex:
     def __init__(self, i, j, canvas):
@@ -15,12 +15,10 @@ class Hex:
         self.canvas.create_polygon(
             self.count_coord(self.x, self.y),
             fill="#80CBC4",
-            outline="#004D40",
-        )
+            outline="#004D40")
         self.canvas.create_text(self.x, self.y,
                                 text=(self.i, self.j),
-                                fill="blue"
-        )
+                                fill="blue")
 
     @staticmethod
     def count_coord(center_x, center_y):

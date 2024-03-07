@@ -1,8 +1,7 @@
-from tkinter import Canvas, Label
 from calculate import index_to_coord
 from PIL import ImageTk, Image
 import constants
-import calculate
+
 
 class Ant:
     def __init__(self, i, j, canvas):
@@ -29,10 +28,9 @@ class Ant:
     def choise_hex(self, x, y):
         for hex in self.canvas.hex_list:
             if ((x - hex.x)**2 + (y - hex.y)**2 <= constants.HEX_h ** 2
-                    and (self.x - hex.x)**2 + (self.y - hex.y)**2 <= 6*constants.HEX_h ** 2): # Позволяет передвигаться ТОЛЬКО на ближайшие хексы
+                    and (self.x - hex.x)**2 + (self.y - hex.y)**2 <= 6*constants.HEX_h ** 2):
+                # Позволяет передвигаться ТОЛЬКО на ближайшие хексы
                 self.i = hex.i
                 self.j = hex.j
                 self.x = hex.x
                 self.y = hex.y
-
-

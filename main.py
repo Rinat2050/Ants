@@ -12,8 +12,10 @@ window.geometry('{w}x{h}+1100+0'.format(
     h=constants.HEIGHT_WINDOW),
 )
 
+
 class Place(Canvas):
     hex_list = []
+
     def __init__(self, root):
         super().__init__(
             root,
@@ -34,6 +36,7 @@ class Place(Canvas):
 
     def select_obj(self):
         pass
+
 
 place_hex = Place(window)
 
