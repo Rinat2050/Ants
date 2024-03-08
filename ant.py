@@ -15,15 +15,16 @@ class Ant:
         self.image = Image.open("image/ant.png").resize((self.cell_size, self.cell_size))
         self.ant_img = ImageTk.PhotoImage(self.image)
         self.ant_obj = self.canvas.create_image(self.x, self.y, anchor='center', image=self.ant_img)
-        self.canvas.bind('<Button-1>', self.move_obj)
+        self.selected = False
+        self.color_selected = ''
 
     def move_obj(self, event):
         new_x = event.x
         new_y = event.y
-        self.choise_hex(new_x, new_y)
-        print(self.i, self.j)
-        print(self.x, self.y)
-        self.canvas.coords(self.ant_obj, self.x, self.y)
+        if self.selected:
+            self.choise_hex(new_x, new_y)
+            self.canvas.coords(self.ant_obj, self.x, self.y)
+            print('move')
 
     def choise_hex(self, x, y):
         for hex in self.canvas.hex_list:

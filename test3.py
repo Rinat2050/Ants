@@ -1,22 +1,40 @@
 import tkinter as tk
 
-def on_label_click(event):
-    label = event.widget
-    print(f"Clicked: {label['text']}")
+class Shape:
+    def __init__(self, canvas, shape_type, x1, y1, x2, y2):
+        self.canvas = canvas
+        self.shape_type = shape_type
+        self.shape = None
+        self.selected = False
+        if shape_type == 'circle':
+            self.shape = canvas.create_oval(x1, y1, x2, y2, outline='black', width=2)
+        elif shape_type == 'square':
+            self.shape = canvas.create_rectangle(x1, y1, x2, y2, outline='black', width=2)
+        self.canvas.tag_bind(self.shape, '<Button-1>', self.select_shape)
+        self.canvas.tag_bind(self.shape, '<B1-Motion>', self.move_shape)
 
+    def select_shape(self, event):
+        self.canvas.itemconfig(self.shape, outline='red')
+        for shape in shapes:
+            if shape != self:
+                shape.canvas.itemconfig(shape.shape, outline='')
+                shape.selected = False
+        self.selected = True
+
+    def move_shape(self, event):
+        if self.selected:
+            x, y = event.x, event.y
+            self.canvas.coords(self.shape, x - 25, y - 25, x + 25, y + 25)
 
 root = tk.Tk()
+root.title('Select and Move Shapes')
 
-label1 = tk.Label(root, text="Label 1", bg="red")
-label1.pack()
+canvas = tk.Canvas(root, width=400, height=400)
+canvas.pack()
 
-label2 = tk.Label(root, text="Label 2", bg="blue")
-label2.pack()
-
-def propagate_click(event):
-    event.widget.event_generate("<Button-1>", x=event.x, y=event.y)
-
-label1.bind("<Button-1>", propagate_click)
-label2.bind("<Button-1>", on_label_click)
+shapes = [
+    Shape(canvas, 'circle', 150, 150, 250, 250),
+    Shape(canvas, 'square', 50, 50, 100, 100)
+]
 
 root.mainloop()

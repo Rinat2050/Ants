@@ -16,9 +16,9 @@ class Hex:
             self.count_coord(self.x, self.y),
             fill="#80CBC4",
             outline="#004D40")
-        self.canvas.create_text(self.x, self.y,
-                                text=(self.i, self.j),
-                                fill="blue")
+        # self.canvas.create_text(self.x, self.y,
+        #                         text=(self.i, self.j),
+        #                         fill="blue")
 
     @staticmethod
     def count_coord(center_x, center_y):
