@@ -1,5 +1,6 @@
 from tkinter import Canvas
 from ant import Ant
+from berry import Berry
 from hex import Hex
 from calculate import index_to_coord
 import constants
@@ -22,6 +23,7 @@ class Place(Canvas):
 
         self.ant1 = Ant(5, 5, self, 'Василий')
         self.ant2 = Ant(7, 6, self, 'Игорь')
+        self.berry1 = Berry(6, 4, self)
         self.ant_list.append(self.ant1)
         self.ant_list.append(self.ant2)
         self.bind('<Button-3>', self.select_obj)
@@ -50,7 +52,7 @@ class Place(Canvas):
                     b = Hex(i, j, self)
                     self.hex_list.append(b)
                     self.hex_dict[(i, j)] = b
-
+        print(len(self.hex_list))
     def create_anthill(self):
         for elem_hex in self.hex_list:
             if [elem_hex.i, elem_hex.j] in ([6, 6], [6, 5], [5, 5], [5, 6], [6, 7], [7, 5], [7, 6]):
@@ -63,3 +65,4 @@ class Place(Canvas):
             if (elem.x - x) ** 2 + (elem.y - y) ** 2 >= (constants.HEX_LENGTH * 4) ** 2:
                 self.itemconfig(elem.obj, fill=constants.GREY)
                 elem.visible = False
+

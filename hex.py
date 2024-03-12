@@ -15,7 +15,7 @@ class Hex:
             self.count_coord(self.x, self.y),
             fill=constants.GREEN,
             outline="#004D40")
-        self.canvas.create_text(self.x, self.y,
+        self.canvas.create_text(self.x, self.y+20,
                                 text=(self.i, ':', self.j),
                                 fill="blue")
 
