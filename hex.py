@@ -5,20 +5,19 @@ import constants
 
 class Hex:
     def __init__(self, i, j, canvas):
-
         self.i = i
         self.j = j
         self.x = index_to_coord(self.i, self.j)[0] + constants.HEX_FIELD_X0
         self.y = index_to_coord(self.i, self.j)[1] + constants.HEX_FIELD_Y0
-
         self.canvas = canvas
-        self.canvas.create_polygon(
+        self.visible = True
+        self.obj = self.canvas.create_polygon(
             self.count_coord(self.x, self.y),
-            fill="#80CBC4",
+            fill=constants.GREEN,
             outline="#004D40")
-        # self.canvas.create_text(self.x, self.y,
-        #                         text=(self.i, self.j),
-        #                         fill="blue")
+        self.canvas.create_text(self.x, self.y,
+                                text=(self.i, ':', self.j),
+                                fill="blue")
 
     @staticmethod
     def count_coord(center_x, center_y):
