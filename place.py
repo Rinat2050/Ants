@@ -1,7 +1,4 @@
 from tkinter import Canvas
-# from ant import Ant
-# from berry import Berry
-# from hex import Hex
 from calculate import index_to_coord
 import constants
 from shape import Ant, Berry, Hex
