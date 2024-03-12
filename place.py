@@ -1,13 +1,13 @@
 from tkinter import Canvas
-from ant import Ant
-from berry import Berry
-from hex import Hex
+# from ant import Ant
+# from berry import Berry
+# from hex import Hex
 from calculate import index_to_coord
 import constants
+from shape import Ant, Berry, Hex
 
 
 class Place(Canvas):
-    hex_list = []
     ant_list = []
     hex_dict = {}
 
@@ -50,19 +50,17 @@ class Place(Canvas):
             for j in range(12):
                 if (index_to_coord(i - 6, j)[0]) ** 2 + (index_to_coord(i, j - 6)[1]) ** 2 <= 300 ** 2:
                     b = Hex(i, j, self)
-                    self.hex_list.append(b)
                     self.hex_dict[(i, j)] = b
-        print(len(self.hex_list))
+
     def create_anthill(self):
-        for elem_hex in self.hex_list:
-            if [elem_hex.i, elem_hex.j] in ([6, 6], [6, 5], [5, 5], [5, 6], [6, 7], [7, 5], [7, 6]):
-                self.itemconfig(elem_hex.obj, fill=constants.BROWN)
+        for hex_index in self.hex_dict.keys():
+            if hex_index in ((6, 6), (6, 5), (5, 5), (5, 6), (6, 7), (7, 5), (7, 6)):
+                self.itemconfig(self.hex_dict.get(hex_index).obj, fill=constants.BROWN)
 
     def do_invisible_hex_start(self):
-        x = self.hex_dict[(6, 6)].x
-        y = self.hex_dict[(6, 6)].y
-        for elem in self.hex_list:
-            if (elem.x - x) ** 2 + (elem.y - y) ** 2 >= (constants.HEX_LENGTH * 4) ** 2:
-                self.itemconfig(elem.obj, fill=constants.GREY)
-                elem.visible = False
-
+        x = self.hex_dict.get((6, 6)).x
+        y = self.hex_dict.get((6, 6)).y
+        for hex_val in self.hex_dict.values():
+            if (hex_val.x - x) ** 2 + (hex_val.y - y) ** 2 >= (constants.HEX_LENGTH * 4) ** 2:
+                self.itemconfig(hex_val.obj, fill=constants.GREY)
+                hex_val.visible = False
