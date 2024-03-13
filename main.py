@@ -9,8 +9,8 @@ window.title('ANTS')
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 
-x_offset = (screen_width - constants.WIDTH_WINDOW) // 2
-y_offset = (screen_height - constants.HEIGHT_WINDOW) // 2
+x_offset = (screen_width - constants.WIDTH_WINDOW)
+y_offset = (screen_height - constants.HEIGHT_WINDOW) * 0
 
 window.geometry('{w}x{h}+{x}+{y}'.format(
     w=constants.WIDTH_WINDOW,
