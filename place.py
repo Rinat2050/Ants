@@ -2,6 +2,7 @@ from tkinter import Canvas
 from calculate import index_to_coord
 import constants
 from shape import Ant, Berry, Hex
+from interface import Interface
 
 
 class Place(Canvas):
@@ -18,13 +19,17 @@ class Place(Canvas):
         self.create_hex()
         self.create_anthill()
 
-        self.ant1 = Ant(5, 5, self, 'Василий')
+        self.ant1 = Ant(6, 5, self, 'Василий')
         self.ant2 = Ant(7, 6, self, 'Игорь')
         self.berry1 = Berry(6, 4, self)
         self.ant_list.append(self.ant1)
         self.ant_list.append(self.ant2)
-        self.bind('<Button-3>', self.select_obj)
+        self.bind('<Button-3>', self.activate)
         self.do_invisible_hex_start()
+        self.interf = Interface(self)
+
+    def activate(self, event):
+        self.select_obj(event)
 
     def select_obj(self, evemt):
         x = evemt.x
@@ -61,3 +66,9 @@ class Place(Canvas):
             if (hex_val.x - x) ** 2 + (hex_val.y - y) ** 2 >= (constants.HEX_LENGTH * 4) ** 2:
                 self.itemconfig(hex_val.obj, fill=constants.GREY)
                 hex_val.visible = False
+
+    def ant_take(self):
+        for selected_ant in self.ant_list:
+            if selected_ant.selected is True:
+                selected_ant.loading == True
+                print(selected_ant.name, 'загружен')

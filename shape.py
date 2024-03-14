@@ -28,6 +28,7 @@ class Ant(Shape):
         self.selected = False
         self.color_selected = ''
         self.name = name
+        self.loading = False
 
     def move_obj(self, event):
         new_x = event.x
