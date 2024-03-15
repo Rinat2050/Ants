@@ -2,12 +2,13 @@ from tkinter import Canvas
 from calculate import index_to_coord
 import constants
 from shape import Ant, Berry, Hex
-from interface import Interface
+from interface import UserButton
 
 
 class Place(Canvas):
     ant_list = []
     hex_dict = {}
+    berry_list = []
 
     def __init__(self, root):
         super().__init__(
@@ -21,15 +22,20 @@ class Place(Canvas):
 
         self.ant1 = Ant(6, 5, self, 'Василий')
         self.ant2 = Ant(7, 6, self, 'Игорь')
-        self.berry1 = Berry(6, 4, self)
         self.ant_list.append(self.ant1)
         self.ant_list.append(self.ant2)
+        self.berry1 = Berry(6, 4, self)
+        self.berry_list.append(self.berry1)
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hex_start()
-        self.interf = Interface(self)
+        self.bnt_take = UserButton(self, "Взять")
 
     def activate(self, event):
         self.select_obj(event)
+
+        #
+        #         button.plase
+
 
     def select_obj(self, evemt):
         x = evemt.x
@@ -37,10 +43,13 @@ class Place(Canvas):
         for ant in self.ant_list:
             shift = ant.cell_size / 2
             if not ant.selected and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
+                print(ant.name, 'выбран')
                 ant.selected = True
                 self.bind('<Button-1>', ant.move_obj)
-                print(ant.name, 'выбран')
                 self.itemconfig(ant.obj, image=ant.img_selected_True)
+                for berry in self.berry_list:
+                    if berry.i == ant.i and berry.j == ant.j:
+                        self.bnt_take.visible()
             else:
                 ant.selected = False
                 # print(ant.name, 'selected False')

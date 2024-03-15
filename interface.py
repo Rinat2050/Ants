@@ -2,8 +2,12 @@ from tkinter import Button
 
 
 
-class Interface:
-    def __init__(self, canvas):
-        self.btn_ant_take = Button(canvas, text="Взять", command=canvas.ant_take)
-        self.btn_ant_take.place(x=100, y=800)
+class UserButton(Button):
+    def __init__(self, canvas, text):
+        super().__init__(canvas, text=text, command=self.unvisible)
 
+    def visible(self):
+        self.place(x=100, y=800)
+
+    def unvisible(self):
+        self.destroy()
