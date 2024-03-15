@@ -1,38 +1,21 @@
 import tkinter as tk
 
+def command1(event):
+    print("Command 1")
 
-def select_image(event):
-    # Определяем координаты курсора при нажатии
-    x, y = event.x, event.y
+def command2(event):
+    print("Command 2")
 
-    # Определяем объекты, находящиеся под курсором
-    items = canvas.find_overlapping(x, y, x, y)
-
-    if len(items) > 0:
-        # Выделяем первый найденный объект рамкой
-        canvas.itemconfig(items[0], outline='red', width=2)
-
-
-def deselect_image(event):
-    # Определяем объекты на холсте и убираем рамку у всех изображений
-    items = canvas.find_all()
-    for item in items:
-        canvas.itemconfig(item, outline='black', width=1)
-
+def command3(event):
+    print("Command 3")
 
 root = tk.Tk()
-
-canvas = tk.Canvas(root, width=400, height=400)
+canvas = tk.Canvas(root, width=200, height=200)
 canvas.pack()
 
-# Загружаем изображение
-image = tk.PhotoImage(file="image/ball.png")
+button = tk.Button(root, text="Click me!")
+button.pack()
 
-# Создаем изображение на холсте
-image_id = canvas.create_image(100, 100, image=image, anchor=tk.NW)
-
-# Привязываем обработчики событий для нажатия и отпускания кнопки мыши
-canvas.bind('<Button-1>', select_image)
-canvas.bind('<ButtonRelease-1>', deselect_image)
+button.bind("<Button-1>", lambda event: [command1(event), command2(event), command3(event)])
 
 root.mainloop()

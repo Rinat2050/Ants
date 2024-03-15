@@ -36,8 +36,7 @@ class Place(Canvas):
         y = evemt.y
         for ant in self.ant_list:
             shift = ant.cell_size / 2
-            if (ant.selected is False) and (ant.x - shift <= x <= ant.x + shift) and (
-                    ant.y - shift <= y <= ant.y + shift):
+            if not ant.selected and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
                 ant.selected = True
                 self.bind('<Button-1>', ant.move_obj)
                 print(ant.name, 'выбран')
