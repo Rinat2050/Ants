@@ -8,7 +8,8 @@ from interface import UserButton
 class Place(Canvas):
     ant_list = []
     hex_dict = {}
-    berry_list = []
+    berry_dict = {}
+    btn_list = []
 
     def __init__(self, root):
         super().__init__(
@@ -25,16 +26,13 @@ class Place(Canvas):
         self.ant_list.append(self.ant1)
         self.ant_list.append(self.ant2)
         self.berry1 = Berry(6, 4, self)
-        self.berry_list.append(self.berry1)
+        self.berry_dict[(6, 4)] = self.berry1
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hex_start()
-        self.bnt_take = UserButton(self, "Взять")
+
 
     def activate(self, event):
         self.select_obj(event)
-
-        #
-        #         button.plase
 
 
     def select_obj(self, evemt):
@@ -46,14 +44,15 @@ class Place(Canvas):
                 print(ant.name, 'выбран')
                 ant.selected = True
                 self.bind('<Button-1>', ant.move_obj)
-                self.itemconfig(ant.obj, image=ant.img_selected_True)
-                for berry in self.berry_list:
-                    if berry.i == ant.i and berry.j == ant.j:
-                        self.bnt_take.visible()
+                self.itemconfig(ant.obj, image=ant.photo_selected_True)
+                for berry in self.berry_dict.values():
+                    if berry.i == ant.i and berry.j == ant.j and not berry.taken:
+                        self.btn_take = UserButton(self, "Взять")
+                        self.btn_list.append(self.btn_take)
+                        self.btn_take.visible()
             else:
                 ant.selected = False
-                # print(ant.name, 'selected False')
-                # self.canvas.create_oval(x-1, y-1,x+1, y+1, fill='black') - показывает точками где тыкаем
+
 
     def create_hex(self):
         for i in range(12):
@@ -79,4 +78,10 @@ class Place(Canvas):
         for selected_ant in self.ant_list:
             if selected_ant.selected is True:
                 selected_ant.loading == True
+                self.itemconfig(selected_ant.obj, image=selected_ant.photo_selected_False)
+                selected_berry = self.berry_dict[(selected_ant.i, selected_ant.j)]
+                selected_berry.taken = True
+                self.itemconfig(selected_berry.obj, image=selected_berry.photo_selected_True)
+                print(self.berry_dict[(selected_ant.i, selected_ant.j)].taken)
                 print(selected_ant.name, 'загружен')
+

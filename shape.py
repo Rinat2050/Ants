@@ -18,13 +18,11 @@ class Ant(Shape):
     def __init__(self, i, j, canvas, name):
         super().__init__(i, j, canvas)
         self.cell_size = constants.ANT_CELL_SIZE
-        # self.image_selected_False = Image.open("image/ant.png").resize((self.cell_size, self.cell_size))
-        # self.image_selected_True = Image.open("image/ant.png").resize((self.cell_size*2, self.cell_size*2))
         self.image_selected_False = Image.open("image/ant.png").resize((self.cell_size, self.cell_size))
         self.image_selected_True = Image.open("image/ant.png").resize((50, 50))
-        self.img_selected_False = ImageTk.PhotoImage(self.image_selected_False)
-        self.img_selected_True = ImageTk.PhotoImage(self.image_selected_True)
-        self.obj = self.canvas.create_image(self.x, self.y, anchor='center', image=self.img_selected_False)
+        self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
+        self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
+        self.obj = self.canvas.create_image(self.x, self.y, anchor='center', image=self.photo_selected_False)
         self.selected = False
         self.color_selected = ''
         self.name = name
@@ -38,8 +36,13 @@ class Ant(Shape):
             self.canvas.coords(self.obj, self.x, self.y)
             print(self.name, 'перемещён')
             self.selected = False
-            self.canvas.itemconfig(self.obj, image=self.img_selected_False)
-            self.do_visible_ant()
+            self.canvas.itemconfig(self.obj, image=self.photo_selected_False)
+            self.do_visible_hex()
+            try:
+                self.canvas.btn_list[-1].destroy()
+                self.canvas.btn_list.pop()
+            except:
+                print('Пустой список')
 
     def choise_hex(self, x, y):
         for hex_val in self.canvas.hex_dict.values():
@@ -51,7 +54,7 @@ class Ant(Shape):
                 self.x = hex_val.x
                 self.y = hex_val.y
 
-    def do_visible_ant(self):
+    def do_visible_hex(self):
         for hex_val in self.canvas.hex_dict.values():
             if [hex_val.i, hex_val.j] == [self.i, self.j] and hex_val.visible is False:
                 self.canvas.itemconfig(hex_val.obj, fill=constants.GREEN)
@@ -90,14 +93,18 @@ class Hex(Shape):
                 )
             coordinates.append(vertex_x)
             coordinates.append(vertex_y)
-
         return coordinates
 
 
 class Berry(Shape):
     def __init__(self, i, j, canvas):
         super().__init__(i, j, canvas)
-        self.image = Image.open("image/berry.png").resize((20, 20))
-        self.photo_image = ImageTk.PhotoImage(self.image)
-        self.obj = self.canvas.create_image(self.x, self.y, anchor='center', image=self.photo_image)
+        self.image_selected_False = Image.open("image/berry.png").resize((15, 15))
+        self.image_selected_True = Image.open("image/berry.png").resize((25, 25))
+        self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
+        self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
+
+        # self.image = Image.open("image/berry.png").resize((20, 20))
+        # self.photo_image = ImageTk.PhotoImage(self.image)
+        self.obj = self.canvas.create_image(self.x, self.y - 20, anchor='center', image=self.photo_selected_False)
         self.taken = False
