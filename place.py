@@ -50,6 +50,7 @@ class Place(Canvas):
                         self.btn_take = UserButton(self, "Взять")
                         self.btn_list.append(self.btn_take)
                         self.btn_take.visible()
+
             else:
                 ant.selected = False
 
@@ -77,7 +78,7 @@ class Place(Canvas):
     def ant_take(self):
         for selected_ant in self.ant_list:
             if selected_ant.selected is True:
-                selected_ant.loading == True
+                selected_ant.loading = True
                 self.itemconfig(selected_ant.obj, image=selected_ant.photo_selected_False)
                 selected_berry = self.berry_dict[(selected_ant.i, selected_ant.j)]
                 selected_berry.taken = True

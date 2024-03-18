@@ -31,9 +31,20 @@ class Ant(Shape):
     def move_obj(self, event):
         new_x = event.x
         new_y = event.y
+
         if self.selected:
+            if self.loading:
+                print('работаем?')
+                berry = self.canvas.berry_dict[(self.i, self.j)]
+                self.canvas.coords(berry.obj, new_x, new_y)
+
+
             self.choise_hex(new_x, new_y)
             self.canvas.coords(self.obj, self.x, self.y)
+            self.canvas.berry_dict[(self.i, self.j)] = self.canvas.berry_dict.pop((berry.i, berry.j))
+            new_coord_berry = self.canvas.berry_dict.pop((self.i, self.j))
+
+
             print(self.name, 'перемещён')
             self.selected = False
             self.canvas.itemconfig(self.obj, image=self.photo_selected_False)
