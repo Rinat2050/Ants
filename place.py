@@ -2,7 +2,7 @@ from tkinter import Canvas
 from calculate import index_to_coord
 import constants
 from shape import Ant, Berry, Hex
-from interface import UserButton
+from interface import TakeButton, DropButton
 
 
 class Place(Canvas):
@@ -30,10 +30,8 @@ class Place(Canvas):
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hex_start()
 
-
     def activate(self, event):
         self.select_obj(event)
-
 
     def select_obj(self, evemt):
         x = evemt.x
@@ -47,13 +45,17 @@ class Place(Canvas):
                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
                 for berry in self.berry_dict.values():
                     if berry.i == ant.i and berry.j == ant.j and not berry.taken:
-                        self.btn_take = UserButton(self, "Взять")
+                        self.btn_take = TakeButton(self, "Взять", 200, 800)
                         self.btn_list.append(self.btn_take)
-                        self.btn_take.visible()
+
+                if ant.loading and self.hex_dict.get((ant.i, ant.j)).home:
+                    self.btn_drop = DropButton(self, 'Бросить', 300, 800)
+                    self.btn_list.append(self.btn_drop)
+
+                    print('Дома?')
 
             else:
                 ant.selected = False
-
 
     def create_hex(self):
         for i in range(12):
@@ -66,6 +68,7 @@ class Place(Canvas):
         for hex_index in self.hex_dict.keys():
             if hex_index in ((6, 6), (6, 5), (5, 5), (5, 6), (6, 7), (7, 5), (7, 6)):
                 self.itemconfig(self.hex_dict.get(hex_index).obj, fill=constants.BROWN)
+                self.hex_dict.get(hex_index).home = True
 
     def do_invisible_hex_start(self):
         x = self.hex_dict.get((6, 6)).x
@@ -75,7 +78,7 @@ class Place(Canvas):
                 self.itemconfig(hex_val.obj, fill=constants.GREY)
                 hex_val.visible = False
 
-    def ant_take(self):
+    def ant_takes_berry(self):
         for selected_ant in self.ant_list:
             if selected_ant.selected is True:
                 self.itemconfig(selected_ant.obj, image=selected_ant.photo_selected_False)
@@ -83,6 +86,14 @@ class Place(Canvas):
                 selected_ant.loading = selected_berry
                 selected_berry.taken = True
                 self.itemconfig(selected_berry.obj, image=selected_berry.photo_selected_True)
-                print(self.berry_dict[(selected_ant.i, selected_ant.j)].taken)
                 print(selected_ant.name, 'загружен', selected_berry.name)
 
+    def ant_drops_berry(self):
+        for selected_ant in self.ant_list:
+            if selected_ant.selected is True:
+                self.itemconfig(selected_ant.obj, image=selected_ant.photo_selected_False)
+                selected_berry = self.berry_dict[(selected_ant.i, selected_ant.j)]
+                selected_ant.loading = None
+                selected_berry.taken = False
+                self.itemconfig(selected_berry.obj, image=selected_berry.photo_selected_False)
+                print(selected_ant.name, 'разгружен', selected_berry.name)

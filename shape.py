@@ -41,6 +41,7 @@ class Ant(Shape):
             self.canvas.itemconfig(self.obj, image=self.photo_selected_False)
 
             self.do_visible_hex()       # Открываем невидимый гекс
+
             try:
                 self.canvas.btn_list[-1].destroy()
                 self.canvas.btn_list.pop()
@@ -50,9 +51,12 @@ class Ant(Shape):
             if self.loading:            # Тащим ягоду
                 print('работаем?')
                 self.loading.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
-                # berry = self.canvas.berry_dict[(self.i, self.j)]
-                # self.canvas.coords(berry.obj, new_x, new_y)
 
+            try:
+                self.canvas.btn_list[-1].destroy()
+                self.canvas.btn_list.pop()
+            except:
+                print('Пустой список')
 
     def choise_hex(self, x, y):
         for hex_val in self.canvas.hex_dict.values():
@@ -71,11 +75,6 @@ class Ant(Shape):
                 hex_val.visible = True
                 print("видимость гекса", hex_val.i, hex_val.j)
 
-    #     for ant in self.ant_list:
-    #         if ant.selected is True:
-    #             self.itemconfig(ant.obj, fill=constants.GREEN)
-    #             ant.visible = True
-
 
 class Hex(Shape):
     def __init__(self, i, j, canvas):
@@ -88,6 +87,7 @@ class Hex(Shape):
         self.canvas.create_text(self.x, self.y+20,
                                 text=(self.i, ':', self.j),
                                 fill="blue")
+        self.home = False
 
     @staticmethod
     def count_coord(center_x, center_y):
@@ -115,8 +115,6 @@ class Berry(Shape):
         self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
         self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
 
-        # self.image = Image.open("image/berry.png").resize((20, 20))
-        # self.photo_image = ImageTk.PhotoImage(self.image)
         self.obj = self.canvas.create_image(self.x, self.y - constants.OFFSET_TOP_Y_BERRY,
                                             anchor='center', image=self.photo_selected_False)
         self.taken = False
@@ -128,6 +126,3 @@ class Berry(Shape):
         self.canvas.coords(self.obj, ant_x, ant_y)
         print(self.i, self.j, self.canvas.berry_dict[(self.i, self.j)].i, self.canvas.berry_dict[(self.i, self.j)].j)
         print(self.name, 'перемещена')
-
-
-
