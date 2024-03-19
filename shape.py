@@ -26,34 +26,33 @@ class Ant(Shape):
         self.selected = False
         self.color_selected = ''
         self.name = name
-        self.loading = False
+        self.loading = None
 
     def move_obj(self, event):
         new_x = event.x
         new_y = event.y
 
         if self.selected:
-            if self.loading:
-                print('работаем?')
-                berry = self.canvas.berry_dict[(self.i, self.j)]
-                self.canvas.coords(berry.obj, new_x, new_y)
-
-
             self.choise_hex(new_x, new_y)
             self.canvas.coords(self.obj, self.x, self.y)
-            self.canvas.berry_dict[(self.i, self.j)] = self.canvas.berry_dict.pop((berry.i, berry.j))
-            new_coord_berry = self.canvas.berry_dict.pop((self.i, self.j))
-
-
+            # self.canvas.berry_dict[(self.i, self.j)] = self.canvas.berry_dict.pop((berry.i, berry.j))
             print(self.name, 'перемещён')
             self.selected = False
             self.canvas.itemconfig(self.obj, image=self.photo_selected_False)
-            self.do_visible_hex()
+
+            self.do_visible_hex()       # Открываем невидимый гекс
             try:
                 self.canvas.btn_list[-1].destroy()
                 self.canvas.btn_list.pop()
             except:
                 print('Пустой список')
+
+            if self.loading:            # Тащим ягоду
+                print('работаем?')
+                self.loading.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
+                # berry = self.canvas.berry_dict[(self.i, self.j)]
+                # self.canvas.coords(berry.obj, new_x, new_y)
+
 
     def choise_hex(self, x, y):
         for hex_val in self.canvas.hex_dict.values():
@@ -108,8 +107,9 @@ class Hex(Shape):
 
 
 class Berry(Shape):
-    def __init__(self, i, j, canvas):
+    def __init__(self, i, j, canvas, name):
         super().__init__(i, j, canvas)
+        self.name = name
         self.image_selected_False = Image.open("image/berry.png").resize((15, 15))
         self.image_selected_True = Image.open("image/berry.png").resize((25, 25))
         self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
@@ -117,5 +117,17 @@ class Berry(Shape):
 
         # self.image = Image.open("image/berry.png").resize((20, 20))
         # self.photo_image = ImageTk.PhotoImage(self.image)
-        self.obj = self.canvas.create_image(self.x, self.y - 20, anchor='center', image=self.photo_selected_False)
+        self.obj = self.canvas.create_image(self.x, self.y - constants.OFFSET_TOP_Y_BERRY,
+                                            anchor='center', image=self.photo_selected_False)
         self.taken = False
+
+    def move_berry(self, ant_x, ant_y, ant):
+        self.canvas.berry_dict[(ant.i, ant.j)] = self.canvas.berry_dict.pop((self.i, self.j))
+        self.i = ant.i
+        self.j = ant.j
+        self.canvas.coords(self.obj, ant_x, ant_y)
+        print(self.i, self.j, self.canvas.berry_dict[(self.i, self.j)].i, self.canvas.berry_dict[(self.i, self.j)].j)
+        print(self.name, 'перемещена')
+
+
+

@@ -25,7 +25,7 @@ class Place(Canvas):
         self.ant2 = Ant(7, 6, self, 'Игорь')
         self.ant_list.append(self.ant1)
         self.ant_list.append(self.ant2)
-        self.berry1 = Berry(6, 4, self)
+        self.berry1 = Berry(6, 4, self, 'Малинка')
         self.berry_dict[(6, 4)] = self.berry1
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hex_start()
@@ -78,11 +78,11 @@ class Place(Canvas):
     def ant_take(self):
         for selected_ant in self.ant_list:
             if selected_ant.selected is True:
-                selected_ant.loading = True
                 self.itemconfig(selected_ant.obj, image=selected_ant.photo_selected_False)
                 selected_berry = self.berry_dict[(selected_ant.i, selected_ant.j)]
+                selected_ant.loading = selected_berry
                 selected_berry.taken = True
                 self.itemconfig(selected_berry.obj, image=selected_berry.photo_selected_True)
                 print(self.berry_dict[(selected_ant.i, selected_ant.j)].taken)
-                print(selected_ant.name, 'загружен')
+                print(selected_ant.name, 'загружен', selected_berry.name)
 
