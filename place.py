@@ -10,6 +10,7 @@ class Place(Canvas):
     hexes_dict = {}
     invisible_hexes_dict = {}
     berries_dict = {}
+    berries_list = []
     btn_list = []
 
     def __init__(self, root):
@@ -27,18 +28,15 @@ class Place(Canvas):
         self.ants_list.append(self.ant1)
         self.ants_list.append(self.ant2)
 
-
-        # self.berry1 = Berry(6, 4, self, 'Малинка')
-        # self.berries_dict[(6, 4)] = self.berry1
-
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
         self.create_berries(constants.NUMBER_OF_BERRIES)
 
     def activate(self, event):
         print('================================')
-        for berry in self.berries_dict.values():
-            print(berry.i, berry.j, berry.visible, berry.name, '/n')
+        for berry in self.berries_list:
+            pass
+            #print(berry.i, berry.j, berry.visible, berry.name, berry)
         self.select_obj(event)
 
 
@@ -53,10 +51,15 @@ class Place(Canvas):
                 self.bind('<Button-1>', ant.move_obj)
                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
                 if not ant.loading:
-                    for berry in self.berries_dict.values():
+                    # for berry in self.berries_dict.values():
+                    #     if berry.i == ant.i and berry.j == ant.j and not berry.taken:
+                    #         btn_take = TakeButton(self, "Взять", 200, 800)
+                    #         self.btn_list.append(btn_take)
+                    for berry in self.berries_list:
                         if berry.i == ant.i and berry.j == ant.j and not berry.taken:
                             btn_take = TakeButton(self, "Взять", 200, 800)
                             self.btn_list.append(btn_take)
+                            break
                 elif ant.loading:
                     if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
                         btn_drop = DropButton(self, 'Бросить', 300, 800)
@@ -104,14 +107,20 @@ class Place(Canvas):
             berries_name_list.remove(berry_name)
 
             value = Berry(index_i, index_j, self, berry_name)
-            self.berries_dict[indexes] = value
+            #self.berries_dict[indexes] = value
+            self.berries_list.append(value)
 
 
     def ant_takes_berry(self):
         for selected_ant in self.ants_list:
             if selected_ant.selected is True:
                 self.itemconfig(selected_ant.obj, image=selected_ant.photo_selected_False)
-                selected_berry = self.berries_dict[(selected_ant.i, selected_ant.j)]
+                #selected_berry = self.berries_dict[(selected_ant.i, selected_ant.j)]
+                for berry in self.berries_list:
+                    if (selected_ant.i, selected_ant.j) == (berry.i, berry.j) and not selected_ant.loading:
+                        selected_berry = berry
+                        break
+
                 selected_ant.loading = selected_berry
                 selected_berry.taken = True
                 self.itemconfig(selected_berry.obj, image=selected_berry.photo_selected_True)
@@ -121,7 +130,7 @@ class Place(Canvas):
         for selected_ant in self.ants_list:
             if selected_ant.selected is True:
                 self.itemconfig(selected_ant.obj, image=selected_ant.photo_selected_False)
-                selected_berry = self.berries_dict[(selected_ant.i, selected_ant.j)]
+                selected_berry = selected_ant.loading
                 selected_ant.loading = None
                 selected_berry.taken = False
                 self.itemconfig(selected_berry.obj, image=selected_berry.photo_selected_False)

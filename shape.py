@@ -65,10 +65,16 @@ class Ant(Shape):
                 self.canvas.itemconfig(hex_val.obj, fill=constants.GREEN)
                 hex_val.visible = True
                 print("стал видимым гекс: ", hex_val.i, hex_val.j)
-                berry = self.canvas.berries_dict.get((self.i, self.j), None)
-                if berry and not berry.visible:
-                    berry.do_visible_berry()
-                    print(self.name, 'нашёл', berry.name)
+                # berry = self.canvas.berries_dict.get((self.i, self.j), None)
+                # if berry and not berry.visible:
+                #     berry.do_visible_berry()
+                #     print(self.name, 'нашёл', berry.name)
+
+                for berry in self.canvas.berries_list:
+                    if [berry.i, berry.j] == [self.i, self.j] and not berry.visible:
+                        berry.do_visible_berry()
+                        print(self.name, 'нашёл', berry.name)
+
 
 
 class Hex(Shape):
@@ -104,24 +110,24 @@ class Hex(Shape):
 class Berry(Shape):
     def __init__(self, i, j, canvas, name):
         super().__init__(i, j, canvas)
-
         self.name = name
         self.image_selected_False = Image.open("image/berry.png").resize((15, 15))
         self.image_selected_True = Image.open("image/berry.png").resize((5, 5))
         self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
         self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
-
         self.visible = False
         self.obj = None
         self.taken = False
 
     def do_visible_berry(self):
         self.visible = True
+        print("покажись")
         self.obj = self.canvas.create_image(self.x, self.y - constants.OFFSET_TOP_Y_BERRY,
                                             anchor='center', image=self.photo_selected_False)
 
     def move_berry(self, ant_x, ant_y, ant):
-        self.canvas.berries_dict[(ant.i, ant.j)] = self.canvas.berries_dict.pop((self.i, self.j))
+        #self.canvas.berries_dict[(ant.i, ant.j)] = self.canvas.berries_dict.pop((self.i, self.j))
+
         self.i = ant.i
         self.j = ant.j
         self.canvas.coords(self.obj, ant_x, ant_y)

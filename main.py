@@ -1,3 +1,6 @@
+# TODO: иногда приходиться кликать правой дважды
+# TODO: берёт ягоды в муравейнике. Запретить?
+
 from tkinter import Tk
 import constants
 from place import Place
