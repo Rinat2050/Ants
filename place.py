@@ -38,8 +38,7 @@ class Place(Canvas):
     def activate(self, event):
         print('================================')
         for berry in self.berries_dict.values():
-            if berry.visible:
-                print(berry.name, berry.i, berry.j)
+            print(berry.i, berry.j, berry.visible, berry.name, '/n')
         self.select_obj(event)
 
 
@@ -53,18 +52,20 @@ class Place(Canvas):
                 ant.selected = True
                 self.bind('<Button-1>', ant.move_obj)
                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
-                for berry in self.berries_dict.values():
-                    if berry.i == ant.i and berry.j == ant.j and not berry.taken:
-                        btn_take = TakeButton(self, "Взять", 200, 800)
-                        self.btn_list.append(btn_take)
-
-                if ant.loading and self.hexes_dict.get((ant.i, ant.j)).is_anthill:
-                    btn_drop = DropButton(self, 'Бросить', 300, 800)
-                    self.btn_list.append(btn_drop)
-                    print(ant.name, 'дома с ягодкой')
+                if not ant.loading:
+                    for berry in self.berries_dict.values():
+                        if berry.i == ant.i and berry.j == ant.j and not berry.taken:
+                            btn_take = TakeButton(self, "Взять", 200, 800)
+                            self.btn_list.append(btn_take)
+                elif ant.loading:
+                    if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
+                        btn_drop = DropButton(self, 'Бросить', 300, 800)
+                        self.btn_list.append(btn_drop)
+                        print(ant.name, 'дома с ягодкой')
 
             else:
                 ant.selected = False
+                self.itemconfig(ant.obj, image=ant.photo_selected_False)
 
     def create_hexes(self):
         for i in range(12):

@@ -107,7 +107,7 @@ class Berry(Shape):
 
         self.name = name
         self.image_selected_False = Image.open("image/berry.png").resize((15, 15))
-        self.image_selected_True = Image.open("image/berry.png").resize((25, 25))
+        self.image_selected_True = Image.open("image/berry.png").resize((5, 5))
         self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
         self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
 
