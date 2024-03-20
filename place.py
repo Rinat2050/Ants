@@ -33,11 +33,15 @@ class Place(Canvas):
 
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
-
         self.create_berries(constants.NUMBER_OF_BERRIES)
 
     def activate(self, event):
+        print('================================')
+        for berry in self.berries_dict.values():
+            if berry.visible:
+                print(berry.name, berry.i, berry.j)
         self.select_obj(event)
+
 
     def select_obj(self, evemt):
         x = evemt.x
@@ -51,13 +55,8 @@ class Place(Canvas):
                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
                 for berry in self.berries_dict.values():
                     if berry.i == ant.i and berry.j == ant.j and not berry.taken:
-
-                        if not berry.visible:
-                            berry.do_visible_berry()
-
                         btn_take = TakeButton(self, "Взять", 200, 800)
                         self.btn_list.append(btn_take)
-
 
                 if ant.loading and self.hexes_dict.get((ant.i, ant.j)).is_anthill:
                     btn_drop = DropButton(self, 'Бросить', 300, 800)

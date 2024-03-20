@@ -40,12 +40,6 @@ class Ant(Shape):
 
             self.do_visible_hex()       # Открываем невидимый гекс
 
-            try:
-                self.canvas.btn_list[-1].destroy()
-                self.canvas.btn_list.pop()
-            except:
-                print('Пустой список')
-
             if self.loading:            # Тащим ягоду
                 self.loading.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
 
@@ -53,7 +47,7 @@ class Ant(Shape):
                 self.canvas.btn_list[-1].destroy()
                 self.canvas.btn_list.pop()
             except:
-                print('Пустой список')
+                pass
 
     def choise_hex(self, x, y):
         for hex_val in self.canvas.hexes_dict.values():
@@ -70,7 +64,11 @@ class Ant(Shape):
             if [hex_val.i, hex_val.j] == [self.i, self.j] and hex_val.visible is False:
                 self.canvas.itemconfig(hex_val.obj, fill=constants.GREEN)
                 hex_val.visible = True
-                print("видимость гекса", hex_val.i, hex_val.j)
+                print("стал видимым гекс: ", hex_val.i, hex_val.j)
+                berry = self.canvas.berries_dict.get((self.i, self.j), None)
+                if berry and not berry.visible:
+                    berry.do_visible_berry()
+                    print(self.name, 'нашёл', berry.name)
 
 
 class Hex(Shape):
