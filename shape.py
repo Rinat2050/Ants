@@ -77,6 +77,13 @@ class Ant(Shape):
                         self.stuck = True
                         break
 
+                for spider in self.canvas.spiders_list:
+                    if [spider.i, spider.j] == [self.i, self.j] and not spider.visible:
+                        spider.do_visible_spider()
+                        print(self.name, 'нашёл паутину :(', spider.id)
+                        self.stuck = True
+                        break
+
 
 class Hex(Shape):
     def __init__(self, i, j, canvas):
@@ -148,6 +155,25 @@ class Web(Shape):
     def do_visible_web(self):
         self.visible = True
         print("покажись, паутинка!")
+        self.obj = self.canvas.create_image(self.x, self.y,
+                                            anchor='center', image=self.photo_selected_False)
+
+class Spider(Shape):
+    count = 0
+    def __init__(self, i, j, canvas):
+        super().__init__(i, j, canvas)
+        self.count += 1
+        self.id = self.count
+        self.image_selected_False = Image.open("image/spider.png").resize((30, 30))
+        #self.image_selected_True = Image.open("image/web.png").resize((7, 7))
+        self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
+        #self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
+        self.visible = False
+        self.obj = None
+
+    def do_visible_spider(self):
+        self.visible = True
+        print("покажись, паучёк!")
         self.obj = self.canvas.create_image(self.x, self.y,
                                             anchor='center', image=self.photo_selected_False)
 

@@ -1,7 +1,7 @@
 from tkinter import Canvas
 from calculate import index_to_coord
 import constants
-from shape import Ant, Berry, Hex, Web
+from shape import Ant, Berry, Hex, Web, Spider
 from interface import TakeButton, DropButton
 import random
 
@@ -12,6 +12,8 @@ class Place(Canvas):
     berries_list = []
     btn_list = []
     cobwebs_list = []
+    spiders_list = []
+
 
     def __init__(self, root):
         super().__init__(
@@ -31,7 +33,8 @@ class Place(Canvas):
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
         self.create_berries(constants.NUMBER_OF_BERRIES)
-        self.create_web(3)
+        self.create_cobwebs(constants.NUMBER_OF_COBWEBS)
+        self.create_spiders(constants.NUMBER_OF_SPIDERS)
 
     def activate(self, event):
         print('================================')
@@ -133,9 +136,13 @@ class Place(Canvas):
                 print(selected_ant.name, 'разгружен', selected_berry.name)
                 selected_ant.selected = False
 
-    def create_web(self, number):
+    def create_cobwebs(self, number):
         for i in range(number):
             web = Web(5+i, 3, self)
             self.cobwebs_list.append(web)
 
+    def create_spiders(self, number):
+        for i in range(number):
+            spider = Spider(5+i, 2, self)
+            self.spiders_list.append(spider)
 
