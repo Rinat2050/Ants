@@ -37,12 +37,9 @@ class Ant(Shape):
             print(self.name, 'перемещён')
             self.selected = False
             self.canvas.itemconfig(self.obj, image=self.photo_selected_False)
-
             self.do_visible_hex()       # Открываем невидимый гекс
-
             if self.loading:            # Тащим ягоду
                 self.loading.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
-
             try:
                 self.canvas.btn_list[-1].destroy()
                 self.canvas.btn_list.pop()
@@ -65,10 +62,6 @@ class Ant(Shape):
                 self.canvas.itemconfig(hex_val.obj, fill=constants.GREEN)
                 hex_val.visible = True
                 print("стал видимым гекс: ", hex_val.i, hex_val.j)
-                # berry = self.canvas.berries_dict.get((self.i, self.j), None)
-                # if berry and not berry.visible:
-                #     berry.do_visible_berry()
-                #     print(self.name, 'нашёл', berry.name)
 
                 for berry in self.canvas.berries_list:
                     if [berry.i, berry.j] == [self.i, self.j] and not berry.visible:
@@ -126,8 +119,6 @@ class Berry(Shape):
                                             anchor='center', image=self.photo_selected_False)
 
     def move_berry(self, ant_x, ant_y, ant):
-        #self.canvas.berries_dict[(ant.i, ant.j)] = self.canvas.berries_dict.pop((self.i, self.j))
-
         self.i = ant.i
         self.j = ant.j
         self.canvas.coords(self.obj, ant_x, ant_y)

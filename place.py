@@ -34,9 +34,6 @@ class Place(Canvas):
 
     def activate(self, event):
         print('================================')
-        for berry in self.berries_list:
-            pass
-            #print(berry.i, berry.j, berry.visible, berry.name, berry)
         self.select_obj(event)
 
 
@@ -45,27 +42,23 @@ class Place(Canvas):
         y = evemt.y
         for ant in self.ants_list:
             shift = ant.cell_size / 2
-            print(ant.name, ant.selected)
             if not ant.selected and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
                 print(ant.name, 'выбран')
                 ant.selected = True
                 self.bind('<Button-1>', ant.move_obj)
                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
                 if not ant.loading:
-                    # for berry in self.berries_dict.values():
-                    #     if berry.i == ant.i and berry.j == ant.j and not berry.taken:
-                    #         btn_take = TakeButton(self, "Взять", 200, 800)
-                    #         self.btn_list.append(btn_take)
                     for berry in self.berries_list:
                         if berry.i == ant.i and berry.j == ant.j and not berry.taken:
-                            btn_take = TakeButton(self, "Взять", 200, 800)
+                            btn_take = TakeButton(self, "Взять", ant.x, ant.y)
                             self.btn_list.append(btn_take)
                             break
                 elif ant.loading:
                     if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
-                        btn_drop = DropButton(self, 'Бросить', 300, 800)
+                        btn_drop = DropButton(self, 'Бросить', ant.x, ant.y)
                         self.btn_list.append(btn_drop)
                         print(ant.name, 'дома с ягодкой')
+                break
 
             else:
                 ant.selected = False
@@ -108,7 +101,6 @@ class Place(Canvas):
             berries_name_list.remove(berry_name)
 
             value = Berry(index_i, index_j, self, berry_name)
-            #self.berries_dict[indexes] = value
             self.berries_list.append(value)
 
 
@@ -116,7 +108,6 @@ class Place(Canvas):
         for selected_ant in self.ants_list:
             if selected_ant.selected is True:
                 self.itemconfig(selected_ant.obj, image=selected_ant.photo_selected_False)
-                #selected_berry = self.berries_dict[(selected_ant.i, selected_ant.j)]
                 for berry in self.berries_list:
                     if (selected_ant.i, selected_ant.j) == (berry.i, berry.j) and not selected_ant.loading:
                         selected_berry = berry
