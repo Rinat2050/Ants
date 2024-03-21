@@ -1,7 +1,7 @@
 from tkinter import Canvas
 from calculate import index_to_coord
 import constants
-from shape import Ant, Berry, Hex
+from shape import Ant, Berry, Hex, Web
 from interface import TakeButton, DropButton
 import random
 
@@ -9,9 +9,9 @@ class Place(Canvas):
     ants_list = []
     hexes_dict = {}
     invisible_hexes_dict = {}
-    berries_dict = {}
     berries_list = []
     btn_list = []
+    cobwebs_list = []
 
     def __init__(self, root):
         super().__init__(
@@ -31,6 +31,7 @@ class Place(Canvas):
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
         self.create_berries(constants.NUMBER_OF_BERRIES)
+        self.create_web(3)
 
     def activate(self, event):
         print('================================')
@@ -42,7 +43,7 @@ class Place(Canvas):
         y = evemt.y
         for ant in self.ants_list:
             shift = ant.cell_size / 2
-            if not ant.selected and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
+            if not ant.selected and not ant.stuck and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
                 print(ant.name, 'выбран')
                 ant.selected = True
                 self.bind('<Button-1>', ant.move_obj)
@@ -129,3 +130,10 @@ class Place(Canvas):
                 self.itemconfig(selected_berry.obj, image=selected_berry.photo_selected_False)
                 print(selected_ant.name, 'разгружен', selected_berry.name)
                 selected_ant.selected = False
+
+    def create_web(self, number):
+        for i in range(number):
+            web = Web(5+i, 3, self)
+            self.cobwebs_list.append(web)
+
+

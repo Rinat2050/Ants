@@ -25,7 +25,8 @@ class Ant(Shape):
         self.selected = False
         self.color_selected = ''
         self.name = name
-        self.loading = None
+        self.loading = None     # содержит ОБЪЕКТ загруженной ягоды
+        self.stuck = None       # содержит ОБЪЕКТ паутины прилипалы
 
     def move_obj(self, event):
         new_x = event.x
@@ -67,7 +68,13 @@ class Ant(Shape):
                     if [berry.i, berry.j] == [self.i, self.j] and not berry.visible:
                         berry.do_visible_berry()
                         print(self.name, 'нашёл', berry.name)
+                        break
 
+                for web in self.canvas.cobwebs_list:
+                    if [web.i, web.j] == [self.i, self.j] and not web.visible:
+                        web.do_visible_web()
+                        print(self.name, 'нашёл паутину', web.id)
+                        break
 
 
 class Hex(Shape):
@@ -114,7 +121,7 @@ class Berry(Shape):
 
     def do_visible_berry(self):
         self.visible = True
-        print("покажись")
+        print("покажись, ягодка!")
         self.obj = self.canvas.create_image(self.x, self.y - constants.OFFSET_TOP_Y_BERRY,
                                             anchor='center', image=self.photo_selected_False)
 
@@ -123,3 +130,23 @@ class Berry(Shape):
         self.j = ant.j
         self.canvas.coords(self.obj, ant_x, ant_y)
         print(self.name, 'перемещена')
+
+class Web(Shape):
+    count = 0
+    def __init__(self, i, j, canvas):
+        super().__init__(i, j, canvas)
+        self.count += 1
+        self.id = self.count
+        self.image_selected_False = Image.open("image/web.png").resize((30, 30))
+        #self.image_selected_True = Image.open("image/web.png").resize((7, 7))
+        self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
+        #self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
+        self.visible = False
+        self.obj = None
+
+    def do_visible_web(self):
+        self.visible = True
+        print("покажись, паутинка!")
+        self.obj = self.canvas.create_image(self.x, self.y,
+                                            anchor='center', image=self.photo_selected_False)
+
