@@ -46,7 +46,6 @@ class Ant(Shape):
             except:
                 pass
 
-
     def choise_hex(self, x, y):
         for hex_val in self.canvas.hexes_dict.values():
             if ((x - hex_val.x) ** 2 + (y - hex_val.y) ** 2 <= constants.HEX_h ** 2
@@ -80,7 +79,7 @@ class Ant(Shape):
                 for spider in self.canvas.spiders_list:
                     if [spider.i, spider.j] == [self.i, self.j] and not spider.visible:
                         spider.do_visible_spider()
-                        print(self.name, 'нашёл паутину :(', spider.id)
+                        print(self.name, 'нашёл паука :(', spider.id)
                         self.stuck = True
                         break
 
@@ -129,7 +128,6 @@ class Berry(Shape):
 
     def do_visible_berry(self):
         self.visible = True
-        print("покажись, ягодка!")
         self.obj = self.canvas.create_image(self.x, self.y - constants.OFFSET_TOP_Y_BERRY,
                                             anchor='center', image=self.photo_selected_False)
 
@@ -154,7 +152,6 @@ class Web(Shape):
 
     def do_visible_web(self):
         self.visible = True
-        print("покажись, паутинка!")
         self.obj = self.canvas.create_image(self.x, self.y,
                                             anchor='center', image=self.photo_selected_False)
 
@@ -173,7 +170,6 @@ class Spider(Shape):
 
     def do_visible_spider(self):
         self.visible = True
-        print("покажись, паучёк!")
         self.obj = self.canvas.create_image(self.x, self.y,
                                             anchor='center', image=self.photo_selected_False)
 
