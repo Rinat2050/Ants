@@ -45,6 +45,7 @@ class Place(Canvas):
         y = evemt.y
         for ant in self.ants_list:
             shift = ant.cell_size / 2
+            print(ant.name, ant.selected)
             if not ant.selected and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
                 print(ant.name, 'выбран')
                 ant.selected = True
@@ -125,6 +126,7 @@ class Place(Canvas):
                 selected_berry.taken = True
                 self.itemconfig(selected_berry.obj, image=selected_berry.photo_selected_True)
                 print(selected_ant.name, 'загружен', selected_berry.name)
+                selected_ant.selected = False
 
     def ant_drops_berry(self):
         for selected_ant in self.ants_list:
@@ -135,3 +137,4 @@ class Place(Canvas):
                 selected_berry.taken = False
                 self.itemconfig(selected_berry.obj, image=selected_berry.photo_selected_False)
                 print(selected_ant.name, 'разгружен', selected_berry.name)
+                selected_ant.selected = False
