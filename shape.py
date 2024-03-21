@@ -31,7 +31,6 @@ class Ant(Shape):
     def move_obj(self, event):
         new_x = event.x
         new_y = event.y
-
         if self.selected:
             self.choise_hex(new_x, new_y)
             self.canvas.coords(self.obj, self.x, self.y)
@@ -46,6 +45,7 @@ class Ant(Shape):
                 self.canvas.btn_list.pop()
             except:
                 pass
+
 
     def choise_hex(self, x, y):
         for hex_val in self.canvas.hexes_dict.values():
@@ -73,7 +73,8 @@ class Ant(Shape):
                 for web in self.canvas.cobwebs_list:
                     if [web.i, web.j] == [self.i, self.j] and not web.visible:
                         web.do_visible_web()
-                        print(self.name, 'нашёл паутину', web.id)
+                        print(self.name, 'нашёл паутину :(', web.id)
+                        self.stuck = True
                         break
 
 
