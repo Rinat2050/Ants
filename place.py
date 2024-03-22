@@ -115,21 +115,23 @@ class Place(Canvas):
         return list_hex_nearby
 
     def create_berries(self, number):
-        invisible_hexes_indexes = [indexes for indexes in self.invisible_hexes_dict]
+        #invisible_hexes_indexes = [indexes for indexes in self.invisible_hexes_dict]
+        hexes_indexes_of_berry = [indexes for indexes in self.hexes_dict]
         berries_name_list = ['смородина', 'малина', 'клубника', 'земляника', 'брусника', 'рябина', 'клюква', 'ирга',
                              'калина', 'шиповник']
 
         for _ in range(number):
-            indexes = random.choice(invisible_hexes_indexes)
+            indexes = random.choice(hexes_indexes_of_berry)
             index_i = indexes[0]
             index_j = indexes[1]
-            invisible_hexes_indexes.remove(indexes)
+            hexes_indexes_of_berry.remove(indexes)
 
             berry_name = random.choice(berries_name_list)
             berries_name_list.remove(berry_name)
 
             value = Berry(index_i, index_j, self, berry_name)
             self.berries_list.append(value)
+            value.do_visible_berry()    #!!!!!!!!!!!!!!!!! Краснуха
 
 
     def ant_takes_berry(self):
