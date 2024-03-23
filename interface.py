@@ -1,4 +1,4 @@
-from tkinter import Button
+from tkinter import Button, Label
 
 
 class UserButton(Button):
@@ -10,7 +10,7 @@ class UserButton(Button):
     def visible(self, x, y):
         self.place(x=x, y=y, anchor='n')
 
-    def click_to_act(self):
+    def click_to_act(self):         ### Зачем создали? Всё равно она переприсваевается/изменяется
         self.destroy()
 
 
@@ -30,3 +30,27 @@ class DropButton(UserButton):
     def click_to_act(self):
         self.canvas.ant_drops_berry()
         self.destroy()
+
+
+class Timer(Label):
+    def __init__(self, canvas, time, x, y):
+        super().__init__(canvas, text=time, font=("Helvetica", 40), foreground='blue')
+        self.canvas = canvas
+        self.time = time
+        self.place(x=x, y=y, anchor='n')
+        #self.update_timer(time)
+
+    def format_time(self, seconds):
+        minutes, sec = divmod(seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        return "{:02d}:{:02d}:{:02d}".format(hours, minutes, sec)
+
+    def update_timer(self):
+        if self.time > 0:
+            time_str = self.format_time(self.time)
+            self.config(text=time_str)
+            self.time -= 1
+            self.after(1000, self.update_timer)
+        else:
+            self.config(text="Время вышло!")
+

@@ -2,7 +2,7 @@ from tkinter import Canvas
 from calculate import index_to_coord
 import constants
 from shape import Ant, Berry, Hex, Web, Spider
-from interface import TakeButton, DropButton
+from interface import TakeButton, DropButton, Timer
 import random
 
 class Place(Canvas):
@@ -37,6 +37,7 @@ class Place(Canvas):
         self.create_berries(constants.NUMBER_OF_BERRIES)
         self.create_cobwebs(constants.NUMBER_OF_COBWEBS)
         self.create_spiders(constants.NUMBER_OF_SPIDERS)
+        self.create_timer(constants.TIME)
 
 
     def activate(self, event):
@@ -170,3 +171,6 @@ class Place(Canvas):
             spider = Spider(5+i, 2, self)
             self.spiders_list.append(spider)
 
+    def create_timer(self, time):
+        self.timer = Timer(self, time, 360, 20)
+        #self.timer.start()
