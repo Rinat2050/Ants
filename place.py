@@ -56,8 +56,8 @@ class Place(Canvas):
                     and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
                 print(ant.name, 'выбран')
                 ant.selected = True
-                self.bind('<Button-1>', ant.move_obj)
-                #self.bind('<Button-1>', self.ant_direction)
+                #self.bind('<Button-1>', ant.move_obj)          # было/работает
+                self.bind('<Button-1>', lambda event, arg=ant: self.ant_direction(event, arg))
                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
                 if not ant.loading:
                     for berry in self.berries_list:
@@ -80,8 +80,10 @@ class Place(Canvas):
                 ant.selected = False
                 self.itemconfig(ant.obj, image=ant.photo_selected_False)
 
-    def ant_direction(self, event):     # не работает. Деректива должна автоматом: сходить или снять паутину
-        self.ant.move_obj(event)
+    def ant_direction(self, event, ant):  # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
+        print(self.hexes_dict[ant.i, ant.j].enemy)
+        if not self.hexes_dict[ant.i, ant.j].enemy: # enemy не работает. Паутина становится врагом после появления :(
+            ant.move_obj(event)
 
     def create_hexes(self):
         for i in range(12):
@@ -178,7 +180,6 @@ class Place(Canvas):
         for i in range(number):
             spider = Spider(5+i, 2, self)
             self.spiders_list.append(spider)
-            print(spider.i, spider.j)
             self.hexes_dict[spider.i, spider.j].enemy = spider
 
     def create_timer(self, time):
