@@ -119,11 +119,12 @@ class Place(Canvas):
         #invisible_hexes_indexes = [indexes for indexes in self.invisible_hexes_dict]
         hexes_indexes_of_berry = []
         for indexes, hex_object in self.hexes_dict.items():
-            if not hex_object.is_anthill:
+            if not hex_object.is_anthill and not hex_object.enemy:
                 hexes_indexes_of_berry.append(indexes)
 
         berries_name_list = ['смородина', 'малина', 'клубника', 'земляника', 'брусника', 'рябина', 'клюква', 'ирга',
-                             'калина', 'шиповник']
+                             'калина', 'шиповник', 'голубика', 'ежевика', 'черешня', 'черника', 'бузина',
+                             'вишня', 'черешня', 'жимолость', 'кизил', 'черёмуха']
 
         for _ in range(number):
             indexes = random.choice(hexes_indexes_of_berry)
@@ -136,11 +137,10 @@ class Place(Canvas):
 
             value = Berry(index_i, index_j, self, berry_name)
             self.berries_list.append(value)
+            # value.do_visible_berry()  # показать все ягоды
         for hex_under_berry in self.berries_list:
             if self.hexes_dict[(hex_under_berry.i, hex_under_berry.j)].visible:
                 hex_under_berry.do_visible_berry()
-
-
 
     def ant_takes_berry(self):
         for selected_ant in self.ants_list:
@@ -172,11 +172,14 @@ class Place(Canvas):
         for i in range(number):
             web = Web(5+i, 3, self)
             self.cobwebs_list.append(web)
+            self.hexes_dict[web.i, web.j].enemy = web
 
     def create_spiders(self, number):
         for i in range(number):
             spider = Spider(5+i, 2, self)
             self.spiders_list.append(spider)
+            print(spider.i, spider.j)
+            self.hexes_dict[spider.i, spider.j].enemy = spider
 
     def create_timer(self, time):
         self.timer = Timer(self, time, 360, 20)

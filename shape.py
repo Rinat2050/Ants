@@ -96,6 +96,7 @@ class Hex(Shape):
                                 text=(self.i, ':', self.j),
                                 fill="blue")
         self.is_anthill = False
+        self.enemy = None
 
     @staticmethod
     def count_coord(center_x, center_y):
