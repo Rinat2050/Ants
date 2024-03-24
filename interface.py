@@ -38,12 +38,12 @@ class Timer(Label):
         self.canvas = canvas
         self.time = time
         self.place(x=x, y=y, anchor='n')
-        #self.update_timer(time)
+        self.update_timer()
 
     def format_time(self, seconds):
         minutes, sec = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
-        return "{:02d}:{:02d}:{:02d}".format(hours, minutes, sec)
+        return "{:2d}:{:02d}".format(minutes, sec)
 
     def update_timer(self):
         if self.time > 0:
@@ -51,6 +51,8 @@ class Timer(Label):
             self.config(text=time_str)
             self.time -= 1
             self.after(1000, self.update_timer)
+            if self.time < 30:
+                self.config(foreground='red')
         else:
             self.config(text="Время вышло!")
 

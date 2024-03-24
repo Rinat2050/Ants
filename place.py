@@ -34,9 +34,9 @@ class Place(Canvas):
 
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
-        self.create_berries(constants.NUMBER_OF_BERRIES)
         self.create_cobwebs(constants.NUMBER_OF_COBWEBS)
         self.create_spiders(constants.NUMBER_OF_SPIDERS)
+        self.create_berries(constants.NUMBER_OF_BERRIES)
         self.create_timer(constants.TIME)
 
 
@@ -80,7 +80,7 @@ class Place(Canvas):
                 ant.selected = False
                 self.itemconfig(ant.obj, image=ant.photo_selected_False)
 
-    def ant_direction(self, event):     # не работает. Должна автоматом: сходить или снять паутину
+    def ant_direction(self, event):     # не работает. Деректива должна автоматом: сходить или снять паутину
         self.ant.move_obj(event)
 
     def create_hexes(self):
@@ -117,7 +117,11 @@ class Place(Canvas):
 
     def create_berries(self, number):
         #invisible_hexes_indexes = [indexes for indexes in self.invisible_hexes_dict]
-        hexes_indexes_of_berry = [indexes for indexes in self.hexes_dict]
+        hexes_indexes_of_berry = []
+        for indexes, hex_object in self.hexes_dict.items():
+            if not hex_object.is_anthill:
+                hexes_indexes_of_berry.append(indexes)
+
         berries_name_list = ['смородина', 'малина', 'клубника', 'земляника', 'брусника', 'рябина', 'клюква', 'ирга',
                              'калина', 'шиповник']
 
@@ -132,7 +136,10 @@ class Place(Canvas):
 
             value = Berry(index_i, index_j, self, berry_name)
             self.berries_list.append(value)
-            value.do_visible_berry()    #!!!!!!!!!!!!!!!!! Краснуха
+        for hex_under_berry in self.berries_list:
+            if self.hexes_dict[(hex_under_berry.i, hex_under_berry.j)].visible:
+                hex_under_berry.do_visible_berry()
+
 
 
     def ant_takes_berry(self):
