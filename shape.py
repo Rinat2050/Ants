@@ -28,61 +28,6 @@ class Ant(Shape):
         self.loading = None     # содержит ОБЪЕКТ загруженной ягоды
         self.stuck = None       # содержит ОБЪЕКТ паутины прилипалы
 
-    def move_obj(self, event):
-        new_x = event.x
-        new_y = event.y
-        if self.selected:
-            self.choise_hex(new_x, new_y)
-            self.canvas.coords(self.obj, self.x, self.y)
-            print(self.name, 'перемещён')
-            self.selected = False
-            self.canvas.itemconfig(self.obj, image=self.photo_selected_False)
-            self.do_visible_hex()       # Открываем невидимый гекс
-            if self.loading:            # Тащим ягоду
-                self.loading.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
-            try:
-                self.canvas.btn_list[-1].destroy()
-                self.canvas.btn_list.pop()
-            except:
-                pass
-
-    def choise_hex(self, x, y):     # изменяет индексы и координаты муравья в свойствах
-        for hex_val in self.canvas.hexes_dict.values():
-            if ((x - hex_val.x) ** 2 + (y - hex_val.y) ** 2 <= constants.HEX_h ** 2
-                    and (self.x - hex_val.x) ** 2 + (self.y - hex_val.y) ** 2 <= 6 * constants.HEX_h ** 2):
-                # Позволяет передвигаться ТОЛЬКО на ближайшие хексы
-                self.i = hex_val.i
-                self.j = hex_val.j
-                self.x = hex_val.x
-                self.y = hex_val.y
-
-    def do_visible_hex(self):
-        for hex_val in self.canvas.hexes_dict.values():
-            if [hex_val.i, hex_val.j] == [self.i, self.j] and hex_val.visible is False:
-                self.canvas.itemconfig(hex_val.obj, fill=constants.GREEN)
-                hex_val.visible = True
-                print("стал видимым гекс: ", hex_val.i, hex_val.j)
-
-                for berry in self.canvas.berries_list:
-                    if [berry.i, berry.j] == [self.i, self.j] and not berry.visible:
-                        berry.do_visible_berry()
-                        print(self.name, 'нашёл', berry.name)
-                        break
-
-                for web in self.canvas.cobwebs_list:
-                    if [web.i, web.j] == [self.i, self.j] and not web.visible:
-                        web.do_visible_web()
-                        print(self.name, 'нашёл паутину :(', web.id)
-                        self.stuck = True
-                        break
-
-                for spider in self.canvas.spiders_list:
-                    if [spider.i, spider.j] == [self.i, self.j] and not spider.visible:
-                        spider.do_visible_spider()
-                        print(self.name, 'нашёл паука :(', spider.id)
-                        self.stuck = True
-                        break
-
 
 class Hex(Shape):
     def __init__(self, i, j, canvas):
