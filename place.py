@@ -5,6 +5,7 @@ from shape import Ant, Berry, Hex, Web, Spider
 from interface import TakeButton, DropButton, Timer
 import random
 
+
 class Place(Canvas):
     ants_list = []
     hexes_dict = {}
@@ -13,7 +14,6 @@ class Place(Canvas):
     btn_list = []
     cobwebs_list = []
     spiders_list = []
-
 
     def __init__(self, root):
         super().__init__(
@@ -24,27 +24,23 @@ class Place(Canvas):
         self.place(x=0, y=0, anchor='nw')
         self.create_hexes()
         self.create_anthill()
-
         self.ant1 = Ant(6, 5, self, 'Василий')
         self.ant2 = Ant(7, 6, self, 'Игорь')
         self.ant3 = Ant(5, 5, self, 'Коля')
         self.ants_list.append(self.ant1)
         self.ants_list.append(self.ant2)
         self.ants_list.append(self.ant3)
-
-        self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
         self.create_cobwebs(constants.NUMBER_OF_COBWEBS)
         self.create_spiders(constants.NUMBER_OF_SPIDERS)
         self.create_berries(constants.NUMBER_OF_BERRIES)
         self.create_timer(constants.TIME)
-
+        self.bind('<Button-3>', self.activate)
 
     def activate(self, event):
         print('================================')
         self.select_obj(event)
         # print(self.search_hex_nearby(6, 6))
-
 
     def select_obj(self, evemt):
         x = evemt.x
@@ -56,8 +52,8 @@ class Place(Canvas):
                     and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
                 print(ant.name, 'выбран')
                 ant.selected = True
-                #self.bind('<Button-1>', ant.move_obj)          # было/работает
-                self.bind('<Button-1>', lambda event, arg=ant: self.ant_direction(event, arg))
+                self.bind('<Button-1>', ant.move_obj)          # было/работает
+                # self.bind('<Button-1>', lambda event, arg=ant: self.ant_direction(event, arg))
                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
                 if not ant.loading:
                     for berry in self.berries_list:
@@ -68,10 +64,11 @@ class Place(Canvas):
                     for ant_friend in self.ants_list:
                         if (ant_friend.i, ant_friend.j) in self.search_hex_nearby(ant.i, ant.j) and ant_friend.stuck:
                             print("Друг в беде!", ant_friend.name, ant_friend.i, ant_friend.j)
+                            self.bind('<Button-1>', self.ant_direction)
 
                 elif ant.loading:
                     if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
-                        btn_drop = DropButton(self, 'Бросить', ant.x, ant.y)
+                        btn_drop = DropButton(self, 'Положить', ant.x, ant.y)
                         self.btn_list.append(btn_drop)
                         print(ant.name, 'дома с ягодкой')
                 break
@@ -80,10 +77,15 @@ class Place(Canvas):
                 ant.selected = False
                 self.itemconfig(ant.obj, image=ant.photo_selected_False)
 
-    def ant_direction(self, event, ant):  # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
-        print(self.hexes_dict[ant.i, ant.j].enemy)
-        if not self.hexes_dict[ant.i, ant.j].enemy: # enemy не работает. Паутина становится врагом после появления :(
-            ant.move_obj(event)
+    def ant_direction(self, event):
+        # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом. Надо менять choise_hex
+        #print('--паутина: ', self.hexes_dict[ant.i, ant.j].enemy)
+        print('--не пойду! Там враг!')
+        #ant.move_obj(event)
+        # if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления
+        #     ant.move_obj(event)
+        # else:
+        #     print('--не пойду! Там враг!', self.hexes_dict[ant.i, ant.j].i, self.hexes_dict[ant.i, ant.j].j)
 
     def create_hexes(self):
         for i in range(12):
@@ -105,7 +107,7 @@ class Place(Canvas):
             if (hex_object.x - x) ** 2 + (hex_object.y - y) ** 2 >= (constants.HEX_LENGTH * 4) ** 2:
                 self.itemconfig(hex_object.obj, fill=constants.GREY)
                 hex_object.visible = False
-                self.invisible_hexes_dict[indexes] = hex_object # Пополняем invisible_hexes_dict невидимыми гексами
+                self.invisible_hexes_dict[indexes] = hex_object  # Пополняем invisible_hexes_dict невидимыми гексами
 
     def search_hex_nearby(self, i, j) -> list[object]:
         list_hex_nearby = []
@@ -118,7 +120,7 @@ class Place(Canvas):
         return list_hex_nearby
 
     def create_berries(self, number):
-        #invisible_hexes_indexes = [indexes for indexes in self.invisible_hexes_dict]
+        # invisible_hexes_indexes = [indexes for indexes in self.invisible_hexes_dict]
         hexes_indexes_of_berry = []
         for indexes, hex_object in self.hexes_dict.items():
             if not hex_object.is_anthill and not hex_object.enemy:
@@ -172,16 +174,16 @@ class Place(Canvas):
 
     def create_cobwebs(self, number):
         for i in range(number):
-            web = Web(5+i, 3, self)
+            web = Web(5 + i, 3, self)
             self.cobwebs_list.append(web)
             self.hexes_dict[web.i, web.j].enemy = web
 
     def create_spiders(self, number):
         for i in range(number):
-            spider = Spider(5+i, 2, self)
+            spider = Spider(5 + i, 2, self)
             self.spiders_list.append(spider)
             self.hexes_dict[spider.i, spider.j].enemy = spider
 
     def create_timer(self, time):
         self.timer = Timer(self, time, 360, 20)
-        #self.timer.start()
+        # self.timer.start()

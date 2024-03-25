@@ -46,7 +46,7 @@ class Ant(Shape):
             except:
                 pass
 
-    def choise_hex(self, x, y):
+    def choise_hex(self, x, y):     # изменяет индексы и координаты муравья в свойствах
         for hex_val in self.canvas.hexes_dict.values():
             if ((x - hex_val.x) ** 2 + (y - hex_val.y) ** 2 <= constants.HEX_h ** 2
                     and (self.x - hex_val.x) ** 2 + (self.y - hex_val.y) ** 2 <= 6 * constants.HEX_h ** 2):
