@@ -5,12 +5,12 @@ class UserButton(Button):
     def __init__(self, canvas, text, x, y):
         super().__init__(text=text, bg='green', activebackground='green', command=self.click_to_act)
         self.canvas = canvas
-        self.visible(x, y)  ### зачем отдельная функция?
+        self.visible(x, y)  # зачем отдельная функция?
 
     def visible(self, x, y):
         self.place(x=x, y=y, anchor='n')
 
-    def click_to_act(self):         ### Зачем создали? Всё равно она переприсваевается/изменяется
+    def click_to_act(self):  # Зачем создали? Всё равно она переприсваевается/изменяется
         self.destroy()
 
 
@@ -55,4 +55,3 @@ class Timer(Label):
                 self.config(foreground='red')
         else:
             self.config(text="Время вышло!")
-

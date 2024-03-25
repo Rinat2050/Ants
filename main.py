@@ -8,8 +8,6 @@
 # TODO: разместить пауков СЛУЧАЙНО на последнем круге
 # TODO: разместить пауков СЛУЧАЙНО на последнем круге
 
-
-
 from tkinter import Tk
 import constants
 from place import Place

@@ -13,6 +13,7 @@ class Shape:
         self.x = constants.HEX_FIELD_X0 + x
         self.y = constants.HEX_FIELD_Y0 + y
 
+
 class Ant(Shape):
     def __init__(self, i, j, canvas, name):
         super().__init__(i, j, canvas)
@@ -40,11 +41,8 @@ class Ant(Shape):
             self.do_visible_hex()       # Открываем невидимый гекс
             if self.loading:            # Тащим ягоду
                 self.loading.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
-            try:
                 self.canvas.btn_list[-1].destroy()
                 self.canvas.btn_list.pop()
-            except:
-                pass
 
     def choise_hex(self, x, y):
         for hex_val in self.canvas.hexes_dict.values():
@@ -138,16 +136,18 @@ class Berry(Shape):
         self.canvas.coords(self.obj, ant_x, ant_y)
         print(self.name, 'перемещена')
 
+
 class Web(Shape):
     count = 0
+
     def __init__(self, i, j, canvas):
         super().__init__(i, j, canvas)
         self.count += 1
         self.id = self.count
         self.image_selected_False = Image.open("image/web.png").resize((30, 30))
-        #self.image_selected_True = Image.open("image/web.png").resize((7, 7))
+        # self.image_selected_True = Image.open("image/web.png").resize((7, 7))
         self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
-        #self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
+        # self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
         self.visible = False
         self.obj = None
 
@@ -156,16 +156,18 @@ class Web(Shape):
         self.obj = self.canvas.create_image(self.x, self.y,
                                             anchor='center', image=self.photo_selected_False)
 
+
 class Spider(Shape):
     count = 0
+
     def __init__(self, i, j, canvas):
         super().__init__(i, j, canvas)
         self.count += 1
         self.id = self.count
         self.image_selected_False = Image.open("image/spider.png").resize((30, 30))
-        #self.image_selected_True = Image.open("image/web.png").resize((7, 7))
+        # self.image_selected_True = Image.open("image/web.png").resize((7, 7))
         self.photo_selected_False = ImageTk.PhotoImage(self.image_selected_False)
-        #self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
+        # self.photo_selected_True = ImageTk.PhotoImage(self.image_selected_True)
         self.visible = False
         self.obj = None
 
@@ -173,4 +175,3 @@ class Spider(Shape):
         self.visible = True
         self.obj = self.canvas.create_image(self.x, self.y,
                                             anchor='center', image=self.photo_selected_False)
-
