@@ -125,7 +125,7 @@ class Place(Canvas):
     def ant_takes_berry(self):
         ant = next(filter(lambda ant: ant.selected, self.ants), None)
         if ant is None:
-            return  # TODO custom error raise
+            return  # TODO custom error raise or pass like argument ant object
         ant.deselect()
         self.itemconfig(ant.obj, image=ant.get_image())
 
@@ -142,7 +142,7 @@ class Place(Canvas):
     def ant_drops_berry(self):
         ant = next(filter(lambda ant: ant.selected, self.ants), None)
         if ant is None:
-            return  # TODO custom error raise
+            return  # TODO custom error raise or pass like argument ant object
         ant.selected = False
         selected_berry = ant.carries
         ant.carries = None
