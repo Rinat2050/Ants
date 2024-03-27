@@ -9,8 +9,6 @@
 
 # TODO: сделать вторую версию с уменьшенным полем и уменьшенным муравейником
 
-
-
 from tkinter import Tk
 import constants
 from place import Place
