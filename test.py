@@ -1,28 +1,73 @@
-import tkinter as tk
+class Engine:
+    def __init__(self, type, horsepower):
+        self.type = type
+        self.horsepower = horsepower
+        self.transmission = None
+        self.wheels = [Wheel(i) for i in range(4)]
 
-def format_time(seconds):
-    minutes, sec = divmod(seconds, 60)
-    hours, minutes = divmod(minutes, 60)
-    return "{:02d}:{:02d}:{:02d}".format(hours, minutes, sec)
+    def set_transmission(self, transmission):
+        self.transmission = transmission
+        print(f"The {self.type} engine is paired with a {transmission.type} transmission")
 
-def update_countdown():
-    global countdown
-    if countdown > 0:
-        time_str = format_time(countdown)
-        label.config(text=time_str)
-        countdown -= 1
-        label.after(1000, update_countdown)
-    else:
-        label.config(text="Время вышло!")
+    def start(self):
+        print(f"The {self.type} engine starts with {self.horsepower} horsepower")
 
-root = tk.Tk()
-root.title("Обратный отсчет")
+    def accelerate(self, speed):
+        if self.transmission is not None:
+            gear = self.transmission.get_gear(speed)
+            print(f"The {self.type} engine accelerates in {gear} gear to {speed} km/h")
+        else:
+            print("No transmission set")
 
-countdown = 3600  # начальное значение времени для обратного отсчета (3600 секунд = 1 час)
+    def power_wheels(self):
+        print(f"The {self.type} engine powers all wheels")
+        for wheel in self.wheels:
+            wheel.rotate()
 
-label = tk.Label(root, font=("Helvetica", 24))
-label.pack()
 
-update_countdown()
+class Transmission:
+    def __init__(self, type, gears):
+        self.type = type
+        self.gears = gears
 
-root.mainloop()
+    def get_gear(self, speed):
+        if speed < 20:
+            return self.gears[0]
+        elif speed < 40:
+            return self.gears[1]
+        else:
+            return self.gears[2]
+
+
+class Wheel:
+    def __init__(self, number):
+        self.number = number
+
+    def rotate(self):
+        print(f"Wheel {self.number} is rotating")
+class Car:
+    def __init__(self, make, model, engine, transmission):
+        self.make = make
+        self.model = model
+        self.engine = engine
+        self.transmission = transmission
+
+    def start(self):
+        self.engine.start()
+
+    def move(self, speed):
+        self.engine.accelerate(speed)
+        self.engine.power_wheels()
+
+
+# Создаем объекты трансмиссии, двигателя и автомобиля
+transmission = Transmission("Automatic", ["D", "N", "R"])
+engine = Engine("V8", 500)
+engine.set_transmission(transmission)
+car = Car("Ford", "Mustang", engine, transmission)
+
+# Запускаем автомобиль
+car.start()
+
+# Двигаемся
+car.move(60)

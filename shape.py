@@ -48,6 +48,7 @@ class Ant(Shape):
     def deselect(self):
         self.selected = False
 
+'''
     def move_obj(self, event):
         if not self.selected:
             return
@@ -93,6 +94,8 @@ class Ant(Shape):
         self._find_and_interact(self.canvas.berries, "{} нашёл {}", set_stuck=False)
         self._find_and_interact(self.canvas.cobwebs, "{} нашёл паутину :( {}", set_stuck=True)
         self._find_and_interact(self.canvas.spiders, "{} нашёл паука :( {}", set_stuck=True)
+'''
+
 
 
 class Hex(Shape):
