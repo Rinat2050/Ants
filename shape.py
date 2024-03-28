@@ -48,9 +48,10 @@ class Ant(Shape):
     def deselect(self):
         self.selected = False
 
-'''
+
     def move_obj(self, event):
         if not self.selected:
+            print('Выберите муравья!')
             return
         self.selected = False
         self.choose_hex(event.x, event.y)
@@ -67,7 +68,7 @@ class Ant(Shape):
     def choose_hex(self, x, y):
         for hex in self.canvas.hexes_dict.values():
             if compare_distance((hex.x, hex.y), (x, y), '<=', constants.HEX_h) \
-               and compare_distance((hex.x, hex.y), (self.x, self.y), '<=', 6*constants.HEX_h):
+               and compare_distance((hex.x, hex.y), (self.x, self.y), '<=', 3*constants.HEX_h):
                 self.set_attributes(hex, 'i', 'j', 'x', 'y')
 
     def _find_and_interact(self, objects, message_format, set_stuck=False):
@@ -94,7 +95,7 @@ class Ant(Shape):
         self._find_and_interact(self.canvas.berries, "{} нашёл {}", set_stuck=False)
         self._find_and_interact(self.canvas.cobwebs, "{} нашёл паутину :( {}", set_stuck=True)
         self._find_and_interact(self.canvas.spiders, "{} нашёл паука :( {}", set_stuck=True)
-'''
+
 
 
 
