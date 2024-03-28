@@ -48,7 +48,6 @@ class Place(Canvas):
         self.select_obj(event)
         # print(self.list_of_hexes_nearby(6, 6))
 
-
     def select_obj(self, event):
         x, y = event.x, event.y
         for ant in self.ants:
@@ -56,12 +55,12 @@ class Place(Canvas):
             if ant.selected or ant.stuck or abs(ant.x - x) > shift or abs(ant.y - y) > shift:
                 ant.deselect()
                 self.itemconfig(ant.obj, image=ant.get_image())
-                continue    ## Зачем нужен континеум?
+                continue
             ant.select()
             self.itemconfig(ant.obj, image=ant.get_image())
             print(ant.name, 'выбран')
             # self.bind('<Button-1>', ant.move_obj) было/работает
-            self.bind('<Button-1>', lambda event, arg=ant: self.ant_direction(event, arg))
+            self.bind('<Button-1>', lambda e, arg=ant: self.ant_direction(e, arg))
             if not ant.carries:
                 for berry in self.berries:
                     if berry.has_matching_indexes_with(ant) and not berry.taken:
@@ -110,7 +109,6 @@ class Place(Canvas):
                     self.btn_list.append(DropButton(self, 'Бросить', ant.x, ant.y))
                     print(ant.name, 'дома с ягодкой')
             break
-
 
     def ant_direction(self, event, ant):
         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
