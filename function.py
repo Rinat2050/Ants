@@ -1,2 +1,2 @@
-def alwaysZero():
+def that_so():
     return 0
