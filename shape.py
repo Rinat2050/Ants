@@ -130,7 +130,7 @@ class Hex(Shape):
 class Berry(Shape):
     def __init__(self, index, canvas):
         super().__init__(index, canvas)
-        #self.name = name
+        #  self.name = name
         self.obj = None
         self.visible = False
         self.taken = False
