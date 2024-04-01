@@ -6,15 +6,11 @@ from interface import TakeButton, DropButton, Timer
 import random
 
 
-class Place(Canvas):
+class Field(Canvas):
     ants = []
     hexes_dict = {}
     invisible_hexes_dict = {}
-    berries = []
     btn_list = []
-
-    cobwebs = []
-    spiders = []
     # '''
     # cobwebs_list = []
     # spiders_list = []
@@ -37,11 +33,15 @@ class Place(Canvas):
 
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
-        self.create_cobwebs(constants.NUMBER_OF_COBWEBS)
-        self.create_spiders(constants.NUMBER_OF_SPIDERS)
-        self.create_berries(constants.NUMBER_OF_BERRIES)
+        #self.create_cobwebs(constants.NUMBER_OF_COBWEBS)
+        self.cobwebs = self.create_random_objects(Web, 8, 'is_anthill')
+        # self.create_spiders(constants.NUMBER_OF_SPIDERS)
+        self.spiders = self.create_random_objects(Spider, 5, 'is_anthill', 'enemy')
+        # self.create_berries(constants.NUMBER_OF_BERRIES)
+        self.berries = self.create_random_objects(Berry, 10, 'is_anthill', 'enemy')
         self.create_timer(constants.TIME)
         self.bind('<Button-3>', self.activate)
+
 
     def activate(self, event):
         print('================================')
@@ -273,6 +273,33 @@ class Place(Canvas):
 #             if self.hexes_dict[(hex_under_berry.i, hex_under_berry.j)].visible:
 #                 hex_under_berry.do_visible_berry()
 # '''
+
+    def create_random_objects(self, class_object, quantity: int, *invalid_places: tuple) -> None:
+        '''
+        Fill up random objects
+        returns: None
+        '''
+        # ('enemy', 'anthil')
+        #print(self.hexes_dict[(6, 6)].__dict__)
+        hexes_indexes = set()
+        for indexes, hex in self.hexes_dict.items():
+            hexes_indexes.add(indexes)
+        for atribute in invalid_places:
+            for hex in self.hexes_dict.values():
+                if hex.__dict__[atribute]:
+                    hexes_indexes.discard((hex.i, hex.j))
+        # hexes_indexes = [indexes for indexes, hex in self.hexes_dict.items()
+        #                  if not hex.is_anthill and not hex.enemy]
+        # berries_names = random.sample(constants.BERRIES_NAMES, quantity)
+        indexes_of_objects_hex = random.sample(list(hexes_indexes), quantity)
+        objects = [class_object(index, self)
+                        for index in list(indexes_of_objects_hex)]
+        for obj in objects:
+            if self.hexes_dict[(obj.i, obj.j)].visible:
+                obj.show()
+        return objects
+
+
 
     def ant_takes_berry(self):
         ant = next(filter(lambda ant: ant.selected, self.ants), None)

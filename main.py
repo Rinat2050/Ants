@@ -5,14 +5,16 @@
 # TODO: разместить пауков СЛУЧАЙНО на последнем круге
 # TODO: вместо клика правой - наведение курсора
 # TODO: переименовать функции и переменные
+# TODO: Пауки и паутины НЕ должны быть на 1 клетке. Заменить hex.enemy на hex.loading?
 
+# После изготовления игры
 # TODO: сделать вторую версию с уменьшенным полем и уменьшенным муравейником
 # TODO: сделать версию с пчёлами Улей
 
 
 from tkinter import Tk
 import constants
-from place import Place
+from field import Field
 
 
 window = Tk()
@@ -31,6 +33,6 @@ window.geometry('{w}x{h}+{x}+{y}'.format(
     y=y_offset,
 ))
 
-place_hex = Place(window)
+place_hex = Field(window)
 
 window.mainloop()
