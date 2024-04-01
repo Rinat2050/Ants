@@ -228,9 +228,7 @@ class Field(Canvas):
             if self.hexes_dict[(berry.i, berry.j)].visible:
                 berry.show()
 
-
-
-# '''
+    # '''
 #         x = self.hexes_dict.get((6, 6)).x
 #         y = self.hexes_dict.get((6, 6)).y
 #         for indexes, hex_object in self.hexes_dict.items():
