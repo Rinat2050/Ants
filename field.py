@@ -6,7 +6,7 @@ from interface import TakeButton, DropButton, Timer
 import random
 
 
-class Place(Canvas):
+class Field(Canvas):
     ants = []
     hexes_dict = {}
     invisible_hexes_dict = {}
@@ -227,6 +227,9 @@ class Place(Canvas):
         for berry in self.berries:
             if self.hexes_dict[(berry.i, berry.j)].visible:
                 berry.show()
+
+
+
 # '''
 #         x = self.hexes_dict.get((6, 6)).x
 #         y = self.hexes_dict.get((6, 6)).y

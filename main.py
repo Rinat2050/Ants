@@ -12,7 +12,7 @@
 
 from tkinter import Tk
 import constants
-from place import Place
+from field import Field
 
 
 window = Tk()
@@ -31,6 +31,6 @@ window.geometry('{w}x{h}+{x}+{y}'.format(
     y=y_offset,
 ))
 
-place_hex = Place(window)
+place_hex = Field(window)
 
 window.mainloop()
