@@ -21,6 +21,7 @@ class Field(Canvas):
             root,
             width=constants.WIDTH_WINDOW,
             height=constants.HEIGHT_WINDOW,
+            bg='grey',
         )
         self.place(x=0, y=0, anchor='nw')
         self.create_hexes()
@@ -33,12 +34,12 @@ class Field(Canvas):
 
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
-        #self.create_cobwebs(constants.NUMBER_OF_COBWEBS)
-        self.cobwebs = self.create_random_objects(Web, 8, 'is_anthill')
-        # self.create_spiders(constants.NUMBER_OF_SPIDERS)
-        self.spiders = self.create_random_objects(Spider, 5, 'is_anthill', 'enemy')
-        # self.create_berries(constants.NUMBER_OF_BERRIES)
-        self.berries = self.create_random_objects(Berry, 10, 'is_anthill', 'enemy')
+        self.cobwebs = self.create_random_objects(Web,
+                                                  constants.NUMBER_OF_COBWEBS, 'is_anthill')
+        self.spiders = self.create_random_objects(Spider,
+                                                  constants.NUMBER_OF_SPIDERS, 'is_anthill', 'enemy')
+        self.berries = self.create_random_objects(Berry,
+                                                  constants.NUMBER_OF_BERRIES, 'is_anthill', 'enemy')
         self.create_timer(constants.TIME)
         self.bind('<Button-3>', self.activate)
 
