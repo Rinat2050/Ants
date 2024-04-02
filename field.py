@@ -11,10 +11,6 @@ class Field(Canvas):
     hexes_dict = {}
     invisible_hexes_dict = {}
     btn_list = []
-    # '''
-    # cobwebs_list = []
-    # spiders_list = []
-    # '''
 
     def __init__(self, root):
         super().__init__(
