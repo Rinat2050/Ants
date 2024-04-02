@@ -72,39 +72,6 @@ class Field(Canvas):
                     if (ant_friend.i, ant_friend.j) in hexes_indexes_nearby and ant_friend.stuck:
                         print("Друг в беде!", ant_friend.name, ant_friend.i, ant_friend.j)
 
-# '''
-#     def select_obj(self, evemt):
-#         x = evemt.x
-#         y = evemt.y
-#         for ant in self.ants_list:
-#             shift = ant.cell_size / 2
-#             if not ant.selected \
-#                     and not ant.stuck \
-#                     and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
-#                 print(ant.name, 'выбран')
-#                 ant.selected = True
-#                 # self.bind('<Button-1>', ant.move_obj)          # было/работает
-#                 self.bind('<Button-1>', lambda event, arg=ant: self.move_obj(event, arg))
-#                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
-#                 if not ant.loading:
-#                     for berry in self.berries_list:
-#                         if berry.i == ant.i and berry.j == ant.j and not berry.taken:
-#                             btn_take = TakeButton(self, "Взять", ant.x, ant.y)
-#                             self.btn_list.append(btn_take)
-#                             break
-#                     for ant_friend in self.ants_list:
-#                         if (ant_friend.i, ant_friend.j) in self.search_hex_nearby(ant.i, ant.j) and ant_friend.stuck:
-#                             print("Друг в беде!", ant_friend.name, ant_friend.i, ant_friend.j)
-#                             # self.bind('<Button-1>', self.ant_direction)
-#
-#                 elif ant.loading:
-#                     if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
-#                         btn_drop = DropButton(self, 'Положить', ant.x, ant.y)
-#                         self.btn_list.append(btn_drop)
-#                         print(ant.name, 'дома с ягодкой')
-#                 break
-# '''
-
             else:
                 if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
                     self.btn_list.append(DropButton(self, 'Бросить', ant.x, ant.y))
@@ -116,16 +83,15 @@ class Field(Canvas):
         # print(self.hexes_dict[ant.i, ant.j].enemy)
         if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления :(
             ant.move_obj(event)
-# '''
-#     def ant_direction(self, event):
-#         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом. Надо менять choise_hex
-#         #print('--паутина: ', self.hexes_dict[ant.i, ant.j].enemy)
-#         print('--не пойду! Там враг!')
-#         #ant.move_obj(event)
-#         # if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления
-#         #     ant.move_obj(event)
-#         # else:
-#         #     print('--не пойду! Там враг!', self.hexes_dict[ant.i, ant.j].i, self.hexes_dict[ant.i, ant.j].j)
+        #print('--паутина: ', self.hexes_dict[ant.i, ant.j].enemy)
+        print('--не пойду! Там враг!')
+        #ant.move_obj(event)
+        # if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления
+        #     ant.move_obj(event)
+        # else:
+        #     print('--не пойду! Там враг!', self.hexes_dict[ant.i, ant.j].i, self.hexes_dict[ant.i, ant.j].j)
+
+
 #
 #     def move_obj(self, event, ant):
 #         new_x = event.x
@@ -181,7 +147,7 @@ class Field(Canvas):
 #                         print(ant.name, 'нашёл паука :(', spider.id)
 #                         ant.stuck = True
 #                         break
-# '''
+
 
     def create_hexes(self):
         center = index_to_coord((6, 6))
@@ -336,10 +302,6 @@ class Field(Canvas):
 
             web = Web((5+i, 3), self)
             self.cobwebs.append(web)
-# '''
-#             web = Web(5 + i, 3, self)
-#             self.cobwebs_list.append(web)
-# '''
             self.hexes_dict[web.i, web.j].enemy = web
 
     def create_spiders(self, number):
@@ -347,12 +309,7 @@ class Field(Canvas):
 
             spider = Spider((5+i, 2), self)
             self.spiders.append(spider)
-# '''
-#             spider = Spider(5 + i, 2, self)
-#             self.spiders_list.append(spider)
-# '''
             self.hexes_dict[spider.i, spider.j].enemy = spider
 
     def create_timer(self, time):
         self.timer = Timer(self, time, 360, 20)
-        # self.timer.start()
