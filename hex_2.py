@@ -1,3 +1,4 @@
+# region
 from tkinter import *
 from math import cos, sin, pi
 
@@ -5,7 +6,7 @@ ROUND = 4
 WIDTH_WINDOW = 900
 HEIGHT_WINDOW = 900
 HEX_LENGTH = 50  # длина стороны
-DELAY = 50  # задержка прорисовки
+DELAY = 0  # задержка прорисовки
 PRECISION = 1  # точность координат центров и вершин гексов
 x0 = WIDTH_WINDOW // 2
 y0 = HEIGHT_WINDOW // 2
@@ -14,13 +15,16 @@ distance_between_centers = 2 * (HEX_LENGTH * (3 ** 0.5) / 2)
 
 class Hex:
     list_of_hex = []
+    dict_of_hex = {}
 
     def __init__(self, center_xy: tuple, color):
         self.center_xy = center_xy
         self.color = color
         self.list_vertex = self.center_to_six_vertex()
         self.paint_hex()
+        self.paint_text()
         Hex.list_of_hex.append(self)
+        Hex.dict_of_hex[self.center_xy] = self
 
     def center_to_six_vertex(self):
         """Преобразует центр в список 6-ти вершин"""
@@ -38,10 +42,17 @@ class Hex:
         window.update()
         canvas.create_polygon(self.list_vertex, fill=self.color, outline='white')
 
-
+    def paint_text(self):
+        """Рисует текст"""
+        window.after(DELAY)
+        window.update()
+        canvas.create_text(self.center_xy[0], self.center_xy[1] + 20,
+                                text=self.center_xy,
+                                fill="white")
 def my_round(x, base=PRECISION):
     # return base * round(float(x) / base)  # Это если точность нужно увеличивать до кратного 3, 5, 10
-    return round(x, PRECISION)
+    return int(round(x, PRECISION))
+    # return int(x)
 
 
 def calculating_intermediate_vertices(coord_1, coord_2, count_med_ver) -> list:
@@ -51,9 +62,14 @@ def calculating_intermediate_vertices(coord_1, coord_2, count_med_ver) -> list:
     x2, y2 = coord_2
     for part in range(1, count_med_ver):
         lam = part / (count_med_ver - part)
-        x, y = (x1 + x2 * lam) / (1 + lam), (y1 + y2 * lam) / (1 + lam)
+        x, y = int((x1 + x2 * lam) / (1 + lam)), int((y1 + y2 * lam) / (1 + lam))
         result.append((x, y))
     return result
+
+def paint_index(hex, i, j):
+    canvas.create_text(hex.center_xy[0], hex.center_xy[1],
+                                    text=(i, j),
+                                    fill="red", font='bold 18')
 
 
 window = Tk()
@@ -83,7 +99,25 @@ for round_hex in range(1, ROUND):
         list_mediate_ver = calculating_intermediate_vertices((x1, y1), (x2, y2), round_hex)
         for v in list_mediate_ver:
             Hex(v, 'green')
+# endregion
 
+sorted_dict = dict(sorted(Hex.dict_of_hex.items()))
+iter_dict = iter(sorted_dict.keys())
+x_current = next(iter_dict)[0]
+i = - ROUND + 1
+j = 0
+j0 = 0
+
+for coord_xy, hex in sorted_dict.items():
+    paint_index(hex, i, j - j0)
+    x_next = next(iter_dict, '999')[0]    # последовательность заканчивается чудом
+    j += 1
+    if x_next != x_current:
+        i += 1
+        x_current = x_next
+        j = 0
+        if i <= 0:
+            j0 += 1
 
 
 window.mainloop()
