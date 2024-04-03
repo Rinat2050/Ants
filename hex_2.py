@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Tk, Canvas, YES, BOTH
 from math import cos, sin, pi
 
 # region
@@ -122,6 +122,7 @@ def create_index():
             if i <= 0:  # если столбы начали укорачиваться - оставляем j
                 j0 += 1
 
+
 def list_environment(hex):
     """Поиск координат окружающих гексов (возможно не существующих)"""
     result = []
@@ -137,7 +138,6 @@ def list_environment(hex):
     return result
 
 
-
 if __name__ == '__main__':
     # region
     window = Tk()
@@ -150,6 +150,5 @@ if __name__ == '__main__':
     create_frame_hex()
     create_index()
     print(list_environment(Hex.dict_of_hex[(225, 492)]))
-
 
     window.mainloop()
