@@ -306,7 +306,7 @@ class Field(Canvas):
         ant.carries = selected_berry
         selected_berry.take()
         self.itemconfig(selected_berry.obj, image=selected_berry.get_image())
-        print(ant.name, 'загружен', selected_berry.name)
+        print(ant.name, 'взял ягоду')
 
     def ant_drops_berry(self):
         ant = next(filter(lambda ant: ant.selected, self.ants), None)
@@ -318,7 +318,7 @@ class Field(Canvas):
         selected_berry.throw()
         self.itemconfig(ant.obj, image=ant.get_image())
         self.itemconfig(selected_berry.obj, image=selected_berry.get_image())
-        print(ant.name, 'разгружен', selected_berry.name)
+        print(ant.name, 'бросил ягоду')
 
     def create_cobwebs(self, number):
         for i in range(number):

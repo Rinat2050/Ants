@@ -159,7 +159,7 @@ class Berry(Shape):
     def move_berry(self, ant_x, ant_y, ant):
         self.set_attributes(ant, 'i', 'j')
         self.canvas.coords(self.obj, ant_x, ant_y)
-        print(self.name, 'перемещена')
+        print('ягодка перемещена')
 
 
 class Web(Shape):
