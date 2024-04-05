@@ -28,16 +28,14 @@ class Field(Canvas):
             Ant((5, 5), self, 'Коля'),
         ]
 
-        self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'enemy')
         self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'enemy')
         self.create_timer(constants.TIME)
-        self.bind('<Button-3>', self.activate)
 
     def activate(self, event):
-        print('================================')
+        #print('================================')
         self.select_obj(event)
 
     def select_obj(self, event):

@@ -13,7 +13,7 @@
 # TODO: сделать версию с пчёлами Улей
 
 
-from tkinter import Tk
+from tkinter import Tk, Canvas
 import constants
 from field import Field
 
@@ -34,6 +34,14 @@ window.geometry('{w}x{h}+{x}+{y}'.format(
     y=y_offset,
 ))
 
+def coord2(event):
+  x, y = event.x, event.y
+  print(f'x={x}, y={y}')
+
+
+#window.bind('<Button-1>', coord2)
+
 place_hex = Field(window)
+place_hex.bind('<Button-3>', place_hex.activate)
 
 window.mainloop()
