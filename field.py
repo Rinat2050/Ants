@@ -30,7 +30,6 @@ class Field(Canvas):
 
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
-
         self.cobwebs = self.create_random_objects(Web,
                                                   constants.NUMBER_OF_COBWEBS, 'is_anthill')
         self.spiders = self.create_random_objects(Spider,
