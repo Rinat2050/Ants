@@ -30,19 +30,15 @@ class Field(Canvas):
 
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
-        self.cobwebs = self.create_random_objects(Web,
-                                                  constants.NUMBER_OF_COBWEBS, 'is_anthill')
-        self.spiders = self.create_random_objects(Spider,
-                                                  constants.NUMBER_OF_SPIDERS, 'is_anthill', 'enemy')
-        self.berries = self.create_random_objects(Berry,
-                                                  constants.NUMBER_OF_BERRIES, 'is_anthill', 'enemy')
+        self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill')
+        self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'enemy')
+        self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'enemy')
         self.create_timer(constants.TIME)
         self.bind('<Button-3>', self.activate)
 
     def activate(self, event):
         print('================================')
         self.select_obj(event)
-        #  print(self.list_of_hexes_nearby(6, 6))
 
     def select_obj(self, event):
         x, y = event.x, event.y
@@ -55,10 +51,9 @@ class Field(Canvas):
             ant.select()
             self.itemconfig(ant.obj, image=ant.get_image())
             print(ant.name, 'выбран')
-            # self.bind('<Button-1>', ant.move_obj) было/работает
             self.bind('<Button-1>', lambda e, arg=ant: self.ant_direction(e, arg))
             if not ant.carries:
-                for berry in self.berries:
+                for berry in Berry.berries:
                     if berry.has_matching_indexes_with(ant) and not berry.taken:
                         self.btn_list.append(TakeButton(self, "Взять", ant.x, ant.y))
                         break
@@ -75,7 +70,6 @@ class Field(Canvas):
 
     def ant_direction(self, event, ant):
         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
-        # print(self.hexes_dict[ant.i, ant.j].enemy)
         if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления :(
             ant.move_obj(event)
         print('--не пойду! Там враг!')
@@ -109,19 +103,10 @@ class Field(Canvas):
 
     def create_random_objects(self, class_name, quantity: int, *invalid_places: tuple) -> list:
         '''
-        Fill up random objects
-        returns: None
+        Fill up random objects. Returns: list
         '''
 
         hexes_indexes = set([indexes for indexes in self.hexes_dict.keys()])
-
-
-    def create_random_objects(self, class_object, quantity: int, *invalid_places: tuple) -> None:
-        '''
-        Fill up random objects
-        returns: None
-        '''
-        hexes_indexes = set()
 
         for atribute in invalid_places:
             for hex in self.hexes_dict.values():
@@ -129,7 +114,7 @@ class Field(Canvas):
                     hexes_indexes.discard((hex.i, hex.j))
 
         indexes_of_objects_hex = random.sample(list(hexes_indexes), quantity)
-        objects = [class_object(index, self)
+        objects = [class_name(index, self)
                    for index in list(indexes_of_objects_hex)]
         for obj in objects:
             if self.hexes_dict[(obj.i, obj.j)].visible:
@@ -143,7 +128,7 @@ class Field(Canvas):
         ant.deselect()
         self.itemconfig(ant.obj, image=ant.get_image())
 
-        for berry in self.berries:
+        for berry in Berry.berries:
             if berry.has_matching_indexes_with(ant) and not ant.carries:
                 selected_berry = berry
                 break

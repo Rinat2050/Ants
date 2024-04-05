@@ -10,8 +10,8 @@ BROWN = "#808000"
 GREY = '#A9A9A9'
 OFFSET_TOP_Y_BERRY = 20
 NUMBER_OF_BERRIES = 20      # less than or equal to 20 because there are no names for berries
-NUMBER_OF_COBWEBS = 3
-NUMBER_OF_SPIDERS = 3
+NUMBER_OF_COBWEBS = 10
+NUMBER_OF_SPIDERS = 10
 TIME = 5*60         # seconds
 BERRIES_NAMES = ['смородина', 'малина', 'клубника', 'земляника', 'брусника', 'рябина', 'клюква', 'ирга',
                  'калина', 'шиповник', 'голубика', 'ежевика', 'черешня', 'черника', 'бузина',

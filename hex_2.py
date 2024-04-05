@@ -1,6 +1,5 @@
 from tkinter import Tk, Canvas, YES, BOTH
 from math import cos, sin, pi
-# 05 04 2024
 
 # region
 ROUND = 4

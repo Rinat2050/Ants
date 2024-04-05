@@ -11,6 +11,7 @@ class Shape:
         x, y = index_to_coord(index)
         self.x = constants.HEX_FIELD_X0 + x
         self.y = constants.HEX_FIELD_Y0 + y
+        self.index = index
 
     def set_attributes(self, other, *attrs):
         for attr in attrs:
@@ -22,6 +23,7 @@ class Shape:
 
 
 class Ant(Shape):
+
     def __init__(self, index, canvas, name):
         super().__init__(index, canvas)
         self.cell_size = constants.ANT_CELL_SIZE
@@ -72,15 +74,18 @@ class Ant(Shape):
 
     def _find_and_interact(self, objects, message_format, set_stuck=False):
         for obj in objects:
-            if self.has_matching_indexes_with(obj) and not obj.visible:
+            if self.has_matching_indexes_with(obj):
                 obj.show()
                 print(message_format.format(
                     self.name,
                     obj.name if hasattr(obj, 'name') else '',
                     obj.id if hasattr(obj, 'id') else '')
                 )
+                print(obj.index)
+                print(obj.visible)
                 if set_stuck:
                     self.stuck = True
+                    print('Застакан муравей')
                 break
 
     def show_hex(self):
@@ -91,9 +96,9 @@ class Ant(Shape):
         self.canvas.itemconfig(hex.obj, fill=constants.GREEN)
         print("стал видимым гекс: ", hex.i, hex.j)
 
-        self._find_and_interact(self.canvas.berries, "{} нашёл {}", set_stuck=False)
-        self._find_and_interact(self.canvas.cobwebs, "{} нашёл паутину :( {}", set_stuck=True)
-        self._find_and_interact(self.canvas.spiders, "{} нашёл паука :( {}", set_stuck=True)
+        self._find_and_interact(Berry.berries, "{} нашёл {}", set_stuck=False)
+        self._find_and_interact(Web.cobwebs, "{} нашёл паутину :( {}", set_stuck=True)
+        self._find_and_interact(Spider.spiders, "{} нашёл паука :( {}", set_stuck=True)
 
 
 class Hex(Shape):
@@ -129,6 +134,7 @@ class Hex(Shape):
 
 class Berry(Shape):
     count = 0
+    berries = []
     def __init__(self, index, canvas):
         super().__init__(index, canvas)
         self.obj = None
@@ -137,6 +143,7 @@ class Berry(Shape):
         self._load_images()
         self.name = constants.BERRIES_NAMES[Berry.count]
         Berry.count += 1
+        self.berries.append(self)
 
     def _load_images(self):
         original_image = Image.open("image/berry.png")
@@ -166,6 +173,7 @@ class Berry(Shape):
 
 class Web(Shape):
     count = 0
+    cobwebs = []
 
     def __init__(self, index, canvas):
         super().__init__(index, canvas)
@@ -174,6 +182,7 @@ class Web(Shape):
         self.visible = False
         self.obj = None
         self._load_images()
+        self.cobwebs.append(self)
 
     def _load_images(self):
         original_image = Image.open("image/web.png")
@@ -191,6 +200,7 @@ class Web(Shape):
 
 class Spider(Shape):
     count = 0
+    spiders = []
 
     def __init__(self, index, canvas):
         super().__init__(index, canvas)
@@ -199,6 +209,7 @@ class Spider(Shape):
         self.visible = False
         self.obj = None
         self._load_images()
+        self.spiders.append(self)
 
     def _load_images(self):
         original_image = Image.open("image/spider.png")
