@@ -128,13 +128,16 @@ class Hex(Shape):
 
 
 class Berry(Shape):
+    count = 0
+
     def __init__(self, index, canvas):
         super().__init__(index, canvas)
-        #  self.name = name
         self.obj = None
         self.visible = False
         self.taken = False
         self._load_images()
+        self.name = constants.BERRIES_NAMES[Berry.count]
+        Berry.count += 1
 
     def _load_images(self):
         original_image = Image.open("image/berry.png")
