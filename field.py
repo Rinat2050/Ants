@@ -11,6 +11,7 @@ class Field(Canvas):
     hexes_dict = {}
     invisible_hexes_dict = {}
     btn_list = []
+
     # '''
     # cobwebs_list = []
     # spiders_list = []
@@ -67,38 +68,39 @@ class Field(Canvas):
                     if (ant_friend.i, ant_friend.j) in hexes_indexes_nearby and ant_friend.stuck:
                         print("Друг в беде!", ant_friend.name, ant_friend.i, ant_friend.j)
 
-# '''
-#     def select_obj(self, evemt):
-#         x = evemt.x
-#         y = evemt.y
-#         for ant in self.ants_list:
-#             shift = ant.cell_size / 2
-#             if not ant.selected \
-#                     and not ant.stuck \
-#                     and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
-#                 print(ant.name, 'выбран')
-#                 ant.selected = True
-#                 # self.bind('<Button-1>', ant.move_obj)          # было/работает
-#                 self.bind('<Button-1>', lambda event, arg=ant: self.move_obj(event, arg))
-#                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
-#                 if not ant.loading:
-#                     for berry in self.berries_list:
-#                         if berry.i == ant.i and berry.j == ant.j and not berry.taken:
-#                             btn_take = TakeButton(self, "Взять", ant.x, ant.y)
-#                             self.btn_list.append(btn_take)
-#                             break
-#                     for ant_friend in self.ants_list:
-#                         if (ant_friend.i, ant_friend.j) in self.search_hex_nearby(ant.i, ant.j) and ant_friend.stuck:
-#                             print("Друг в беде!", ant_friend.name, ant_friend.i, ant_friend.j)
-#                             # self.bind('<Button-1>', self.ant_direction)
-#
-#                 elif ant.loading:
-#                     if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
-#                         btn_drop = DropButton(self, 'Положить', ant.x, ant.y)
-#                         self.btn_list.append(btn_drop)
-#                         print(ant.name, 'дома с ягодкой')
-#                 break
-# '''
+            # '''
+            #     def select_obj(self, evemt):
+            #         x = evemt.x
+            #         y = evemt.y
+            #         for ant in self.ants_list:
+            #             shift = ant.cell_size / 2
+            #             if not ant.selected \
+            #                     and not ant.stuck \
+            #                     and abs(ant.x - x) <= shift and abs(ant.y - y) <= shift:
+            #                 print(ant.name, 'выбран')
+            #                 ant.selected = True
+            #                 # self.bind('<Button-1>', ant.move_obj)          # было/работает
+            #                 self.bind('<Button-1>', lambda event, arg=ant: self.move_obj(event, arg))
+            #                 self.itemconfig(ant.obj, image=ant.photo_selected_True)
+            #                 if not ant.loading:
+            #                     for berry in self.berries_list:
+            #                         if berry.i == ant.i and berry.j == ant.j and not berry.taken:
+            #                             btn_take = TakeButton(self, "Взять", ant.x, ant.y)
+            #                             self.btn_list.append(btn_take)
+            #                             break
+            #                     for ant_friend in self.ants_list:
+            #                         if (ant_friend.i, ant_friend.j) in self.search_hex_nearby(ant.i, ant.j)
+            #                         and ant_friend.stuck:
+            #                             print("Друг в беде!", ant_friend.name, ant_friend.i, ant_friend.j)
+            #                             # self.bind('<Button-1>', self.ant_direction)
+            #
+            #                 elif ant.loading:
+            #                     if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
+            #                         btn_drop = DropButton(self, 'Положить', ant.x, ant.y)
+            #                         self.btn_list.append(btn_drop)
+            #                         print(ant.name, 'дома с ягодкой')
+            #                 break
+            # '''
 
             else:
                 if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
@@ -111,72 +113,75 @@ class Field(Canvas):
         # print(self.hexes_dict[ant.i, ant.j].enemy)
         if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления :(
             ant.move_obj(event)
-# '''
-#     def ant_direction(self, event):
-#         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом. Надо менять choise_hex
-#         #print('--паутина: ', self.hexes_dict[ant.i, ant.j].enemy)
-#         print('--не пойду! Там враг!')
-#         #ant.move_obj(event)
-#         # if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления
-#         #     ant.move_obj(event)
-#         # else:
-#         #     print('--не пойду! Там враг!', self.hexes_dict[ant.i, ant.j].i, self.hexes_dict[ant.i, ant.j].j)
-#
-#     def move_obj(self, event, ant):
-#         new_x = event.x
-#         new_y = event.y
-#         if ant.selected:
-#             self.choise_hex(ant, new_x, new_y)
-#             self.coords(ant.obj, ant.x, ant.y)
-#             print(ant.name, 'перемещён')
-#             ant.selected = False
-#             self.itemconfig(ant.obj, image=ant.photo_selected_False)
-#             self.do_visible_hex(ant)       # Открываем невидимый гекс
-#             if ant.loading:            # Тащим ягоду
-#                 ant.loading.move_berry(ant.x, ant.y - constants.OFFSET_TOP_Y_BERRY, ant)
-#             try:
-#                 self.btn_list[-1].destroy()
-#                 self.btn_list.pop()
-#             except:
-#                 pass
-#
-#     def choise_hex(self, ant, x, y):     # изменяет индексы и координаты муравья в свойствах
-#         for hex_val in self.hexes_dict.values():
-#             if ((x - hex_val.x) ** 2 + (y - hex_val.y) ** 2 <= constants.HEX_h ** 2
-#                     and (ant.x - hex_val.x) ** 2 + (ant.y - hex_val.y) ** 2 <= 6 * constants.HEX_h ** 2):
-#                 # Позволяет передвигаться ТОЛЬКО на ближайшие хексы
-#                 ant.i = hex_val.i
-#                 ant.j = hex_val.j
-#                 ant.x = hex_val.x
-#                 ant.y = hex_val.y
-#
-#     def do_visible_hex(self, ant):
-#         for hex_val in self.hexes_dict.values():
-#             if [hex_val.i, hex_val.j] == [ant.i, ant.j] and hex_val.visible is False:
-#                 self.itemconfig(hex_val.obj, fill=constants.GREEN)
-#                 hex_val.visible = True
-#                 print("стал видимым гекс: ", hex_val.i, hex_val.j)
-#
-#                 for berry in self.berries_list:
-#                     if [berry.i, berry.j] == [ant.i, ant.j] and not berry.visible:
-#                         berry.do_visible_berry()
-#                         print(ant.name, 'нашёл', berry.name)
-#                         break
-#
-#                 for web in self.cobwebs_list:
-#                     if [web.i, web.j] == [ant.i, ant.j] and not web.visible:
-#                         web.do_visible_web()
-#                         print(ant.name, 'нашёл паутину :(', web.id)
-#                         ant.stuck = True
-#                         break
-#
-#                 for spider in self.spiders_list:
-#                     if [spider.i, spider.j] == [ant.i, ant.j] and not spider.visible:
-#                         spider.do_visible_spider()
-#                         print(ant.name, 'нашёл паука :(', spider.id)
-#                         ant.stuck = True
-#                         break
-# '''
+
+    # '''
+    #     def ant_direction(self, event):
+    #         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом.
+    #         Надо менять choise_hex
+    #         #print('--паутина: ', self.hexes_dict[ant.i, ant.j].enemy)
+    #         print('--не пойду! Там враг!')
+    #         #ant.move_obj(event)
+    #         # if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает.
+    #         Паутина становится врагом после появления
+    #         #     ant.move_obj(event)
+    #         # else:
+    #         #     print('--не пойду! Там враг!', self.hexes_dict[ant.i, ant.j].i, self.hexes_dict[ant.i, ant.j].j)
+    #
+    #     def move_obj(self, event, ant):
+    #         new_x = event.x
+    #         new_y = event.y
+    #         if ant.selected:
+    #             self.choise_hex(ant, new_x, new_y)
+    #             self.coords(ant.obj, ant.x, ant.y)
+    #             print(ant.name, 'перемещён')
+    #             ant.selected = False
+    #             self.itemconfig(ant.obj, image=ant.photo_selected_False)
+    #             self.do_visible_hex(ant)       # Открываем невидимый гекс
+    #             if ant.loading:            # Тащим ягоду
+    #                 ant.loading.move_berry(ant.x, ant.y - constants.OFFSET_TOP_Y_BERRY, ant)
+    #             try:
+    #                 self.btn_list[-1].destroy()
+    #                 self.btn_list.pop()
+    #             except:
+    #                 pass
+    #
+    #     def choise_hex(self, ant, x, y):     # изменяет индексы и координаты муравья в свойствах
+    #         for hex_val in self.hexes_dict.values():
+    #             if ((x - hex_val.x) ** 2 + (y - hex_val.y) ** 2 <= constants.HEX_h ** 2
+    #                     and (ant.x - hex_val.x) ** 2 + (ant.y - hex_val.y) ** 2 <= 6 * constants.HEX_h ** 2):
+    #                 # Позволяет передвигаться ТОЛЬКО на ближайшие хексы
+    #                 ant.i = hex_val.i
+    #                 ant.j = hex_val.j
+    #                 ant.x = hex_val.x
+    #                 ant.y = hex_val.y
+    #
+    #     def do_visible_hex(self, ant):
+    #         for hex_val in self.hexes_dict.values():
+    #             if [hex_val.i, hex_val.j] == [ant.i, ant.j] and hex_val.visible is False:
+    #                 self.itemconfig(hex_val.obj, fill=constants.GREEN)
+    #                 hex_val.visible = True
+    #                 print("стал видимым гекс: ", hex_val.i, hex_val.j)
+    #
+    #                 for berry in self.berries_list:
+    #                     if [berry.i, berry.j] == [ant.i, ant.j] and not berry.visible:
+    #                         berry.do_visible_berry()
+    #                         print(ant.name, 'нашёл', berry.name)
+    #                         break
+    #
+    #                 for web in self.cobwebs_list:
+    #                     if [web.i, web.j] == [ant.i, ant.j] and not web.visible:
+    #                         web.do_visible_web()
+    #                         print(ant.name, 'нашёл паутину :(', web.id)
+    #                         ant.stuck = True
+    #                         break
+    #
+    #                 for spider in self.spiders_list:
+    #                     if [spider.i, spider.j] == [ant.i, ant.j] and not spider.visible:
+    #                         spider.do_visible_spider()
+    #                         print(ant.name, 'нашёл паука :(', spider.id)
+    #                         ant.stuck = True
+    #                         break
+    # '''
 
     def create_hexes(self):
         center = index_to_coord((6, 6))
@@ -205,54 +210,54 @@ class Field(Canvas):
                         if compare_distance((hex.x, hex.y), (x, y), '<', constants.HEX_LENGTH * 2)]
         return hexes_nearby
 
-
     # '''
-#         x = self.hexes_dict.get((6, 6)).x
-#         y = self.hexes_dict.get((6, 6)).y
-#         for indexes, hex_object in self.hexes_dict.items():
-#             if (hex_object.x - x) ** 2 + (hex_object.y - y) ** 2 >= (constants.HEX_LENGTH * 4) ** 2:
-#                 self.itemconfig(hex_object.obj, fill=constants.GREY)
-#                 hex_object.visible = False
-#                 self.invisible_hexes_dict[indexes] = hex_object  # Пополняем invisible_hexes_dict невидимыми гексами
-#
-#     def search_hex_nearby(self, i, j) -> list[object]:
-#         list_hex_nearby = []
-#         x = self.hexes_dict.get((i, j)).x
-#         y = self.hexes_dict.get((i, j)).y
-#         for indexes, hex_object in self.hexes_dict.items():
-#             if (hex_object.x - x) ** 2 + (hex_object.y - y) ** 2 <= (constants.HEX_LENGTH * 2) ** 2:
-#                 # list_hex_nearby.append(hex_object)
-#                 list_hex_nearby.append(indexes)
-#         return list_hex_nearby
-#
-#     def create_berries(self, number):
-#         # invisible_hexes_indexes = [indexes for indexes in self.invisible_hexes_dict]
-#         hexes_indexes_of_berry = []
-#         for indexes, hex_object in self.hexes_dict.items():
-#             if not hex_object.is_anthill and not hex_object.enemy:
-#                 hexes_indexes_of_berry.append(indexes)
-#
-#         berries_name_list = ['смородина', 'малина', 'клубника', 'земляника', 'брусника', 'рябина', 'клюква', 'ирга',
-#                              'калина', 'шиповник', 'голубика', 'ежевика', 'черешня', 'черника', 'бузина',
-#                              'вишня', 'черешня', 'жимолость', 'кизил', 'черёмуха']
-#
-#         for _ in range(number):
-#             indexes = random.choice(hexes_indexes_of_berry)
-#             index_i = indexes[0]
-#             index_j = indexes[1]
-#             hexes_indexes_of_berry.remove(indexes)
-#
-#             berry_name = random.choice(berries_name_list)
-#             berries_name_list.remove(berry_name)
-#
-#             value = Berry(index_i, index_j, self, berry_name)
-#             self.berries_list.append(value)
-#             # value.do_visible_berry()  # показать все ягоды
-#         for hex_under_berry in self.berries_list:
-#             if self.hexes_dict[(hex_under_berry.i, hex_under_berry.j)].visible:
-#                 hex_under_berry.do_visible_berry()
-# '''
-
+    #         x = self.hexes_dict.get((6, 6)).x
+    #         y = self.hexes_dict.get((6, 6)).y
+    #         for indexes, hex_object in self.hexes_dict.items():
+    #             if (hex_object.x - x) ** 2 + (hex_object.y - y) ** 2 >= (constants.HEX_LENGTH * 4) ** 2:
+    #                 self.itemconfig(hex_object.obj, fill=constants.GREY)
+    #                 hex_object.visible = False
+    #                 self.invisible_hexes_dict[indexes] = hex_object  # Пополняем invisible_hexes_dict
+    #                 невидимыми гексами
+    #
+    #     def search_hex_nearby(self, i, j) -> list[object]:
+    #         list_hex_nearby = []
+    #         x = self.hexes_dict.get((i, j)).x
+    #         y = self.hexes_dict.get((i, j)).y
+    #         for indexes, hex_object in self.hexes_dict.items():
+    #             if (hex_object.x - x) ** 2 + (hex_object.y - y) ** 2 <= (constants.HEX_LENGTH * 2) ** 2:
+    #                 # list_hex_nearby.append(hex_object)
+    #                 list_hex_nearby.append(indexes)
+    #         return list_hex_nearby
+    #
+    #     def create_berries(self, number):
+    #         # invisible_hexes_indexes = [indexes for indexes in self.invisible_hexes_dict]
+    #         hexes_indexes_of_berry = []
+    #         for indexes, hex_object in self.hexes_dict.items():
+    #             if not hex_object.is_anthill and not hex_object.enemy:
+    #                 hexes_indexes_of_berry.append(indexes)
+    #
+    #         berries_name_list = ['смородина', 'малина', 'клубника', 'земляника', 'брусника', 'рябина',
+    #         'клюква', 'ирга',
+    #                              'калина', 'шиповник', 'голубика', 'ежевика', 'черешня', 'черника', 'бузина',
+    #                              'вишня', 'черешня', 'жимолость', 'кизил', 'черёмуха']
+    #
+    #         for _ in range(number):
+    #             indexes = random.choice(hexes_indexes_of_berry)
+    #             index_i = indexes[0]
+    #             index_j = indexes[1]
+    #             hexes_indexes_of_berry.remove(indexes)
+    #
+    #             berry_name = random.choice(berries_name_list)
+    #             berries_name_list.remove(berry_name)
+    #
+    #             value = Berry(index_i, index_j, self, berry_name)
+    #             self.berries_list.append(value)
+    #             # value.do_visible_berry()  # показать все ягоды
+    #         for hex_under_berry in self.berries_list:
+    #             if self.hexes_dict[(hex_under_berry.i, hex_under_berry.j)].visible:
+    #                 hex_under_berry.do_visible_berry()
+    # '''
     def create_random_objects(self, class_name, quantity: int, *invalid_places: tuple) -> list:
         '''
         Fill up random objects
