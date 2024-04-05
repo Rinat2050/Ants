@@ -135,6 +135,7 @@ class Hex(Shape):
 class Berry(Shape):
     count = 0
     berries = []
+
     def __init__(self, index, canvas):
         super().__init__(index, canvas)
         self.obj = None
