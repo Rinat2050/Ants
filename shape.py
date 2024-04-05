@@ -128,9 +128,9 @@ class Hex(Shape):
 
 
 class Berry(Shape):
-    def __init__(self, index, canvas, name):
+    def __init__(self, index, canvas):
         super().__init__(index, canvas)
-        self.name = name
+        #  self.name = name
         self.obj = None
         self.visible = False
         self.taken = False
@@ -159,7 +159,7 @@ class Berry(Shape):
     def move_berry(self, ant_x, ant_y, ant):
         self.set_attributes(ant, 'i', 'j')
         self.canvas.coords(self.obj, ant_x, ant_y)
-        print(self.name, 'перемещена')
+        print('ягодка перемещена')
 
 
 class Web(Shape):

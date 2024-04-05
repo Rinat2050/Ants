@@ -10,11 +10,7 @@ class Field(Canvas):
     ants = []
     hexes_dict = {}
     invisible_hexes_dict = {}
-    berries = []
     btn_list = []
-
-    cobwebs = []
-    spiders = []
     # '''
     # cobwebs_list = []
     # spiders_list = []
@@ -37,16 +33,16 @@ class Field(Canvas):
 
         self.bind('<Button-3>', self.activate)
         self.do_invisible_hexes_start()
-        self.create_cobwebs(constants.NUMBER_OF_COBWEBS)
-        self.create_spiders(constants.NUMBER_OF_SPIDERS)
-        self.create_berries(constants.NUMBER_OF_BERRIES)
+        self.cobwebs = self.create_random_objects(Web, 8, 'is_anthill')
+        self.spiders = self.create_random_objects(Spider, 5, 'is_anthill', 'enemy')
+        self.berries = self.create_random_objects(Berry, 10, 'is_anthill', 'enemy')
         self.create_timer(constants.TIME)
         self.bind('<Button-3>', self.activate)
 
     def activate(self, event):
         print('================================')
         self.select_obj(event)
-        # print(self.list_of_hexes_nearby(6, 6))
+        #  print(self.list_of_hexes_nearby(6, 6))
 
     def select_obj(self, event):
         x, y = event.x, event.y
@@ -209,24 +205,6 @@ class Field(Canvas):
                         if compare_distance((hex.x, hex.y), (x, y), '<', constants.HEX_LENGTH * 2)]
         return hexes_nearby
 
-    def create_berries(self, quantity: int) -> None:
-        '''
-        Fill up self.berries with random Berry objects
-        returns: None
-        '''
-        hexes_indexes_of_berry = [indexes for indexes, hex in self.hexes_dict.items()
-                                  if not hex.is_anthill and not hex.enemy]
-
-        berries_names = random.sample(constants.BERRIES_NAMES, quantity)
-        indexes_of_berry_hex = random.sample(hexes_indexes_of_berry, quantity)
-
-        self.berries = [Berry(index, self, name)
-                        for index, name in
-                        list(zip(indexes_of_berry_hex, berries_names))]
-
-        for berry in self.berries:
-            if self.hexes_dict[(berry.i, berry.j)].visible:
-                berry.show()
 
     # '''
 #         x = self.hexes_dict.get((6, 6)).x
@@ -275,6 +253,27 @@ class Field(Canvas):
 #                 hex_under_berry.do_visible_berry()
 # '''
 
+    def create_random_objects(self, class_name, quantity: int, *invalid_places: tuple) -> list:
+        '''
+        Fill up random objects
+        returns: None
+        '''
+
+        hexes_indexes = set([indexes for indexes in self.hexes_dict.keys()])
+
+        for atribute in invalid_places:
+            for hex in self.hexes_dict.values():
+                if hex.__dict__[atribute]:
+                    hexes_indexes.discard((hex.i, hex.j))
+
+        indexes_of_objects_hex = random.sample(list(hexes_indexes), quantity)
+        objects = [class_name(index, self) for index in list(indexes_of_objects_hex)]
+        for obj in objects:
+            if self.hexes_dict[(obj.i, obj.j)].visible:
+                obj.show()
+
+        return objects
+
     def ant_takes_berry(self):
         ant = next(filter(lambda ant: ant.selected, self.ants), None)
         if ant is None:
@@ -290,7 +289,7 @@ class Field(Canvas):
         ant.carries = selected_berry
         selected_berry.take()
         self.itemconfig(selected_berry.obj, image=selected_berry.get_image())
-        print(ant.name, 'загружен', selected_berry.name)
+        print(ant.name, 'взял ягоду')
 
     def ant_drops_berry(self):
         ant = next(filter(lambda ant: ant.selected, self.ants), None)
@@ -302,29 +301,7 @@ class Field(Canvas):
         selected_berry.throw()
         self.itemconfig(ant.obj, image=ant.get_image())
         self.itemconfig(selected_berry.obj, image=selected_berry.get_image())
-        print(ant.name, 'разгружен', selected_berry.name)
-
-    def create_cobwebs(self, number):
-        for i in range(number):
-
-            web = Web((5+i, 3), self)
-            self.cobwebs.append(web)
-# '''
-#             web = Web(5 + i, 3, self)
-#             self.cobwebs_list.append(web)
-# '''
-            self.hexes_dict[web.i, web.j].enemy = web
-
-    def create_spiders(self, number):
-        for i in range(number):
-
-            spider = Spider((5+i, 2), self)
-            self.spiders.append(spider)
-# '''
-#             spider = Spider(5 + i, 2, self)
-#             self.spiders_list.append(spider)
-# '''
-            self.hexes_dict[spider.i, spider.j].enemy = spider
+        print(ant.name, 'бросил ягоду')
 
     def create_timer(self, time):
         self.timer = Timer(self, time, 360, 20)
