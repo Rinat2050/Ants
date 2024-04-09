@@ -42,6 +42,9 @@ class Field(Canvas):
         x, y = event.x, event.y
         for ant in self.ants:
             shift = ant.cell_size / 2
+            ant._find_and_interact(Berry.berries, "{} нашёл {}", set_stuck=False)
+            ant._find_and_interact(Web.cobwebs, "{} нашёл паутину :( {}", set_stuck=True)
+            ant._find_and_interact(Spider.spiders, "{} нашёл паука :( {}", set_stuck=True)
             if ant.selected or ant.stuck or abs(ant.x - x) > shift or abs(ant.y - y) > shift:
                 ant.deselect()
                 self.itemconfig(ant.obj, image=ant.get_image())

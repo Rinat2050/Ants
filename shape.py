@@ -81,8 +81,6 @@ class Ant(Shape):
                     obj.name if hasattr(obj, 'name') else '',
                     obj.id if hasattr(obj, 'id') else '')
                 )
-                print(obj.index)
-                print(obj.visible)
                 if set_stuck:
                     self.stuck = True
                     print('Застакан муравей')
