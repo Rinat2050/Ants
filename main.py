@@ -1,3 +1,4 @@
+# TODO: find_neighbors должна показывать только существующие
 # TODO: упростить добавление новых муравьёв. Сейчас надо не только создать объект, но и добавить его в список вручную
 # TODO: дописать Place/def ant_direction
 # TODO: заменить таймер "полосой загрузки" Progressbar
@@ -37,12 +38,6 @@ window.geometry('{w}x{h}+{x}+{y}'.format(
     y=y_offset,
 ))
 
-def coord2(event):
-  x, y = event.x, event.y
-  print(f'x={x}, y={y}')
-
-
-#window.bind('<Button-1>', coord2)
 
 place_hex = Field(window)
 place_hex.bind('<Button-3>', place_hex.activate)
