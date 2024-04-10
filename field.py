@@ -35,7 +35,7 @@ class Field(Canvas):
         self.create_timer(constants.TIME)
 
     def activate(self, event):
-        #print('================================')
+        # print('================================')
         self.select_obj(event)
 
     def select_obj(self, event):

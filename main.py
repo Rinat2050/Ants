@@ -17,7 +17,7 @@
 # TODO: сделать версию с пчёлами Улей
 
 
-from tkinter import Tk, Canvas
+from tkinter import Tk
 import constants
 from field import Field
 

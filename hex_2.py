@@ -84,17 +84,17 @@ class Hexes:
             result.append((x, y))
         return result
 
-    def find_neighbors(self, hex):
+    def find_neighbors(self, hex) -> list[tuple]:
         """Поиск координат окружающих гексов (возможно не существующих)"""
-        result = []
+        neighbors = []
         x = hex.i
         y = hex.j
-        list_search_environment = [(0, -1), (1, -1), (1, 0), (0, 1), (-1, 1), (-1, 0)]
-        for i in range(len(list_search_environment)):
-            x_new, y_new = x + list_search_environment[i][0], y + list_search_environment[i][1]
-            result.append((x_new, y_new))
-        print(result)
-        return result
+        base_neighbors = [(0, -1), (1, -1), (1, 0), (0, 1), (-1, 1), (-1, 0)]
+        for i in range(len(base_neighbors)):
+            x_new, y_new = x + base_neighbors[i][0], y + base_neighbors[i][1]
+            if (x_new, y_new) in Hex.hexes_indexes.keys():
+                neighbors.append((x_new, y_new))
+        return neighbors
 
 
 class Hex:
@@ -142,8 +142,6 @@ class Hex:
                            fill="red", font='bold 18')
 
 
-
-
 if __name__ == '__main__':
     # region
     window = Tk()
@@ -156,6 +154,6 @@ if __name__ == '__main__':
     hexes = Hexes(ROUND, 1)
     print(Hex.hexes_indexes)
     hex = Hex.hexes_indexes[(-3, 0)]
-    hexes.find_neighbors(hex)
+    print(hexes.find_neighbors(hex))
 
     window.mainloop()
