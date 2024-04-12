@@ -1,42 +1,35 @@
 from tkinter import Tk, Canvas, YES, BOTH
 from math import cos, sin, pi
 import calculate
+import constants
 
-# region
-ROUND = 4
-WIDTH_WINDOW = 900
-HEIGHT_WINDOW = 900
-HEX_LENGTH = 50  # длина стороны
-DELAY = 0  # задержка прорисовки
-distance_between_centers = 2 * (HEX_LENGTH * (3 ** 0.5) / 2)
-
-
-# endregion
 
 class Hexes:
 
-    def __init__(self, rounds, anthill_round):
+    def __init__(self, rounds, anthill_round, canvas):
+        self.canvas = canvas
         self.rounds = rounds
         self.anthill_round = anthill_round
-        self.x0 = WIDTH_WINDOW // 2
-        self.y0 = HEIGHT_WINDOW // 2
+        self.x0 = constants.WIDTH_WINDOW // 2
+        self.y0 = constants.HEIGHT_WINDOW // 2
         self.create_frame_hex()
         self.create_index()
+        self.hexes_dict = Hex.hexes_indexes
 
     def create_frame_hex(self):
         # Первый гекс
-        Hex((self.x0, self.y0), 'grey')
+        Hex((self.x0, self.y0), self.canvas)
 
         # Остальные круги
-        for round_hex in range(1, ROUND):
+        for round_hex in range(1, constants.ROUNDS):
             list_center = []
             # Создание ветвей каркаса
             for branch in range(6):
-                distance_between_centers = 2 * (HEX_LENGTH * (3 ** 0.5) / 2) * round_hex
+                distance_between_centers = 2 * (constants.HEX_LENGTH * (3 ** 0.5) / 2) * round_hex
                 radians = (branch * 2 * pi / 6) + pi / 6
                 vertex_x = calculate.round_for_painting(self.x0 + distance_between_centers * cos(radians))
                 vertex_y = calculate.round_for_painting(self.y0 + distance_between_centers * sin(radians))
-                Hex((vertex_x, vertex_y), 'green')
+                Hex((vertex_x, vertex_y), self.canvas)
                 list_center.append((vertex_x, vertex_y))
             # Заполение промежутков
             for ver in range(len(list_center)):
@@ -44,14 +37,14 @@ class Hexes:
                 x2, y2 = list_center[(ver + 1) % len(list_center)]
                 list_mediate_ver = Hexes.calculating_intermediate_vertices((x1, y1), (x2, y2), round_hex)
                 for v in list_mediate_ver:
-                    Hex(v, 'green')
+                    Hex(v, self.canvas)
 
     def create_index(self):
         # Создаём индексы
         sorted_dict = dict(sorted(Hex.hexes_coords.items()))
         iter_dict = iter(sorted_dict.keys())
         x_current = next(iter_dict)[0]
-        i = - ROUND + 1
+        i = - constants.ROUNDS + 1
         j = 0
         j0 = 0
 
@@ -102,57 +95,60 @@ class Hex:
     hexes_coords = {}
     hexes_indexes = {}
 
-    def __init__(self, center_xy: tuple, color):
-        self.center_xy = center_xy
+    def __init__(self, center_xy: tuple, canvas):
+        self.canvas = canvas
+        self.x, self.y = center_xy
         self.i = 999
         self.j = 999
-        self.color = color
         self.list_vertex = self.center_to_six_vertex()
-        self.paint_hex()
-        self.paint_text_coord()
-        Hex.hexes_coords[self.center_xy] = self
+        self.obj = self.paint_hex()
+        # self.paint_text_coord()
+        Hex.hexes_coords[(self.x, self.y)] = self
+        self.visible = True
+        self.is_anthill = False
+        self.enemy = None
 
     def center_to_six_vertex(self):
         """Преобразует центр в список 6-ти вершин"""
         result = []
         for i in range(6):
             angle_radians = i * 2 * pi / 6
-            vertex_x = calculate.round_for_painting(self.center_xy[0] + HEX_LENGTH * cos(angle_radians))
-            vertex_y = calculate.round_for_painting(self.center_xy[1] + HEX_LENGTH * sin(angle_radians))
+            vertex_x = calculate.round_for_painting(self.x + constants.HEX_LENGTH * cos(angle_radians))
+            vertex_y = calculate.round_for_painting(self.y + constants.HEX_LENGTH * sin(angle_radians))
             result.append((vertex_x, vertex_y))
         return result
 
     def paint_hex(self):
         """Рисует гекс"""
-        window.after(DELAY)
-        window.update()
-        canvas.create_polygon(self.list_vertex, fill=self.color, outline='white')
+        # window.after(constants.DELAY)
+        # window.update()
+        return self.canvas.create_polygon(self.list_vertex, fill=constants.GREEN, outline="#004D40")
 
     def paint_text_coord(self):
         """Подписывает координаты прямо на гексах"""
-        window.after(DELAY)
-        window.update()
-        canvas.create_text(self.center_xy[0], self.center_xy[1] + 20,
-                           text=self.center_xy,
+        # window.after(constants.DELAY)
+        # window.update()
+        self.canvas.create_text(self.x, self.y + 20,
+                           text=(self.x, self.y),
                            fill="white")
 
     def paint_index(self):
         """Подписывает индексы прямо на гексах"""
-        canvas.create_text(self.center_xy[0], self.center_xy[1],
-                           text=(self.i, self.j),
-                           fill="red", font='bold 18')
+        self.canvas.create_text(self.x, self.y+20,
+                           text=(self.i, ':', self.j),
+                           fill="blue")
 
 
 if __name__ == '__main__':
     # region
     window = Tk()
-    window.geometry(str(WIDTH_WINDOW) + "x" + str(HEIGHT_WINDOW) + "+1000+0")
-    canvas = Canvas(window, width=WIDTH_WINDOW, height=HEIGHT_WINDOW, bg="#53acfd")
+    window.geometry(str(constants.WIDTH_WINDOW) + "x" + str(constants.HEIGHT_WINDOW) + "+1000+0")
+    canvas = Canvas(window, width=constants.WIDTH_WINDOW, height=constants.HEIGHT_WINDOW, bg="#53acfd")
     canvas.pack(expand=YES, fill=BOTH)
     canvas.background = "red"
     # endregion
 
-    hexes = Hexes(ROUND, 1)
+    hexes = Hexes(constants.ROUNDS, 1)
     print(Hex.hexes_indexes)
     hex = Hex.hexes_indexes[(-3, 0)]
     print(hexes.find_neighbors(hex))

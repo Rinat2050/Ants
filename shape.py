@@ -5,13 +5,12 @@ import constants
 
 
 class Shape:
-    def __init__(self, index, canvas):
+    def __init__(self, index, canvas, hex):
         self.canvas = canvas
+        self.native_hex = hex
         self.i, self.j = index
-        x, y = index_to_coord(index)
-        self.x = constants.HEX_FIELD_X0 + x
-        self.y = constants.HEX_FIELD_Y0 + y
-        self.index = index
+        self.x, self.y = self.native_hex.x, self.native_hex.y
+
 
     def set_attributes(self, other, *attrs):
         for attr in attrs:
@@ -100,8 +99,8 @@ class Ant(Shape):
 
 
 class Hex(Shape):
-    def __init__(self, index, canvas):
-        super().__init__(index, canvas)
+    def __init__(self, index, canvas, hex):
+        super().__init__(index, canvas, hex)
         self.visible = True
         self.obj = self.canvas.create_polygon(
             self.count_coord(self.x, self.y),
@@ -134,12 +133,13 @@ class Berry(Shape):
     count = 0
     berries = []
 
-    def __init__(self, index, canvas):
-        super().__init__(index, canvas)
+    def __init__(self, index, canvas, hex):
+        super().__init__(index, canvas, hex)
         self.obj = None
         self.visible = False
         self.taken = False
         self._load_images()
+        print(self.count)
         self.name = constants.BERRIES_NAMES[Berry.count]
         Berry.count += 1
         self.berries.append(self)
@@ -174,8 +174,8 @@ class Web(Shape):
     count = 0
     cobwebs = []
 
-    def __init__(self, index, canvas):
-        super().__init__(index, canvas)
+    def __init__(self, index, canvas, hex):
+        super().__init__(index, canvas, hex)
         self.count += 1
         self.id = self.count
         self.visible = False
@@ -201,8 +201,8 @@ class Spider(Shape):
     count = 0
     spiders = []
 
-    def __init__(self, index, canvas):
-        super().__init__(index, canvas)
+    def __init__(self, index, canvas, hex):
+        super().__init__(index, canvas, hex)
         self.count += 1
         self.id = self.count
         self.visible = False

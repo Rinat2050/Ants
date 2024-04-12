@@ -4,11 +4,11 @@ import constants
 from shape import Shape, Ant, Berry, Hex, Web, Spider
 from interface import TakeButton, DropButton, Timer
 import random
-
+from hexes import Hexes
 
 class Field(Canvas):
     ants = []
-    hexes_dict = {}
+
     invisible_hexes_dict = {}
     btn_list = []
 
@@ -20,19 +20,23 @@ class Field(Canvas):
             bg='grey',
         )
         self.place(x=0, y=0, anchor='nw')
-        self.create_hexes()
+        # self.create_hexes()
+        self.hexes = Hexes(constants.ROUNDS, 1, self)
+        self.hexes_dict = self.hexes.hexes_dict
         self.create_anthill()
-        self.ants = [
-            Ant((6, 5), self, 'Василий'),
-            Ant((7, 6), self, 'Игорь'),
-            Ant((5, 5), self, 'Коля'),
-        ]
+        # self.ants = [
+        #     Ant((6, 5), self, 'Василий'),
+        #     Ant((7, 6), self, 'Игорь'),
+        #     Ant((5, 5), self, 'Коля'),
+        # ]
 
         self.do_invisible_hexes_start()
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'enemy')
         self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'enemy')
         self.create_timer(constants.TIME)
+        self.berry1 = Berry((-1,0), self, self.hexes_dict[(-1,0)])
+        self.berry1.show()
 
     def activate(self, event):
         # print('================================')
@@ -83,13 +87,13 @@ class Field(Canvas):
                     self.hexes_dict[(i, j)] = Hex((i, j), self)
 
     def create_anthill(self):
-        for index in ((6, 6), (6, 5), (5, 5), (5, 6), (6, 7), (7, 5), (7, 6)):
+        for index in ((0, 0),):
             self.itemconfig(self.hexes_dict.get(index).obj, fill=constants.BROWN)
             self.hexes_dict.get(index).is_anthill = True
 
     def do_invisible_hexes_start(self):
 
-        center_hex = self.hexes_dict.get((6, 6))
+        center_hex = self.hexes_dict.get((0, 0))
         for index, hex in self.hexes_dict.items():
             if compare_distance((hex.x, hex.y), (center_hex.x, center_hex.y), '>=', constants.HEX_LENGTH * 4):
                 hex.visible = False
@@ -106,7 +110,7 @@ class Field(Canvas):
         '''
         Fill up random objects. Returns: list
         '''
-
+        objects = []
         hexes_indexes = set([indexes for indexes in self.hexes_dict.keys()])
 
         for atribute in invalid_places:
@@ -115,8 +119,11 @@ class Field(Canvas):
                     hexes_indexes.discard((hex.i, hex.j))
 
         indexes_of_objects_hex = random.sample(list(hexes_indexes), quantity)
-        objects = [class_name(index, self)
-                   for index in list(indexes_of_objects_hex)]
+        for hex in self.hexes_dict.values():
+            if (hex.i, hex.j) in indexes_of_objects_hex:
+                objects = [class_name(index, self, hex) for index in list(indexes_of_objects_hex)]
+
+
         for obj in objects:
             if self.hexes_dict[(obj.i, obj.j)].visible:
                 obj.show()
