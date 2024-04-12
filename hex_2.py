@@ -85,15 +85,16 @@ class Hexes:
         return result
 
     def find_neighbors(self, hex) -> list[tuple]:
-        """Поиск координат окружающих гексов (возможно не существующих)"""
+        """Поиск координат окружающих гексов"""
         neighbors = []
-        x = hex.i
-        y = hex.j
+        i = hex.i
+        j = hex.j
+
         base_neighbors = [(0, -1), (1, -1), (1, 0), (0, 1), (-1, 1), (-1, 0)]
-        for i in range(len(base_neighbors)):
-            x_new, y_new = x + base_neighbors[i][0], y + base_neighbors[i][1]
-            if (x_new, y_new) in Hex.hexes_indexes.keys():
-                neighbors.append((x_new, y_new))
+        for index in range(len(base_neighbors)):
+            i_new, j_new = i + base_neighbors[index][0], j + base_neighbors[index][1]
+            if (i_new, j_new) in Hex.hexes_indexes.keys():
+                neighbors.append((i_new, j_new))
         return neighbors
 
 
