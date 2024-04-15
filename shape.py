@@ -1,4 +1,4 @@
-from calculate import index_to_coord, compare_distance
+from calculate import compare_distance
 from PIL import ImageTk, Image
 from math import cos, sin, pi
 import constants
@@ -87,7 +87,7 @@ class Ant(Shape):
         hex = self.canvas.hexes_dict.get((self.i, self.j))
         if not hex or hex.visible:
             return
-        hex.visible = True
+        hex.visible = False
         self.canvas.itemconfig(hex.obj, fill=constants.GREEN)
         print("стал видимым гекс: ", hex.i, hex.j)
 

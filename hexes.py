@@ -1,6 +1,4 @@
-from tkinter import Tk, Canvas, YES, BOTH
 from math import cos, sin, pi
-import calculate
 import constants
 
 
@@ -81,13 +79,23 @@ class Hexes:
         neighbors = []
         i = hex.i
         j = hex.j
-
         base_neighbors = [(0, -1), (1, -1), (1, 0), (0, 1), (-1, 1), (-1, 0)]
         for index in range(len(base_neighbors)):
             i_new, j_new = i + base_neighbors[index][0], j + base_neighbors[index][1]
             if (i_new, j_new) in Hex.hexes_indexes.keys():
                 neighbors.append((i_new, j_new))
         return neighbors
+
+    def find_neighbors_round(self, hex, round=3) -> set[tuple]:
+        """Поиск координат окружающих колец гексов"""
+        neighbors = set()
+        neighbors.update(set(self.find_neighbors(hex)))
+        new_neighbors = neighbors.copy()
+        for i in range(round):
+            for neighbor in neighbors:
+                new_neighbors.update(set(self.find_neighbors(self.hexes_dict[neighbor])))
+
+        return new_neighbors
 
 
 class Hex:
