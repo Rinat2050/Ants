@@ -132,6 +132,3 @@ class Hex:
         self.canvas.create_text(self.x, self.y + 20,
                                 text=(self.i, ':', self.j),
                                 fill="blue")
-
-
-

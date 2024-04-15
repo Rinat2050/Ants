@@ -11,7 +11,6 @@ class Shape:
         self.i, self.j = hex.i, hex.j
         self.x, self.y = self.native_hex.x, self.native_hex.y
 
-
     def set_attributes(self, other, *attrs):
         for attr in attrs:
             if hasattr(other, attr):
@@ -27,8 +26,8 @@ class Ant(Shape):
         self.cell_size = constants.ANT_CELL_SIZE
         self.color_selected = ''
         self.name = name
-        self.carries = None     # содержит ОБЪЕКТ загруженной ягоды
-        self.stuck = None       # содержит ОБЪЕКТ паутины прилипалы
+        self.carries = None  # содержит ОБЪЕКТ загруженной ягоды
+        self.stuck = None  # содержит ОБЪЕКТ паутины прилипалы
         self.selected = False
         self._load_images()
         self.obj = self.canvas.create_image(self.x, self.y, anchor='center', image=self.get_image())
@@ -67,7 +66,7 @@ class Ant(Shape):
     def choose_hex(self, x, y):
         for hex in self.canvas.hexes_dict.values():
             if compare_distance((hex.x, hex.y), (x, y), '<=', constants.HEX_h) \
-               and compare_distance((hex.x, hex.y), (self.x, self.y), '<=', 3*constants.HEX_h):
+                    and compare_distance((hex.x, hex.y), (self.x, self.y), '<=', 3 * constants.HEX_h):
                 self.set_attributes(hex, 'i', 'j', 'x', 'y')
 
     def _find_and_interact(self, objects, message_format, set_stuck=False):
@@ -105,7 +104,7 @@ class Hex(Shape):
             self.count_coord(self.x, self.y),
             fill=constants.GREEN,
             outline="#004D40")
-        self.canvas.create_text(self.x, self.y+20,
+        self.canvas.create_text(self.x, self.y + 20,
                                 text=(self.i, ':', self.j),
                                 fill="blue")
         self.is_anthill = False
@@ -116,13 +115,13 @@ class Hex(Shape):
         coordinates = []
         for i in range(6):
             vertex_x = int(
-                    center_x +
-                    constants.HEX_LENGTH * cos(i * 2 * pi / 6)
-                )
+                center_x +
+                constants.HEX_LENGTH * cos(i * 2 * pi / 6)
+            )
             vertex_y = int(
-                    center_y +
-                    constants.HEX_LENGTH * sin(i * 2 * pi / 6)
-                )
+                center_y +
+                constants.HEX_LENGTH * sin(i * 2 * pi / 6)
+            )
             coordinates.append(vertex_x)
             coordinates.append(vertex_y)
         return coordinates

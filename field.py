@@ -6,6 +6,7 @@ from interface import TakeButton, DropButton, Timer
 import random
 from hexes import Hexes
 
+
 class Field(Canvas):
     ants = []
 
@@ -101,8 +102,6 @@ class Field(Canvas):
             hex.visible = False
             self.itemconfig(hex.obj, fill=constants.GREY)
             self.invisible_hexes_dict[hex] = hex  # Пополняем invisible_hexes_dict невидимыми гексами
-
-
 
     def list_of_hexes_indexes_nearby(self, shape: Shape) -> list[tuple[int, int]]:
         x, y = shape.x, shape.y
