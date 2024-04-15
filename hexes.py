@@ -50,7 +50,7 @@ class Hexes:
             hex.i, hex.j = i, j - j0
             hex.paint_index()
             self.fill_hexes_indexes(hex)
-            x_next = next(iter_dict, '888')[0]  # последовательность заканчивается чудом
+            x_next = next(iter_dict, '999')[0]  # последовательность заканчивается чудом
             j += 1
             if x_next != x_current:  # идём по столбам
                 i += 1
@@ -138,18 +138,4 @@ class Hex:
                                 fill="blue")
 
 
-if __name__ == '__main__':
-    # region
-    window = Tk()
-    window.geometry(str(constants.WIDTH_WINDOW) + "x" + str(constants.HEIGHT_WINDOW) + "+1000+0")
-    canvas = Canvas(window, width=constants.WIDTH_WINDOW, height=constants.HEIGHT_WINDOW, bg="#53acfd")
-    canvas.pack(expand=YES, fill=BOTH)
-    canvas.background = "red"
-    # endregion
 
-    hexes = Hexes(constants.ROUNDS, 1)
-    print(Hex.hexes_indexes)
-    hex = Hex.hexes_indexes[(-3, 0)]
-    print(hexes.find_neighbors(hex))
-
-    window.mainloop()

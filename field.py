@@ -24,7 +24,7 @@ class Field(Canvas):
         self.hexes = Hexes(constants.ROUNDS, 1, self)
         self.hexes_dict = self.hexes.hexes_dict
         self.create_anthill()
-        self.do_invisible_hexes_start(4)
+        self.do_invisible_hexes_start('is_anthill')
         self.ants = [
             # Ant((6, 5), self, self.hexes_dict[(-1,0)], 'Василий'),
             # Ant((7, 6), self, 'Игорь'),
@@ -90,13 +90,19 @@ class Field(Canvas):
             self.itemconfig(self.hexes_dict.get(index).obj, fill=constants.BROWN)
             self.hexes_dict.get(index).is_anthill = True
 
-    def do_invisible_hexes_start(self, invisible_rounds):
-        center_hex = self.hexes_dict.get((0, 0))
-        for index, hex in self.hexes_dict.items():
-            if compare_distance((hex.x, hex.y), (center_hex.x, center_hex.y), '>=', constants.HEX_LENGTH * invisible_rounds):
-                hex.visible = False
-                self.itemconfig(hex.obj, fill=constants.GREY)
-                self.invisible_hexes_dict[index] = hex  # Пополняем invisible_hexes_dict невидимыми гексами
+    def do_invisible_hexes_start(self, *invalid_places):
+        # center_hex = self.hexes_dict.get((0, 0))
+        # for index, hex in self.hexes_dict.items():
+        #     if compare_distance((hex.x, hex.y), (center_hex.x, center_hex.y), '>=', constants.HEX_LENGTH * invisible_rounds):
+        #         hex.visible = False
+        #         self.itemconfig(hex.obj, fill=constants.GREY)
+        #         self.invisible_hexes_dict[index] = hex  # Пополняем invisible_hexes_dict невидимыми гексами
+        for hex in self.hexes_dict.values():
+            hex.visible = False
+            self.itemconfig(hex.obj, fill=constants.GREY)
+            self.invisible_hexes_dict[hex] = hex  # Пополняем invisible_hexes_dict невидимыми гексами
+
+
 
     def list_of_hexes_indexes_nearby(self, shape: Shape) -> list[tuple[int, int]]:
         x, y = shape.x, shape.y
