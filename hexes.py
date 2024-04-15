@@ -5,7 +5,6 @@ import constants
 
 
 class Hexes:
-
     def __init__(self, rounds, anthill_round, canvas):
         self.canvas = canvas
         self.rounds = rounds
@@ -19,7 +18,6 @@ class Hexes:
     def create_frame_hex(self):
         # Первый гекс
         Hex((self.x0, self.y0), self.canvas)
-
         # Остальные круги
         for round_hex in range(1, constants.ROUNDS):
             list_center = []
@@ -107,6 +105,7 @@ class Hex:
         self.visible = True
         self.is_anthill = False
         self.enemy = None
+        self.load = None
 
     def center_to_six_vertex(self):
         """Преобразует центр в список 6-ти вершин"""
@@ -129,14 +128,14 @@ class Hex:
         # window.after(constants.DELAY)
         # window.update()
         self.canvas.create_text(self.x, self.y + 20,
-                           text=(self.x, self.y),
-                           fill="white")
+                                text=(self.x, self.y),
+                                fill="white")
 
     def paint_index(self):
         """Подписывает индексы прямо на гексах"""
-        self.canvas.create_text(self.x, self.y+20,
-                           text=(self.i, ':', self.j),
-                           fill="blue")
+        self.canvas.create_text(self.x, self.y + 20,
+                                text=(self.i, ':', self.j),
+                                fill="blue")
 
 
 if __name__ == '__main__':
