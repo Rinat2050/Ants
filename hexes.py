@@ -25,8 +25,8 @@ class Hexes:
             for branch in range(6):
                 distance_between_centers = 2 * (constants.HEX_LENGTH * (3 ** 0.5) / 2) * round_hex
                 radians = (branch * 2 * pi / 6) + pi / 6
-                vertex_x = calculate.round_for_painting(self.x0 + distance_between_centers * cos(radians))
-                vertex_y = calculate.round_for_painting(self.y0 + distance_between_centers * sin(radians))
+                vertex_x = round(self.x0 + distance_between_centers * cos(radians))
+                vertex_y = round(self.y0 + distance_between_centers * sin(radians))
                 Hex((vertex_x, vertex_y), self.canvas)
                 list_center.append((vertex_x, vertex_y))
             # Заполение промежутков
@@ -49,6 +49,7 @@ class Hexes:
         for coord_xy, hex in sorted_dict.items():
             hex.i, hex.j = i, j - j0
             hex.paint_index()
+            # hex.paint_text_coord()      # если надо подписать координаты
             self.fill_hexes_indexes(hex)
             x_next = next(iter_dict, '999')[0]  # последовательность заканчивается чудом
             j += 1
@@ -71,7 +72,7 @@ class Hexes:
         x2, y2 = coord_2
         for part in range(1, count_med_ver):
             lam = part / (count_med_ver - part)
-            x, y = int((x1 + x2 * lam) / (1 + lam)), int((y1 + y2 * lam) / (1 + lam))
+            x, y = (round((x1 + x2 * lam) / (1 + lam)), round((y1 + y2 * lam) / (1 + lam)))
             result.append((x, y))
         return result
 
@@ -100,7 +101,6 @@ class Hex:
         self.j = 999
         self.list_vertex = self.center_to_six_vertex()
         self.obj = self.paint_hex()
-        # self.paint_text_coord()
         Hex.hexes_coords[(self.x, self.y)] = self
         self.visible = True
         self.is_anthill = False
@@ -112,22 +112,18 @@ class Hex:
         result = []
         for i in range(6):
             angle_radians = i * 2 * pi / 6
-            vertex_x = calculate.round_for_painting(self.x + constants.HEX_LENGTH * cos(angle_radians))
-            vertex_y = calculate.round_for_painting(self.y + constants.HEX_LENGTH * sin(angle_radians))
+            vertex_x = round(self.x + constants.HEX_LENGTH * cos(angle_radians), 1)
+            vertex_y = round(self.y + constants.HEX_LENGTH * sin(angle_radians), 1)
             result.append((vertex_x, vertex_y))
         return result
 
     def paint_hex(self):
         """Рисует гекс"""
-        # window.after(constants.DELAY)
-        # window.update()
         return self.canvas.create_polygon(self.list_vertex, fill=constants.GREEN, outline="#004D40")
 
     def paint_text_coord(self):
         """Подписывает координаты прямо на гексах"""
-        # window.after(constants.DELAY)
-        # window.update()
-        self.canvas.create_text(self.x, self.y + 20,
+        self.canvas.create_text(self.x, self.y - 20,
                                 text=(self.x, self.y),
                                 fill="white")
 

@@ -55,9 +55,3 @@ def compare_distance(dot1: tuple[float, float], dot2: tuple[float, float], opera
         return operators[operator_str](dist, distance)
     except KeyError:
         raise ValueError("Invalid comparison operator")
-
-
-def round_for_painting(x, base=constants.PRECISION):
-    # return base * round(float(x) / base)  # Это если точность нужно увеличивать до кратного 3, 5, 10
-    return int(round(x, base))
-    # return int(x)

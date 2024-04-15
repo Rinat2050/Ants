@@ -24,7 +24,7 @@ class Field(Canvas):
         self.hexes = Hexes(constants.ROUNDS, 1, self)
         self.hexes_dict = self.hexes.hexes_dict
         self.create_anthill()
-        self.do_invisible_hexes_start('is_anthill')
+        # self.do_invisible_hexes_start('is_anthill')
         self.ants = [
             # Ant((6, 5), self, self.hexes_dict[(-1,0)], 'Василий'),
             # Ant((7, 6), self, 'Игорь'),
