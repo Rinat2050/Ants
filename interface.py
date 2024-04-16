@@ -1,5 +1,6 @@
 from tkinter import Button, Label
 from tkinter import ttk
+import constants
 
 
 class UserButton(Button):
@@ -32,10 +33,10 @@ class DropButton(UserButton):
 
 class Timer(Label):
     def __init__(self, canvas, time, x, y):
-        super().__init__(canvas, text=time, font=("Helvetica", 40), foreground='blue')
+        super().__init__(canvas, text=time, font=("Helvetica", 15), foreground='blue')
         self.canvas = canvas
         self.time = time
-        self.place(x=x, y=y, anchor='n')
+        self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
         self.update_timer()
 
     def format_time(self, seconds):
@@ -55,19 +56,34 @@ class Timer(Label):
             self.config(text="Время вышло!")
 
 
-class Game_progressbar(ttk.Progressbar):
+class GameProgressbar(ttk.Progressbar):
+    # втроенные цвета https://www.plus2net.com/python/tkinter-colors.php
     def __init__(self, canvas, time, x, y):
         super().__init__(
             canvas,
             orient="horizontal",
-            length=500,
+            length=constants.WIDTH_WINDOW * 0.7,  # ширина полосы
             mode="determinate"
         )
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
+        self.style.configure("Horizontal.TProgressbar",
+                             background=constants.GREEN,
+                             troughcolor="lightgray",
+                             bordercolor="darkgray",
+                             lightcolor="green",
+                             darkcolor="green")
         self.canvas = canvas
+        self.time_to_start = time
         self.time = time
-        self.place(x=x, y=y, anchor='n')
-        self.start(time)
-        # self.step(500)
-        self.after(time*500, self.stop)
-        # value_var
-        print(time)
+        self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
+        self.start_progress()
+
+    def start_progress(self):
+        if self.time >= 0:
+            self.time -= 1
+            value = round(self.time * 100 / self.time_to_start, 1)
+            self.config(value=value)
+            self.after(1000, self.start_progress)
+            if value < 20:
+                self.style.configure("Horizontal.TProgressbar", background='brown2')
