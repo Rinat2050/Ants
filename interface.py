@@ -1,4 +1,5 @@
 from tkinter import Button, Label
+from tkinter import ttk
 
 
 class UserButton(Button):
@@ -52,3 +53,29 @@ class Timer(Label):
                 self.config(foreground='red')
         else:
             self.config(text="Время вышло!")
+
+
+class Game_progressbar(ttk.Progressbar):
+    def __init__(self, canvas, time, x, y):
+        super().__init__(
+            canvas,
+            variable=time,
+            orient="horizontal",
+            length=200,
+            mode="determinate"
+        )
+        self.canvas = canvas
+        self.time = time
+        self.place(x=x, y=y, anchor='n')
+        self.start_progress()
+
+    def start_progress(self):
+        self.start(10)
+        self.update_timer()
+        self.stop()
+
+    def update_timer(self):
+        if self.time > 0:
+            self.config(variable=self.time)
+            self.time -= 1
+            self.after(1000, self.update_timer)

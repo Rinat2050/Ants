@@ -94,7 +94,6 @@ class Hexes:
         for i in range(round):
             for neighbor in neighbors:
                 new_neighbors.update(set(self.find_neighbors(self.hexes_dict[neighbor])))
-
         return new_neighbors
 
 

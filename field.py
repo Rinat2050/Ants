@@ -2,7 +2,7 @@ from tkinter import Canvas
 from calculate import index_to_coord, compare_distance
 import constants
 from shape import Shape, Ant, Berry, Hex, Web, Spider
-from interface import TakeButton, DropButton, Timer
+from interface import TakeButton, DropButton, Timer, Game_progressbar
 import random
 from hexes import Hexes
 
@@ -25,17 +25,18 @@ class Field(Canvas):
         self.create_anthill()
         self.do_visible_hexes(self.hexes_dict[0, 0])
         self.ants = [
-            # Ant((6, 5), self, self.hexes_dict[(-1,0)], 'Василий'),
+            # Ant((0, 1), self, self.hexes_dict[(-1,0)], 'Василий'),
             # Ant((7, 6), self, 'Игорь'),
             # Ant((5, 5), self, 'Коля'),
         ]
         # self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')
         self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'load')
-        # self.create_timer(constants.TIME)
+        self.create_timer(constants.TIME)
+        self.create_progressbar(constants.TIME)
         # self.berry1 = Berry((-1,0), self, self.hexes_dict[(-1,0)])
         # self.berry1.show()
-        print(self.hexes.find_neighbors(self.hexes_dict[(0, 0)]))
+        # print(self.hexes.find_neighbors(self.hexes_dict[(0, 0)]))
         # print(self.hexes.find_neighbors_round(self.hexes_dict[(0, 0)], 1))
         s = self.hexes.find_neighbors_round(self.hexes_dict[(-1, 2)], 3)
         for i in s:
@@ -98,7 +99,8 @@ class Field(Canvas):
     def do_visible_hexes(self, hex_in_center, round=0):
         # center_hex = self.hexes_dict.get((0, 0))
         # for index, hex in self.hexes_dict.items():
-        #     if compare_distance((hex.x, hex.y), (center_hex.x, center_hex.y), '>=', constants.HEX_LENGTH * invisible_rounds):
+        #     if compare_distance((hex.x, hex.y), (center_hex.x, center_hex.y), '>=',
+        #     constants.HEX_LENGTH * invisible_rounds):
         #         hex.visible = False
         #         self.itemconfig(hex.obj, fill=constants.GREY)
         #         self.invisible_hexes_dict[index] = hex  # Пополняем invisible_hexes_dict невидимыми гексами
@@ -161,4 +163,7 @@ class Field(Canvas):
         print(ant.name, 'бросил ягоду')
 
     def create_timer(self, time):
-        self.timer = Timer(self, time, 360, 20)
+        self.timer = Timer(self, time, constants.WIDTH_WINDOW // 2 , 20)
+
+    def create_progressbar(self, time):
+        self.progressbar = Game_progressbar(self, time, constants.WIDTH_WINDOW // 2, 100)
