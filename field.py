@@ -1,7 +1,7 @@
 from tkinter import Canvas
 from calculate import index_to_coord, compare_distance
 import constants
-from shape import Shape, Ant, Berry, Hex, Web, Spider
+from shape import Shape, Berry, Hex, Web, Spider# , Ant
 from interface import TakeButton, DropButton, Timer, Game_progressbar
 import random
 from hexes import Hexes
@@ -163,7 +163,7 @@ class Field(Canvas):
         print(ant.name, 'бросил ягоду')
 
     def create_timer(self, time):
-        self.timer = Timer(self, time, constants.WIDTH_WINDOW // 2 , 20)
+        self.timer = Timer(self, time, constants.WIDTH_WINDOW // 2, 20)
 
     def create_progressbar(self, time):
         self.progressbar = Game_progressbar(self, time, constants.WIDTH_WINDOW // 2, 100)

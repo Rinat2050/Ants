@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import time
 
+
 def start_progress():
     progressbar_indeterminate.start(10)
     time.sleep(2)
@@ -11,6 +12,7 @@ def start_progress():
         time.sleep(0.05)
         progress_var.set(i)
         root.update_idletasks()
+
 
 root = tk.Tk()
 root.title("Progressbar Example")
