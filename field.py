@@ -1,7 +1,7 @@
 from tkinter import Canvas
-from calculate import index_to_coord, compare_distance
+from calculate import compare_distance
 import constants
-from shape import Shape, Berry, Hex, Web, Spider  # , Ant
+from shape import Shape, Berry, Web, Spider, Ant
 from interface import TakeButton, DropButton, Timer, GameProgressbar
 import random
 from hexes import Hexes
@@ -21,12 +21,12 @@ class Field(Canvas):
         self.place(x=0, y=0, anchor='nw')
         self.hexes = Hexes(constants.ROUNDS, 1, self)
         self.hexes_dict = self.hexes.hexes_dict
-        self.do_visible_hexes(self.hexes_dict[0, 0], 1)
+        self.do_visible_hexes(self.hexes_dict[0, 0], 2)
         self.create_anthill()
         self.ants = [
-            # Ant((0, 1), self, self.hexes_dict[(-1,0)], 'Василий'),
-            # Ant((7, 6), self, 'Игорь'),
-            # Ant((5, 5), self, 'Коля'),
+            Ant(self, self.hexes_dict[(-1,0)], 'Василий'),
+            Ant(self, self.hexes_dict[(-1,1)], 'Игорь'),
+            Ant(self, self.hexes_dict[(1,0)], 'Коля'),
         ]
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')

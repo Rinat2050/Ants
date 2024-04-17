@@ -35,6 +35,7 @@ class Timer(Label):
     def __init__(self, canvas, time, x, y):
         super().__init__(canvas, text=time, font=("Helvetica", 15), foreground='blue', bg="lightgray")
         self.canvas = canvas
+        self.time_to_start = time
         self.time = time
         self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
         self.update_timer()
@@ -50,7 +51,7 @@ class Timer(Label):
             self.config(text=time_str)
             self.time -= 1
             self.after(1000, self.update_timer)
-            if self.time < 30:
+            if self.time * 100 / self.time_to_start < 20:
                 self.config(foreground='red')
         else:
             self.config(text="Время вышло!")
@@ -85,5 +86,5 @@ class GameProgressbar(ttk.Progressbar):
             value = round(self.time * 100 / self.time_to_start, 1)
             self.config(value=value)
             self.after(1000, self.start_progress)
-            if value < 10:
+            if value < 20:
                 self.style.configure("Horizontal.TProgressbar", background='brown2')

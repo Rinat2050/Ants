@@ -30,7 +30,16 @@ window.geometry('{w}x{h}+{x}+{y}'.format(
 ))
 
 
+def coord(event):
+  window.title(f'x={event.x}, y={event.y}')
+def coord2(event):
+  x, y = event.x, event.y
+  print(f'x={x}, y={y}')
+
 place_hex = Field(window)
 place_hex.bind('<Button-3>', place_hex.activate)
+place_hex.bind('<Motion>', coord)
+place_hex.bind('<Button-1>', coord2)
+
 
 window.mainloop()

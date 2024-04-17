@@ -90,7 +90,6 @@ class Hexes:
         """Поиск координат окружающих колец гексов"""
         neighbors = set()
         neighbors.add((hex.i, hex.j))
-        print(neighbors)
         new_neighbors = set()
         new_neighbors.add((hex.i, hex.j))
         for i in range(round):
