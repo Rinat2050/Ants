@@ -33,7 +33,7 @@ class DropButton(UserButton):
 
 class Timer(Label):
     def __init__(self, canvas, time, x, y):
-        super().__init__(canvas, text=time, font=("Helvetica", 15), foreground='blue')
+        super().__init__(canvas, text=time, font=("Helvetica", 15), foreground='blue', bg="lightgray")
         self.canvas = canvas
         self.time = time
         self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
@@ -42,7 +42,7 @@ class Timer(Label):
     def format_time(self, seconds):
         minutes, sec = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
-        return "{:2d}:{:02d}".format(minutes, sec)
+        return "{:01d}:{:02d}".format(minutes, sec)
 
     def update_timer(self):
         if self.time > 0:
@@ -68,11 +68,11 @@ class GameProgressbar(ttk.Progressbar):
         self.style = ttk.Style()
         self.style.theme_use("clam")
         self.style.configure("Horizontal.TProgressbar",
-                             background=constants.GREEN,
-                             troughcolor="lightgray",
-                             bordercolor="darkgray",
-                             lightcolor="green",
-                             darkcolor="green")
+                             background=constants.GREEN,    # цвет полосы
+                             troughcolor="lightgray",       # цвет фона
+                             bordercolor="darkgray",        # цвет всех рамок
+                             lightcolor="green",            # цвет вверха полосы
+                             darkcolor="green")             # цвет низа полосы
         self.canvas = canvas
         self.time_to_start = time
         self.time = time
