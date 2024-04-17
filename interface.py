@@ -85,5 +85,5 @@ class GameProgressbar(ttk.Progressbar):
             value = round(self.time * 100 / self.time_to_start, 1)
             self.config(value=value)
             self.after(1000, self.start_progress)
-            if value < 20:
+            if value < 10:
                 self.style.configure("Horizontal.TProgressbar", background='brown2')

@@ -19,29 +19,20 @@ class Field(Canvas):
             bg='grey',
         )
         self.place(x=0, y=0, anchor='nw')
-        # self.create_hexes()
         self.hexes = Hexes(constants.ROUNDS, 1, self)
         self.hexes_dict = self.hexes.hexes_dict
+        self.do_visible_hexes(self.hexes_dict[0, 0], 1)
         self.create_anthill()
-        self.do_visible_hexes(self.hexes_dict[0, 0])
         self.ants = [
             # Ant((0, 1), self, self.hexes_dict[(-1,0)], 'Василий'),
             # Ant((7, 6), self, 'Игорь'),
             # Ant((5, 5), self, 'Коля'),
         ]
-        # self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
+        self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')
         self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'load')
         self.create_timer(constants.TIME)
         self.create_progressbar(constants.TIME)
-        # self.berry1 = Berry((-1,0), self, self.hexes_dict[(-1,0)])
-        # self.berry1.show()
-        # print(self.hexes.find_neighbors(self.hexes_dict[(0, 0)]))
-        # print(self.hexes.find_neighbors_round(self.hexes_dict[(0, 0)], 1))
-        s = self.hexes.find_neighbors_round(self.hexes_dict[(-1, 2)], 3)
-        for i in s:
-            w = Web(self, self.hexes_dict[i])
-            w.show()
 
     def activate(self, event):
         # print('================================')
@@ -80,16 +71,9 @@ class Field(Canvas):
 
     def ant_direction(self, event, ant):
         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
-        if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления :(
-            ant.move_obj(event)
+        # if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления :(
+        #     ant.move_obj(event)
         print('--не пойду! Там враг!')
-
-    def create_hexes(self):
-        center = index_to_coord((6, 6))
-        for i in range(12):
-            for j in range(12):
-                if compare_distance(index_to_coord((i, j)), center, '<=', 300):
-                    self.hexes_dict[(i, j)] = Hex((i, j), self)
 
     def create_anthill(self):
         for index in ((0, 0),):
@@ -104,11 +88,10 @@ class Field(Canvas):
         #         hex.visible = False
         #         self.itemconfig(hex.obj, fill=constants.GREY)
         #         self.invisible_hexes_dict[index] = hex  # Пополняем invisible_hexes_dict невидимыми гексами
-        list_of_visible = []
-        list_of_visible.append(hex_in_center)
-        # for hex in list_of_visible:
-        #     hex.visible = True
-        #     self.itemconfig(hex.obj, fill=constants.GREY)
+        list_of_visible = self.hexes.find_neighbors_round(hex_in_center, round)
+        for index in list_of_visible:
+            self.hexes_dict[index].visible = True
+            self.itemconfig(self.hexes_dict[index].obj, fill=constants.GREEN)
 
     def list_of_hexes_indexes_nearby(self, shape: Shape) -> list[tuple[int, int]]:
         x, y = shape.x, shape.y

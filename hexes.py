@@ -86,21 +86,24 @@ class Hexes:
                 neighbors.append((i_new, j_new))
         return neighbors
 
-    def find_neighbors_round(self, hex, round=3) -> set[tuple]:
+    def find_neighbors_round(self, hex, round=0) -> set[tuple]:
         """Поиск координат окружающих колец гексов"""
         neighbors = set()
-        neighbors.update(set(self.find_neighbors(hex)))
-        new_neighbors = neighbors.copy()
+        neighbors.add((hex.i, hex.j))
+        print(neighbors)
+        new_neighbors = set()
+        new_neighbors.add((hex.i, hex.j))
         for i in range(round):
             for neighbor in neighbors:
                 new_neighbors.update(set(self.find_neighbors(self.hexes_dict[neighbor])))
-        return new_neighbors
+            neighbors = new_neighbors.copy()
+            new_neighbors = set()
+        return neighbors
 
 
 class Hex:
     hexes_coords = {}
     hexes_indexes = {}
-
     def __init__(self, center_xy: tuple, canvas):
         self.canvas = canvas
         self.x, self.y = center_xy
@@ -109,9 +112,8 @@ class Hex:
         self.list_vertex = self.center_to_six_vertex()
         self.obj = self.paint_hex()
         Hex.hexes_coords[(self.x, self.y)] = self
-        self.visible = True
+        self.visible = False
         self.is_anthill = False
-        self.enemy = None
         self.load = None
 
     def center_to_six_vertex(self):
@@ -126,7 +128,7 @@ class Hex:
 
     def paint_hex(self):
         """Рисует гекс"""
-        return self.canvas.create_polygon(self.list_vertex, fill=constants.GREEN, outline="#004D40")
+        return self.canvas.create_polygon(self.list_vertex, fill=constants.GREY, outline="#004D40")
 
     def paint_text_coord(self):
         """Подписывает координаты прямо на гексах"""
