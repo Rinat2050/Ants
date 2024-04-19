@@ -31,7 +31,6 @@ window.geometry('{w}x{h}+{x}+{y}'.format(
 ))
 
 
-
 def coord2(event):
   x, y = event.x, event.y
   # print(f'x={x}, y={y}')
@@ -39,7 +38,5 @@ def coord2(event):
 
 place_hex = Field(window)
 place_hex.bind('<Button-3>', place_hex.activate)
-place_hex.bind('<Button-1>', coord2)
-
-
+place_hex.bind('<Button-1>', place_hex.operate)
 window.mainloop()

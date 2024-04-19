@@ -23,11 +23,9 @@ class Field(Canvas):
         self.hexes_dict = self.hexes.hexes_dict
         self.do_visible_hexes(self.hexes_dict[0, 0], 2)
         self.create_anthill()
-        self.ants = [
-            Ant(self, self.hexes_dict[(-1,0)], 'Василий'),
-            Ant(self, self.hexes_dict[(-1,1)], 'Игорь'),
-            Ant(self, self.hexes_dict[(1,0)], 'Коля'),
-        ]
+        self.create_ant((-1,0), 'Василий')
+        self.create_ant((-1, 1), 'Игорь')
+        self.create_ant((1, 0), 'Коля')
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')
         self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'load')
@@ -35,7 +33,9 @@ class Field(Canvas):
         self.create_progressbar(constants.TIME)
 
     def activate(self, event):
-        # print('================================')
+        print('================================')
+        for ant in self.ants:
+            ant.deselect()
         index = self.coord_to_index(event)
         hex = self.hexes_dict.get(index, None)
         if hex is None:
@@ -46,14 +46,24 @@ class Field(Canvas):
         else:
             print("Гекс без муравья")
 
+    def select_obj(self, hex):
+        print((hex.i, hex.j), hex.ant.name)
+        if type(hex.load) is Web or type(hex.load) is Spider:
+            print('Я застакан :(')
+            return
+        hex.ant.select()
+        if type(hex.load) is Berry:
+            print('Стою на Ягоде')
+            # self.ant_takes_berry()
+        if hex.ant.carries:
+            pass    # Добавить кнопку Бросить ягоду
 
-
-
-    #     self.select_obj(event)
-    #
-    # def select_obj(self, event):
-    #     x, y = event.x, event.y
-
+    def operate(self, event):
+        ant_selected = None
+        for ant in self.ants:
+            if ant.selected:
+                ant_selected = ant
+        ant_selected.move(event)
 
 
 
@@ -104,6 +114,11 @@ class Field(Canvas):
                 if self.hexes_dict[(hex.i, hex.j)].visible:
                     elem.show()
 
+    def create_ant(self, index, name):
+        ant = Ant(self, self.hexes_dict[index], name)
+        Field.ants.append(ant)
+        self.hexes_dict[index].ant = ant
+
     def ant_takes_berry(self):
         ant = next(filter(lambda ant: ant.selected, self.ants), None)
         if ant is None:
@@ -145,3 +160,5 @@ class Field(Canvas):
             if compare_distance((hex.x, hex.y), (x, y), '<=', constants.HEX_h):
                 return (hex.i, hex.j)
         return ("Гекс не найден")
+
+

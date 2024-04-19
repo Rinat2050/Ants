@@ -43,11 +43,13 @@ class Ant(Shape):
 
     def select(self):
         self.selected = True
+        self.canvas.itemconfig(self.obj, image=self.get_image())
 
     def deselect(self):
         self.selected = False
+        self.canvas.itemconfig(self.obj, image=self.get_image())
 
-    def move_obj(self, event):
+    def move(self, event):
         if not self.selected:
             print('Выберите муравья!')
             return
