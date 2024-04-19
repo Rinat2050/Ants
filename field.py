@@ -54,7 +54,7 @@ class Field(Canvas):
         hex.ant.select()
         if type(hex.load) is Berry:
             print('Стою на Ягоде')
-            # self.ant_takes_berry()
+            self.btn_list.append(TakeButton(self, "Взять", hex.x, hex.y))
         if hex.ant.carries:
             pass    # Добавить кнопку Бросить ягоду
 
@@ -65,6 +65,26 @@ class Field(Canvas):
                 ant_selected = ant
         ant_selected.move(event)
 
+    def ant_takes_berry(self):
+        pass
+
+
+    # def ant_takes_berry(self):
+    #     ant = next(filter(lambda ant: ant.selected, self.ants), None)
+    #     if ant is None:
+    #         return  # TODO custom error raise or pass like argument ant object
+    #     ant.deselect()
+    #     self.itemconfig(ant.obj, image=ant.get_image())
+    #
+    #     for berry in Berry.berries:
+    #         if berry.has_matching_indexes_with(ant) and not ant.carries:
+    #             selected_berry = berry
+    #             break
+    #
+    #     ant.carries = selected_berry
+    #     selected_berry.take()
+    #     self.itemconfig(selected_berry.obj, image=selected_berry.get_image())
+    #     print(ant.name, 'взял ягоду')
 
 
     def ant_direction(self, event, ant):
@@ -119,22 +139,6 @@ class Field(Canvas):
         Field.ants.append(ant)
         self.hexes_dict[index].ant = ant
 
-    def ant_takes_berry(self):
-        ant = next(filter(lambda ant: ant.selected, self.ants), None)
-        if ant is None:
-            return  # TODO custom error raise or pass like argument ant object
-        ant.deselect()
-        self.itemconfig(ant.obj, image=ant.get_image())
-
-        for berry in Berry.berries:
-            if berry.has_matching_indexes_with(ant) and not ant.carries:
-                selected_berry = berry
-                break
-
-        ant.carries = selected_berry
-        selected_berry.take()
-        self.itemconfig(selected_berry.obj, image=selected_berry.get_image())
-        print(ant.name, 'взял ягоду')
 
     def ant_drops_berry(self):
         ant = next(filter(lambda ant: ant.selected, self.ants), None)
