@@ -114,6 +114,7 @@ class Hex:
         self.visible = False
         self.is_anthill = False
         self.load = None
+        self.ant = None
 
     def center_to_six_vertex(self):
         """Преобразует центр в список 6-ти вершин"""

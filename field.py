@@ -36,38 +36,26 @@ class Field(Canvas):
 
     def activate(self, event):
         # print('================================')
-        self.select_obj(event)
+        index = self.coord_to_index(event)
+        hex = self.hexes_dict.get(index, None)
+        if hex is None:
+            print("Нет гекса")
+            return None
+        if hex.ant:
+            self.select_obj(hex)
+        else:
+            print("Гекс без муравья")
 
-    def select_obj(self, event):
-        x, y = event.x, event.y
-        for ant in self.ants:
-            shift = ant.cell_size / 2
-            ant._find_and_interact(Berry.berries, "{} нашёл {}", set_stuck=False)
-            ant._find_and_interact(Web.cobwebs, "{} нашёл паутину :( {}", set_stuck=True)
-            ant._find_and_interact(Spider.spiders, "{} нашёл паука :( {}", set_stuck=True)
-            if ant.selected or ant.stuck or abs(ant.x - x) > shift or abs(ant.y - y) > shift:
-                ant.deselect()
-                self.itemconfig(ant.obj, image=ant.get_image())
-                continue
-            ant.select()
-            self.itemconfig(ant.obj, image=ant.get_image())
-            print(ant.name, 'выбран')
-            self.bind('<Button-1>', lambda e, arg=ant: self.ant_direction(e, arg))
-            if not ant.carries:
-                for berry in Berry.berries:
-                    if berry.has_matching_indexes_with(ant) and not berry.taken:
-                        self.btn_list.append(TakeButton(self, "Взять", ant.x, ant.y))
-                        break
-                hexes_indexes_nearby = self.list_of_hexes_indexes_nearby(ant)
-                for ant_friend in self.ants:
-                    if (ant_friend.i, ant_friend.j) in hexes_indexes_nearby and ant_friend.stuck:
-                        print("Друг в беде!", ant_friend.name, ant_friend.i, ant_friend.j)
 
-            else:
-                if self.hexes_dict.get((ant.i, ant.j)).is_anthill:
-                    self.btn_list.append(DropButton(self, 'Бросить', ant.x, ant.y))
-                    print(ant.name, 'дома с ягодкой')
-            break
+
+
+    #     self.select_obj(event)
+    #
+    # def select_obj(self, event):
+    #     x, y = event.x, event.y
+
+
+
 
     def ant_direction(self, event, ant):
         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
@@ -150,3 +138,10 @@ class Field(Canvas):
 
     def create_progressbar(self, time):
         self.progressbar = GameProgressbar(self, time, 999, 40)
+
+    def coord_to_index(self, event):
+        x, y = event.x, event.y
+        for hex in self.hexes_dict.values():
+            if compare_distance((hex.x, hex.y), (x, y), '<=', constants.HEX_h):
+                return (hex.i, hex.j)
+        return ("Гекс не найден")
