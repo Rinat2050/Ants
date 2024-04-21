@@ -160,9 +160,11 @@ class Berry(Shape):
 
     def take(self):
         self.taken = True
+        self.canvas.itemconfig(self.obj, image=self.get_image())
 
     def throw(self):
         self.taken = False
+        self.canvas.itemconfig(self.obj, image=self.get_image())
 
     def move_berry(self, ant_x, ant_y, ant):
         self.set_attributes(ant, 'i', 'j')

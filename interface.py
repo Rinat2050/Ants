@@ -4,30 +4,31 @@ import constants
 
 
 class UserButton(Button):
-    def __init__(self, canvas, text, x, y):
+    def __init__(self, canvas, text, hex):
         super().__init__(text=text, bg='green', activebackground='green', command=self.on_click)
         self.canvas = canvas
-        self.place(x=x, y=y, anchor='n')
+        self.hex = hex
+        self.place(x=hex.x, y=hex.y, anchor='n')
 
     def on_click(self):
         self.destroy()
 
 
 class TakeButton(UserButton):
-    def __init__(self, canvas, text, x, y):
-        super().__init__(canvas, text, x, y)
+    def __init__(self, canvas, text, hex):
+        super().__init__(canvas, text, hex)
 
     def on_click(self):
-        self.canvas.ant_takes_berry()
+        self.canvas.ant_takes_berry(self.hex)
         self.destroy()
 
 
 class DropButton(UserButton):
-    def __init__(self, canvas, text, x, y):
-        super().__init__(canvas, text, x, y)
+    def __init__(self, canvas, text, hex):
+        super().__init__(canvas, text, hex)
 
     def on_click(self):
-        self.canvas.ant_drops_berry()
+        self.canvas.ant_drops_berry(self.hex)
         self.destroy()
 
 
