@@ -47,23 +47,34 @@ class Field(Canvas):
             print("Гекс без муравья")
 
     def select_obj(self, hex):
-        print(hex.ant.name, (hex.i, hex.j))
+        print(hex.ant.name, "выбран", (hex.i, hex.j))
         if type(hex.load) is Web or type(hex.load) is Spider:
             print('Я застакан :(')
             return
         hex.ant.select()
         if type(hex.load) is Berry:
             print('Стою на Ягоде')
-            self.btn_list.append(TakeButton(self, "Взять", hex))
+            if not hex.ant.carries:
+                self.btn_list.append(TakeButton(self, "Взять", hex))
         if hex.ant.carries:
             pass    # Добавить кнопку Бросить ягоду
 
     def operate(self, event):
-        ant_selected = None
-        for ant in self.ants:
-            if ant.selected:
-                ant_selected = ant
-        ant_selected.move(event)
+        for hex_start in self.hexes_dict.values():
+            if hex_start.ant:
+                if hex_start.ant.selected:
+                    hex_start.ant.deselect()
+                    index = self.coord_to_index(event)
+                    hex_finish = self.hexes_dict.get(index, None)
+                    if not hex_finish or hex_finish.ant:
+                        return
+                    if (hex_finish.i, hex_finish.j) in self.hexes.find_neighbors(hex_start):
+                        ant_traveler = hex_start.ant
+                        hex_start.ant.move(hex_finish)
+                        hex_start.ant = None
+                        hex_finish.ant = ant_traveler
+                        break
+
 
     def ant_takes_berry(self, hex):
         hex.ant.deselect()

@@ -116,6 +116,14 @@ class Hex:
         self.load = None
         self.ant = None
 
+    def make_visible(self):
+        self.visible = True
+        self.canvas.itemconfig(self.obj, fill=constants.GREEN)
+
+    def make_invisible(self):
+        self.visible = False
+        self.canvas.itemconfig(self.obj, fill=constants.GREY)
+
     def center_to_six_vertex(self):
         """Преобразует центр в список 6-ти вершин"""
         result = []

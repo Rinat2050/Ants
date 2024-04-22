@@ -49,27 +49,16 @@ class Ant(Shape):
         self.selected = False
         self.canvas.itemconfig(self.obj, image=self.get_image())
 
-    def move(self, event):
-        if not self.selected:
-            print('Выберите муравья!')
-            return
-        self.selected = False
-        self.choose_hex(event.x, event.y)
+    def move(self, hex):
+        self.set_attributes(hex, 'i', 'j', 'x', 'y')
         self.canvas.coords(self.obj, self.x, self.y)
-        print(self.name, 'перемещён')
-        self.canvas.itemconfig(self.obj, image=self.get_image())
-        self.show_hex()  # Открываем невидимый гекс
+        print(self.name, 'перемещён', (self.i, self.j))
+        self.show_hex()  # Открываем невидимый гекс !!!!!!!!!!!!!!!!!
         if self.carries:  # Тащим ягоду
             self.carries.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
         if len(self.canvas.btn_list) > 0:
             self.canvas.btn_list.pop().destroy()
             # TODO fix this, button must be destroyed from method where button was clicked
-
-    def choose_hex(self, x, y):
-        for hex in self.canvas.hexes_dict.values():
-            if compare_distance((hex.x, hex.y), (x, y), '<=', constants.HEX_h) \
-                    and compare_distance((hex.x, hex.y), (self.x, self.y), '<=', 3 * constants.HEX_h):
-                self.set_attributes(hex, 'i', 'j', 'x', 'y')
 
     def _find_and_interact(self, objects, message_format, set_stuck=False):
         for obj in objects:
@@ -87,46 +76,13 @@ class Ant(Shape):
 
     def show_hex(self):
         hex = self.canvas.hexes_dict.get((self.i, self.j))
-        if not hex or hex.visible:
+        if hex.visible:
             return
-        hex.visible = False
-        self.canvas.itemconfig(hex.obj, fill=constants.GREEN)
-        print("стал видимым гекс: ", hex.i, hex.j)
-
+        hex.make_visible()
+        print("стал видимым гекс: ", (hex.i, hex.j))
         self._find_and_interact(Berry.berries, "{} нашёл {}", set_stuck=False)
         self._find_and_interact(Web.cobwebs, "{} нашёл паутину :( {}", set_stuck=True)
         self._find_and_interact(Spider.spiders, "{} нашёл паука :( {}", set_stuck=True)
-
-
-# class Hex(Shape):
-#     def __init__(self, canvas, hex):
-#         super().__init__(canvas, hex)
-#         self.visible = True
-#         self.obj = self.canvas.create_polygon(
-#             self.count_coord(self.x, self.y),
-#             fill=constants.GREEN,
-#             outline="#004D40")
-#         self.canvas.create_text(self.x, self.y + 20,
-#                                 text=(self.i, ':', self.j),
-#                                 fill="blue")
-#         self.is_anthill = False
-#         self.enemy = None
-#
-#     @staticmethod
-#     def count_coord(center_x, center_y):
-#         coordinates = []
-#         for i in range(6):
-#             vertex_x = int(
-#                 center_x +
-#                 constants.HEX_LENGTH * cos(i * 2 * pi / 6)
-#             )
-#             vertex_y = int(
-#                 center_y +
-#                 constants.HEX_LENGTH * sin(i * 2 * pi / 6)
-#             )
-#             coordinates.append(vertex_x)
-#             coordinates.append(vertex_y)
-#         return coordinates
 
 
 class Berry(Shape):
@@ -139,7 +95,6 @@ class Berry(Shape):
         self.visible = False
         self.taken = False
         self._load_images()
-        # print(self.count)
         self.name = constants.BERRIES_NAMES[Berry.count]
         Berry.count += 1
         self.berries.append(self)
