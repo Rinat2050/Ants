@@ -18,7 +18,7 @@ class Field(Canvas):
         self.place(x=0, y=0, anchor='nw')
         self.hexes = Hexes(constants.ROUNDS, 1, self)
         self.hexes_dict = self.hexes.hexes_dict
-        self.do_visible_hexes(self.hexes_dict[0, 0], 2)
+        self.do_visible_hexes(self.hexes_dict[0, 0], 1)
         self.create_anthill()
         self.create_ant((-1, 0), 'Василий')
         self.create_ant((-1, 1), 'Игорь')
@@ -79,27 +79,17 @@ class Field(Canvas):
 
     def ant_takes_berry(self, hex):
         hex.ant.deselect()
-        if not hex.ant.carries:
-            hex.ant.carries = hex.load
-            hex.load = None
-            hex.ant.carries.take()
+        hex.ant.carries = hex.load
+        hex.load = None
+        hex.ant.carries.take()
+        print(hex.ant.name, 'взял ягоду')
 
-    # def ant_takes_berry(self):
-    #     ant = next(filter(lambda ant: ant.selected, self.ants), None)
-    #     if ant is None:
-    #         return  # TODO custom error raise or pass like argument ant object
-    #     ant.deselect()
-    #     self.itemconfig(ant.obj, image=ant.get_image())
-    #
-    #     for berry in Berry.berries:
-    #         if berry.has_matching_indexes_with(ant) and not ant.carries:
-    #             selected_berry = berry
-    #             break
-    #
-    #     ant.carries = selected_berry
-    #     selected_berry.take()
-    #     self.itemconfig(selected_berry.obj, image=selected_berry.get_image())
-    #     print(ant.name, 'взял ягоду')
+    def ant_drops_berry(self, hex):
+        hex.ant.deselect()
+        hex.load = hex.ant.carries
+        hex.load.throw()
+        hex.ant.carries = None
+        print(hex.ant.name, 'бросил ягоду')
 
     def ant_direction(self, event, ant):
         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
@@ -152,13 +142,6 @@ class Field(Canvas):
         ant = Ant(self, self.hexes_dict[index], name)
         # Field.ants.append(ant)
         self.hexes_dict[index].ant = ant
-
-    def ant_drops_berry(self, hex):
-        hex.ant.deselect()
-        hex.load = hex.ant.carries
-        hex.load.throw()
-        hex.ant.carries = None
-        print(hex.ant.name, 'бросил ягоду')
 
     def create_timer(self, time):
         self.timer = Timer(self, time, 999, 70)
