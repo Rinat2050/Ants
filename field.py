@@ -153,17 +153,12 @@ class Field(Canvas):
         # Field.ants.append(ant)
         self.hexes_dict[index].ant = ant
 
-    def ant_drops_berry(self):
-        ant = next(filter(lambda ant: ant.selected, Ant.ants), None)
-        if ant is None:
-            return  # TODO custom error raise or pass like argument ant object
-        ant.selected = False
-        selected_berry = ant.carries
-        ant.carries = None
-        selected_berry.throw()
-        self.itemconfig(ant.obj, image=ant.get_image())
-        self.itemconfig(selected_berry.obj, image=selected_berry.get_image())
-        print(ant.name, 'бросил ягоду')
+    def ant_drops_berry(self, hex):
+        hex.ant.deselect()
+        hex.load = hex.ant.carries
+        hex.load.throw()
+        hex.ant.carries = None
+        print(hex.ant.name, 'бросил ягоду')
 
     def create_timer(self, time):
         self.timer = Timer(self, time, 999, 70)
