@@ -1,4 +1,4 @@
-for ant in self.ants:
+for ant in Ant.ants:
     shift = ant.cell_size / 2
     ant._find_and_interact(Berry.berries, "{} нашёл {}", set_stuck=False)
     ant._find_and_interact(Web.cobwebs, "{} нашёл паутину :( {}", set_stuck=True)
@@ -17,7 +17,7 @@ for ant in self.ants:
                 self.btn_list.append(TakeButton(self, "Взять", ant.x, ant.y))
                 break
         hexes_indexes_nearby = self.list_of_hexes_indexes_nearby(ant)
-        for ant_friend in self.ants:
+        for ant_friend in Ant.ants:
             if (ant_friend.i, ant_friend.j) in hexes_indexes_nearby and ant_friend.stuck:
                 print("Друг в беде!", ant_friend.name, ant_friend.i, ant_friend.j)
 

@@ -4,6 +4,8 @@ import constants
 
 
 class UserButton(Button):
+    btn_list = []
+
     def __init__(self, canvas, text, hex):
         super().__init__(text=text, bg='green', activebackground='green', command=self.on_click)
         self.canvas = canvas
@@ -17,6 +19,7 @@ class UserButton(Button):
 class TakeButton(UserButton):
     def __init__(self, canvas, text, hex):
         super().__init__(canvas, text, hex)
+        UserButton.btn_list.append(self)
 
     def on_click(self):
         self.canvas.ant_takes_berry(self.hex)
@@ -26,6 +29,7 @@ class TakeButton(UserButton):
 class DropButton(UserButton):
     def __init__(self, canvas, text, hex):
         super().__init__(canvas, text, hex)
+        UserButton.btn_list.append(self)
 
     def on_click(self):
         self.canvas.ant_drops_berry(self.hex)
@@ -70,11 +74,11 @@ class GameProgressbar(ttk.Progressbar):
         self.style = ttk.Style()
         self.style.theme_use("clam")
         self.style.configure("Horizontal.TProgressbar",
-                             background=constants.GREEN,    # цвет полосы
-                             troughcolor="lightgray",       # цвет фона
-                             bordercolor="darkgray",        # цвет всех рамок
-                             lightcolor="green",            # цвет вверха полосы
-                             darkcolor="green")             # цвет низа полосы
+                             background=constants.GREEN,  # цвет полосы
+                             troughcolor="lightgray",  # цвет фона
+                             bordercolor="darkgray",  # цвет всех рамок
+                             lightcolor="green",  # цвет вверха полосы
+                             darkcolor="green")  # цвет низа полосы
         self.canvas = canvas
         self.time_to_start = time
         self.time = time

@@ -103,6 +103,7 @@ class Hexes:
 class Hex:
     hexes_coords = {}
     hexes_indexes = {}
+
     def __init__(self, center_xy: tuple, canvas):
         self.canvas = canvas
         self.x, self.y = center_xy
@@ -115,6 +116,11 @@ class Hex:
         self.is_anthill = False
         self.load = None
         self.ant = None
+        self.buttons = []
+
+    def del_butons(self):
+        for button in self.buttons:
+            button.destroy()
 
     def make_visible(self):
         self.visible = True

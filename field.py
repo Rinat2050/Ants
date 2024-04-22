@@ -8,9 +8,6 @@ from hexes import Hexes
 
 
 class Field(Canvas):
-    ants = []
-    btn_list = []
-
     def __init__(self, root):
         super().__init__(
             root,
@@ -23,7 +20,7 @@ class Field(Canvas):
         self.hexes_dict = self.hexes.hexes_dict
         self.do_visible_hexes(self.hexes_dict[0, 0], 2)
         self.create_anthill()
-        self.create_ant((-1,0), 'Василий')
+        self.create_ant((-1, 0), 'Василий')
         self.create_ant((-1, 1), 'Игорь')
         self.create_ant((1, 0), 'Коля')
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
@@ -33,8 +30,11 @@ class Field(Canvas):
         self.create_progressbar(constants.TIME)
 
     def activate(self, event):
+        """Клик правой клавишей мыши"""
         print('================================')
-        for ant in self.ants:
+        for hex in self.hexes_dict.values():
+            hex.del_butons()
+        for ant in Ant.ants:
             ant.deselect()
         index = self.coord_to_index(event)
         hex = self.hexes_dict.get(index, None)
@@ -47,34 +47,35 @@ class Field(Canvas):
             print("Гекс без муравья")
 
     def select_obj(self, hex):
+        """Действия муравья"""
         print(hex.ant.name, "выбран", (hex.i, hex.j))
         if type(hex.load) is Web or type(hex.load) is Spider:
             print('Я застакан :(')
             return
         hex.ant.select()
-        if type(hex.load) is Berry:
-            print('Стою на Ягоде')
-            if not hex.ant.carries:
-                self.btn_list.append(TakeButton(self, "Взять", hex))
         if hex.ant.carries:
-            pass    # Добавить кнопку Бросить ягоду
+            if hex.is_anthill:
+                hex.buttons.append(DropButton(self, 'Бросить', hex))
+        else:
+            if type(hex.load) is Berry:
+                hex.buttons.append(TakeButton(self, "Взять", hex))
 
     def operate(self, event):
+        """Клик левой клавишей мыши"""
         for hex_start in self.hexes_dict.values():
-            if hex_start.ant:
-                if hex_start.ant.selected:
-                    hex_start.ant.deselect()
-                    index = self.coord_to_index(event)
-                    hex_finish = self.hexes_dict.get(index, None)
-                    if not hex_finish or hex_finish.ant:
-                        return
-                    if (hex_finish.i, hex_finish.j) in self.hexes.find_neighbors(hex_start):
-                        ant_traveler = hex_start.ant
-                        hex_start.ant.move(hex_finish)
-                        hex_start.ant = None
-                        hex_finish.ant = ant_traveler
-                        break
-
+            if hex_start.ant and hex_start.ant.selected:
+                hex_start.ant.deselect()
+                hex_start.del_butons()
+                index = self.coord_to_index(event)
+                hex_finish = self.hexes_dict.get(index, None)
+                if not hex_finish or hex_finish.ant:
+                    return
+                if (hex_finish.i, hex_finish.j) in self.hexes.find_neighbors(hex_start):
+                    ant_traveler = hex_start.ant
+                    hex_start.ant.move(hex_finish)
+                    hex_start.ant = None
+                    hex_finish.ant = ant_traveler
+                    break
 
     def ant_takes_berry(self, hex):
         hex.ant.deselect()
@@ -99,7 +100,6 @@ class Field(Canvas):
     #     selected_berry.take()
     #     self.itemconfig(selected_berry.obj, image=selected_berry.get_image())
     #     print(ant.name, 'взял ягоду')
-
 
     def ant_direction(self, event, ant):
         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
@@ -150,12 +150,11 @@ class Field(Canvas):
 
     def create_ant(self, index, name):
         ant = Ant(self, self.hexes_dict[index], name)
-        Field.ants.append(ant)
+        # Field.ants.append(ant)
         self.hexes_dict[index].ant = ant
 
-
     def ant_drops_berry(self):
-        ant = next(filter(lambda ant: ant.selected, self.ants), None)
+        ant = next(filter(lambda ant: ant.selected, Ant.ants), None)
         if ant is None:
             return  # TODO custom error raise or pass like argument ant object
         ant.selected = False
@@ -178,5 +177,3 @@ class Field(Canvas):
             if compare_distance((hex.x, hex.y), (x, y), '<=', constants.HEX_h):
                 return (hex.i, hex.j)
         return ("Гекс не найден")
-
-

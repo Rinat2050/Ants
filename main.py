@@ -1,4 +1,4 @@
-# TODO: Достать методы уничтожения кнопки из Шейпа и удалять кнопку Взять если не сможет сходить
+# TODO: меняются ли ij ягод при перетаскивании?
 # TODO: при перемещении муравья заменять привязку к гексу
 # TODO: упростить добавление новых муравьёв. Сейчас надо не только создать объект, но и добавить его в список вручную
 # TODO: дописать Place/def ant_direction
@@ -16,7 +16,6 @@ from tkinter import Tk
 import constants
 from field import Field
 
-
 window = Tk()
 window.title('ANTS')
 screen_width = window.winfo_screenwidth()
@@ -31,12 +30,6 @@ window.geometry('{w}x{h}+{x}+{y}'.format(
     x=x_offset,
     y=y_offset,
 ))
-
-
-def coord2(event):
-  x, y = event.x, event.y
-  # print(f'x={x}, y={y}')
-  print(place_hex.coord_to_index(event))
 
 place_hex = Field(window)
 place_hex.bind('<Button-3>', place_hex.activate)

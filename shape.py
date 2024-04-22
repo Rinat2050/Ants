@@ -1,6 +1,4 @@
-from calculate import compare_distance
 from PIL import ImageTk, Image
-from math import cos, sin, pi
 import constants
 
 
@@ -21,6 +19,8 @@ class Shape:
 
 
 class Ant(Shape):
+    ants = []
+
     def __init__(self, canvas, hex, name):
         super().__init__(canvas, hex)
         self.cell_size = constants.ANT_CELL_SIZE
@@ -31,6 +31,7 @@ class Ant(Shape):
         self.selected = False
         self._load_images()
         self.obj = self.canvas.create_image(self.x, self.y, anchor='center', image=self.get_image())
+        self.ants.append(self)
 
     def _load_images(self):
         original_image = Image.open("image/ant.png")
@@ -56,9 +57,9 @@ class Ant(Shape):
         self.show_hex()  # Открываем невидимый гекс !!!!!!!!!!!!!!!!!
         if self.carries:  # Тащим ягоду
             self.carries.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
-        if len(self.canvas.btn_list) > 0:
-            self.canvas.btn_list.pop().destroy()
-            # TODO fix this, button must be destroyed from method where button was clicked
+        # if len(self.canvas.btn_list) > 0:
+        #     self.canvas.btn_list.pop().destroy()
+        # TODO fix this, button must be destroyed from method where button was clicked
 
     def _find_and_interact(self, objects, message_format, set_stuck=False):
         for obj in objects:
