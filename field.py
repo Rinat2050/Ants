@@ -2,7 +2,7 @@ from tkinter import Canvas
 from calculate import compare_distance
 import constants
 from shape import Shape, Berry, Web, Spider, Ant
-from interface import TakeButton, DropButton, Timer, GameProgressbar
+from interface import TakeButton, DropButton, Timer, GameProgressbar, Help_friend
 import random
 from hexes import Hexes
 
@@ -55,10 +55,15 @@ class Field(Canvas):
         hex.ant.select()
         if hex.ant.carries:
             if hex.is_anthill:
-                hex.buttons.append(DropButton(self, 'Бросить', hex))
+                hex.buttons.append(DropButton(self, 'Положить', hex))
         else:
             if type(hex.load) is Berry:
                 hex.buttons.append(TakeButton(self, "Взять", hex))
+        for index in self.hexes.find_neighbors(hex):
+            friend_hex = self.hexes.hexes_dict[index]
+            if friend_hex.ant and friend_hex.ant.stuck:
+                print("Друг в беде!", friend_hex.ant.name, (friend_hex.ant.i, friend_hex.ant.j))
+                hex.buttons.append(Help_friend(self, "Спасти", hex))
 
     def operate(self, event):
         """Клик левой клавишей мыши"""

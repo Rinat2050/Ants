@@ -11,15 +11,20 @@ class UserButton(Button):
         self.canvas = canvas
         self.hex = hex
         self.place(x=hex.x, y=hex.y, anchor='n')
+        UserButton.btn_list.append(self)
 
     def on_click(self):
         self.destroy()
 
 
+class Help_friend(Button):
+    def __init__(self, canvas, text, hex):
+        super().__init__(canvas, text, hex)
+
+
 class TakeButton(UserButton):
     def __init__(self, canvas, text, hex):
         super().__init__(canvas, text, hex)
-        UserButton.btn_list.append(self)
 
     def on_click(self):
         self.canvas.ant_takes_berry(self.hex)
@@ -29,7 +34,6 @@ class TakeButton(UserButton):
 class DropButton(UserButton):
     def __init__(self, canvas, text, hex):
         super().__init__(canvas, text, hex)
-        UserButton.btn_list.append(self)
 
     def on_click(self):
         self.canvas.ant_drops_berry(self.hex)
