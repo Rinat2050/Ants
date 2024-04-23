@@ -21,6 +21,9 @@ class HelpButton(UserButton):
     def __init__(self, canvas, text, hex):
         super().__init__(canvas, text, hex)
 
+    def on_click(self):
+        self.destroy()
+
 
 class TakeButton(UserButton):
     def __init__(self, canvas, text, hex):

@@ -76,8 +76,10 @@ class Field(Canvas):
                 hex_start.del_buttons()
                 index = self.coord_to_index(event)
                 hex_finish = self.hexes_dict.get(index, None)
+                if not hex_finish:
+                    return
                 hex_finish_ant = get_for_list(hex_finish.ant, 0)
-                if not hex_finish or hex_finish_ant:
+                if not hex_finish.is_anthill and hex_finish_ant:
                     return
                 if (hex_finish.i, hex_finish.j) in self.hexes.find_neighbors(hex_start):
                     ant_traveler = hex_start_ant
@@ -105,6 +107,11 @@ class Field(Canvas):
         # if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления :(
         #     ant.move_obj(event)
         print('--не пойду! Там враг!')
+
+    def ant_help_fried(self, hex, hex_friend):
+        hex.ant[0].deselect()
+        hex_friend.ant[0].stuck = False
+        print(hex_friend.ant[0].name, 'спасён!')
 
     def create_anthill(self):
         for index in ((0, 0),):
