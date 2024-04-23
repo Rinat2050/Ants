@@ -3,6 +3,9 @@ import constants
 
 
 class Shape:
+    instances = []
+    count = 0
+
     def __init__(self, canvas, hex):
         self.canvas = canvas
         self.native_hex = hex
@@ -17,21 +20,26 @@ class Shape:
     def has_matching_indexes_with(self, shape):
         return (self.i, self.j) == (shape.i, shape.j)
 
+    def destroy_shape(self):
+        self.canvas.delete(self.obj)
+        self.instances.remove(self)
+        del self
+
 
 class Ant(Shape):
-    ants = []
-
+    instances = []
+    count = 0
     def __init__(self, canvas, hex, name):
         super().__init__(canvas, hex)
         self.cell_size = constants.ANT_CELL_SIZE
         self.color_selected = ''
         self.name = name
         self.carries = None  # содержит ОБЪЕКТ загруженной ягоды
-        self.stuck = None  # содержит ОБЪЕКТ паутины прилипалы
+        self.stuck = None  # содержит ОБЪЕКТ паутины или паука
         self.selected = False
         self._load_images()
         self.obj = self.canvas.create_image(self.x, self.y, anchor='center', image=self.get_image())
-        self.ants.append(self)
+        self.instances.append(self)
 
     def _load_images(self):
         original_image = Image.open("image/ant.png")
@@ -54,14 +62,14 @@ class Ant(Shape):
         self.set_attributes(hex, 'i', 'j', 'x', 'y')
         self.canvas.coords(self.obj, self.x, self.y)
         print(self.name, 'перемещён', (self.i, self.j))
-        self.show_hex()  # Открываем невидимый гекс !!!!!!!!!!!!!!!!!
+        self.show_hex()  # Открываем невидимый гекс
         if self.carries:  # Тащим ягоду
             self.carries.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
         # if len(self.canvas.btn_list) > 0:
         #     self.canvas.btn_list.pop().destroy()
         # TODO fix this, button must be destroyed from method where button was clicked
 
-    def _find_and_interact(self, objects, message_format, set_stuck=False):
+    def find_and_interact(self, objects, message_format, set_stuck=False):
         for obj in objects:
             if self.has_matching_indexes_with(obj):
                 obj.show()
@@ -77,19 +85,17 @@ class Ant(Shape):
 
     def show_hex(self):
         hex = self.canvas.hexes_dict.get((self.i, self.j))
-        if hex.visible:
-            return
-        hex.make_visible()
-        print("стал видимым гекс: ", (hex.i, hex.j))
-        self._find_and_interact(Berry.berries, "{} нашёл {}", set_stuck=False)
-        self._find_and_interact(Web.cobwebs, "{} нашёл паутину :( {}", set_stuck=True)
-        self._find_and_interact(Spider.spiders, "{} нашёл паука :( {}", set_stuck=True)
+        if not hex.visible:
+            hex.make_visible()
+            print("стал видимым гекс: ", (hex.i, hex.j))
+        self.find_and_interact(Berry.instances, "{} нашёл {}", set_stuck=False)
+        self.find_and_interact(Web.instances, "{} нашёл паутину :( {}", set_stuck=True)
+        self.find_and_interact(Spider.instances, "{} нашёл паука :( {}", set_stuck=True)
 
 
 class Berry(Shape):
+    instances = []
     count = 0
-    berries = []
-
     def __init__(self, canvas, hex):
         super().__init__(canvas, hex)
         self.obj = None
@@ -98,7 +104,7 @@ class Berry(Shape):
         self._load_images()
         self.name = constants.BERRIES_NAMES[Berry.count]
         Berry.count += 1
-        self.berries.append(self)
+        self.instances.append(self)
 
     def _load_images(self):
         original_image = Image.open("image/berry.png")
@@ -129,9 +135,8 @@ class Berry(Shape):
 
 
 class Web(Shape):
+    instances = []
     count = 0
-    cobwebs = []
-
     def __init__(self, canvas, hex):
         super().__init__(canvas, hex)
         Web.count += 1
@@ -139,7 +144,7 @@ class Web(Shape):
         self.visible = False
         self.obj = None
         self._load_images()
-        self.cobwebs.append(self)
+        self.instances.append(self)
 
     def _load_images(self):
         original_image = Image.open("image/web.png")
@@ -156,9 +161,8 @@ class Web(Shape):
 
 
 class Spider(Shape):
+    instances = []
     count = 0
-    spiders = []
-
     def __init__(self, canvas, hex):
         super().__init__(canvas, hex)
         Spider.count += 1
@@ -166,7 +170,7 @@ class Spider(Shape):
         self.visible = False
         self.obj = None
         self._load_images()
-        self.spiders.append(self)
+        self.instances.append(self)
 
     def _load_images(self):
         original_image = Image.open("image/spider.png")

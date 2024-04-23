@@ -18,10 +18,14 @@ class UserButton(Button):
 
 
 class HelpButton(UserButton):
-    def __init__(self, canvas, text, hex):
+    def __init__(self, canvas, text, hex, selected_ant):
         super().__init__(canvas, text, hex)
+        self.selected_ant = selected_ant
 
     def on_click(self):
+        self.selected_ant.deselect()
+        self.canvas.ant_help_fried(self.hex)
+        self.hex.load.destroy_shape()
         self.destroy()
 
 

@@ -22,7 +22,7 @@ class Field(Canvas):
         self.create_anthill()
         self.create_ant((0, 0), 'Василий')
         self.create_ant((0, 0), 'Игорь')
-        self.create_ant((1, 0), 'Коля')
+        self.create_ant((0, 0), 'Коля')
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')
         self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'load')
@@ -34,7 +34,7 @@ class Field(Canvas):
         print('================================')
         for hex in self.hexes_dict.values():
             hex.del_buttons()
-        for ant in Ant.ants:
+        for ant in Ant.instances:
             ant.deselect()
         index = self.coord_to_index(event)
         hex = self.hexes_dict.get(index, None)
@@ -50,7 +50,7 @@ class Field(Canvas):
         """Действия муравья"""
         ant = get_for_list(hex.ant, 0)
         print(ant.name, "выбран", (hex.i, hex.j))
-        if type(hex.load) is Web or type(hex.load) is Spider:
+        if ant.stuck:
             print('Я застакан :(')
             return
         ant.select()
@@ -65,7 +65,7 @@ class Field(Canvas):
             friend_ant = get_for_list(friend_hex.ant, 0)
             if friend_ant and friend_ant.stuck:
                 print("Друг в беде!", friend_ant.name, (friend_ant.i, friend_ant.j))
-                hex.buttons.append(HelpButton(self, "Спасти", hex))
+                friend_hex.buttons.append(HelpButton(self, "Спасти", friend_hex, ant))
 
     def operate(self, event):
         """Клик левой клавишей мыши"""
@@ -108,10 +108,10 @@ class Field(Canvas):
         #     ant.move_obj(event)
         print('--не пойду! Там враг!')
 
-    def ant_help_fried(self, hex, hex_friend):
-        hex.ant[0].deselect()
-        hex_friend.ant[0].stuck = False
-        print(hex_friend.ant[0].name, 'спасён!')
+    def ant_help_fried(self, hex_friend):
+        get_for_list(hex_friend.ant, 0).stuck = False
+        print(get_for_list(hex_friend.ant, 0).name, 'спасён!')
+
 
     def create_anthill(self):
         for index in ((0, 0),):
@@ -120,17 +120,9 @@ class Field(Canvas):
             self.hexes_dict.get(index).create_warehouse()
 
     def do_visible_hexes(self, hex_in_center, round=0):
-        # center_hex = self.hexes_dict.get((0, 0))
-        # for index, hex in self.hexes_dict.items():
-        #     if compare_distance((hex.x, hex.y), (center_hex.x, center_hex.y), '>=',
-        #     constants.HEX_LENGTH * invisible_rounds):
-        #         hex.visible = False
-        #         self.itemconfig(hex.obj, fill=constants.GREY)
-        #         self.invisible_hexes_dict[index] = hex  # Пополняем invisible_hexes_dict невидимыми гексами
         list_of_visible = self.hexes.find_neighbors_round(hex_in_center, round)
         for index in list_of_visible:
-            self.hexes_dict[index].visible = True
-            self.itemconfig(self.hexes_dict[index].obj, fill=constants.GREEN)
+            self.hexes_dict[index].make_visible()
 
     def list_of_hexes_indexes_nearby(self, shape: Shape) -> list[tuple[int, int]]:
         x, y = shape.x, shape.y
@@ -154,6 +146,7 @@ class Field(Canvas):
                 hex.load = elem
                 if self.hexes_dict[(hex.i, hex.j)].visible:
                     elem.show()
+        print(class_name.instances)
 
     def create_ant(self, index, name):
         ant = Ant(self, self.hexes_dict[index], name)
