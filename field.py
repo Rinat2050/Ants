@@ -1,5 +1,5 @@
 from tkinter import Canvas
-from calculate import compare_distance
+from calculate import compare_distance, get_for_list
 import constants
 from shape import Shape, Berry, Web, Spider, Ant
 from interface import TakeButton, DropButton, Timer, GameProgressbar, HelpButton
@@ -33,7 +33,7 @@ class Field(Canvas):
         """Клик правой клавишей мыши"""
         print('================================')
         for hex in self.hexes_dict.values():
-            hex.del_butons()
+            hex.del_buttons()
         for ant in Ant.ants:
             ant.deselect()
         index = self.coord_to_index(event)
@@ -41,19 +41,20 @@ class Field(Canvas):
         if hex is None:
             print("Нет гекса")
             return None
-        if hex.ant:
+        if get_for_list(hex.ant, 0):
             self.select_obj(hex)
         else:
             print("Гекс без муравья")
 
     def select_obj(self, hex):
         """Действия муравья"""
-        print(hex.ant.name, "выбран", (hex.i, hex.j))
+        ant = get_for_list(hex.ant, 0)
+        print(ant.name, "выбран", (hex.i, hex.j))
         if type(hex.load) is Web or type(hex.load) is Spider:
             print('Я застакан :(')
             return
-        hex.ant.select()
-        if hex.ant.carries:
+        ant.select()
+        if ant.carries:
             if hex.is_anthill:
                 hex.buttons.append(DropButton(self, 'Положить', hex))
         else:
@@ -61,40 +62,43 @@ class Field(Canvas):
                 hex.buttons.append(TakeButton(self, "Взять", hex))
         for index in self.hexes.find_neighbors(hex):
             friend_hex = self.hexes.hexes_dict[index]
-            if friend_hex.ant and friend_hex.ant.stuck:
-                print("Друг в беде!", friend_hex.ant.name, (friend_hex.ant.i, friend_hex.ant.j))
+            friend_ant = get_for_list(friend_hex.ant, 0)
+            if friend_ant and friend_ant.stuck:
+                print("Друг в беде!", friend_ant.name, (friend_ant.i, friend_ant.j))
                 hex.buttons.append(HelpButton(self, "Спасти", hex))
 
     def operate(self, event):
         """Клик левой клавишей мыши"""
         for hex_start in self.hexes_dict.values():
-            if hex_start.ant and hex_start.ant.selected:
-                hex_start.ant.deselect()
-                hex_start.del_butons()
+            hex_start_ant = get_for_list(hex_start.ant, 0)
+            if hex_start_ant and hex_start_ant.selected:
+                hex_start_ant.deselect()
+                hex_start.del_buttons()
                 index = self.coord_to_index(event)
                 hex_finish = self.hexes_dict.get(index, None)
-                if not hex_finish or hex_finish.ant:
+                hex_finish_ant = get_for_list(hex_finish.ant, 0)
+                if not hex_finish or hex_finish_ant:
                     return
                 if (hex_finish.i, hex_finish.j) in self.hexes.find_neighbors(hex_start):
-                    ant_traveler = hex_start.ant
-                    hex_start.ant.move(hex_finish)
-                    hex_start.ant = None
-                    hex_finish.ant = ant_traveler
+                    ant_traveler = hex_start_ant
+                    hex_start_ant.move(hex_finish)
+                    hex_start.ant.remove(hex_start_ant)
+                    hex_finish.ant.append(ant_traveler)
                     break
 
     def ant_takes_berry(self, hex):
-        hex.ant.deselect()
-        hex.ant.carries = hex.load
+        hex.ant[0].deselect()
+        hex.ant[0].carries = hex.load
         hex.load = None
-        hex.ant.carries.take()
-        print(hex.ant.name, 'взял ягоду')
+        hex.ant[0].carries.take()
+        print(hex.ant[0].name, 'взял ягоду')
 
     def ant_drops_berry(self, hex):
-        hex.ant.deselect()
-        hex.load = hex.ant.carries
-        hex.load.throw()
-        hex.ant.carries = None
-        print(hex.ant.name, 'бросил ягоду')
+        hex.ant[0].deselect()
+        hex.warehouse.append(hex.ant[0].carries)
+        hex.warehouse[-1].throw()
+        hex.ant[0].carries = None
+        print(hex.ant[0].name, 'положил ягоду')
 
     def ant_direction(self, event, ant):
         # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
@@ -106,6 +110,7 @@ class Field(Canvas):
         for index in ((0, 0),):
             self.itemconfig(self.hexes_dict.get(index).obj, fill=constants.BROWN)
             self.hexes_dict.get(index).is_anthill = True
+            self.hexes_dict.get(index).create_warehouse()
 
     def do_visible_hexes(self, hex_in_center, round=0):
         # center_hex = self.hexes_dict.get((0, 0))
@@ -146,7 +151,7 @@ class Field(Canvas):
     def create_ant(self, index, name):
         ant = Ant(self, self.hexes_dict[index], name)
         # Field.ants.append(ant)
-        self.hexes_dict[index].ant = ant
+        self.hexes_dict[index].ant.append(ant)
 
     def create_timer(self, time):
         self.timer = Timer(self, time, 999, 70)

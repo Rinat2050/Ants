@@ -55,3 +55,10 @@ def compare_distance(dot1: tuple[float, float], dot2: tuple[float, float], opera
         return operators[operator_str](dist, distance)
     except KeyError:
         raise ValueError("Invalid comparison operator")
+
+
+def get_for_list(array, index):
+    try:
+        return array[index]
+    except IndexError:
+        return None
