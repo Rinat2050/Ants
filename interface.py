@@ -17,7 +17,7 @@ class UserButton(Button):
         self.destroy()
 
 
-class Help_friend(Button):
+class HelpButton(UserButton):
     def __init__(self, canvas, text, hex):
         super().__init__(canvas, text, hex)
 

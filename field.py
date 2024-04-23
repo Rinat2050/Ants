@@ -2,7 +2,7 @@ from tkinter import Canvas
 from calculate import compare_distance
 import constants
 from shape import Shape, Berry, Web, Spider, Ant
-from interface import TakeButton, DropButton, Timer, GameProgressbar, Help_friend
+from interface import TakeButton, DropButton, Timer, GameProgressbar, HelpButton
 import random
 from hexes import Hexes
 
@@ -20,8 +20,8 @@ class Field(Canvas):
         self.hexes_dict = self.hexes.hexes_dict
         self.do_visible_hexes(self.hexes_dict[0, 0], 1)
         self.create_anthill()
-        self.create_ant((-1, 0), 'Василий')
-        self.create_ant((-1, 1), 'Игорь')
+        self.create_ant((0, 0), 'Василий')
+        self.create_ant((0, 0), 'Игорь')
         self.create_ant((1, 0), 'Коля')
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')
@@ -63,7 +63,7 @@ class Field(Canvas):
             friend_hex = self.hexes.hexes_dict[index]
             if friend_hex.ant and friend_hex.ant.stuck:
                 print("Друг в беде!", friend_hex.ant.name, (friend_hex.ant.i, friend_hex.ant.j))
-                hex.buttons.append(Help_friend(self, "Спасти", hex))
+                hex.buttons.append(HelpButton(self, "Спасти", hex))
 
     def operate(self, event):
         """Клик левой клавишей мыши"""
