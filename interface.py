@@ -3,6 +3,19 @@ from tkinter import ttk
 import constants
 
 
+class Interface:
+    def __init__(self, canvas):
+        self.canvas = canvas
+        self.create_timer(constants.TIME)
+        self.create_progressbar(constants.TIME)
+
+    def create_timer(self, time):
+        self.timer = Timer(self.canvas, time, 999, 70)
+
+    def create_progressbar(self, time):
+        self.progressbar = GameProgressbar(self.canvas, time, 999, 40)
+
+
 class UserButton(Button):
     btn_list = []
 

@@ -21,14 +21,15 @@ class Shape:
         return (self.i, self.j) == (shape.i, shape.j)
 
     def destroy_shape(self):
-        self.canvas.delete(self.obj) # Удаляет картинку
-        self.instances.remove(self) # Удаляет из списка элементов
-        del self # Удаляет экземпляр класса
+        self.canvas.delete(self.obj)  # Удаляет картинку
+        self.instances.remove(self)  # Удаляет из списка элементов
+        del self  # Удаляет экземпляр класса
 
 
 class Ant(Shape):
     instances = []
     count = 0
+
     def __init__(self, canvas, hex, name):
         super().__init__(canvas, hex)
         self.cell_size = constants.ANT_CELL_SIZE
@@ -97,6 +98,7 @@ class Ant(Shape):
 class Berry(Shape):
     instances = []
     count = 0
+
     def __init__(self, canvas, hex):
         super().__init__(canvas, hex)
         self.obj = None
@@ -138,6 +140,7 @@ class Berry(Shape):
 class Web(Shape):
     instances = []
     count = 0
+
     def __init__(self, canvas, hex):
         super().__init__(canvas, hex)
         Web.count += 1
@@ -164,6 +167,7 @@ class Web(Shape):
 class Spider(Shape):
     instances = []
     count = 0
+
     def __init__(self, canvas, hex):
         super().__init__(canvas, hex)
         Spider.count += 1

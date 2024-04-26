@@ -1,4 +1,3 @@
-# TODO: упростить добавление новых муравьёв. Сейчас надо не только создать объект, но и добавить его в список вручную
 # TODO: Если время вышло - бесполезно кликать
 # TODO: Улучшить coord_to_index
 # TODO: Сделать игровой счёт: (длина списка ягод в доме / всего ягод)
@@ -12,6 +11,7 @@
 from tkinter import Tk
 import constants
 from field import Field
+from interface import Interface
 
 window = Tk()
 window.title('ANTS')
@@ -29,6 +29,10 @@ window.geometry('{w}x{h}+{x}+{y}'.format(
 ))
 
 place_hex = Field(window)
+user_panel = Interface(place_hex)
+
+
 place_hex.bind('<Button-3>', place_hex.activate)
 place_hex.bind('<Button-1>', place_hex.operate)
+
 window.mainloop()

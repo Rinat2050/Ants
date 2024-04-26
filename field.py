@@ -2,7 +2,7 @@ from tkinter import Canvas
 from calculate import compare_distance, get_for_list
 import constants
 from shape import Shape, Berry, Web, Spider, Ant
-from interface import TakeButton, DropButton, Timer, GameProgressbar, HelpButton
+from interface import TakeButton, DropButton, HelpButton
 import random
 from hexes import Hexes
 
@@ -24,8 +24,6 @@ class Field(Canvas):
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')
         self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'load')
-        self.create_timer(constants.TIME)
-        self.create_progressbar(constants.TIME)
 
     def activate(self, event):
         """Клик правой клавишей мыши"""
@@ -112,7 +110,6 @@ class Field(Canvas):
         get_for_list(hex_friend.ant, 0).stuck = False
         print(get_for_list(hex_friend.ant, 0).name, 'спасён!')
 
-
     def create_anthill(self):
         for index in ((0, 0),):
             self.itemconfig(self.hexes_dict.get(index).obj, fill=constants.BROWN)
@@ -155,12 +152,6 @@ class Field(Canvas):
         ant = Ant(self, self.hexes_dict[index], name)
         # Field.ants.append(ant)
         self.hexes_dict[index].ant.append(ant)
-
-    def create_timer(self, time):
-        self.timer = Timer(self, time, 999, 70)
-
-    def create_progressbar(self, time):
-        self.progressbar = GameProgressbar(self, time, 999, 40)
 
     def coord_to_index(self, event):
         x, y = event.x, event.y
