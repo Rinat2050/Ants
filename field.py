@@ -20,9 +20,7 @@ class Field(Canvas):
         self.hexes_dict = self.hexes.hexes_dict
         self.do_visible_hexes(self.hexes_dict[0, 0], 1)
         self.create_anthill()
-        self.create_ant((0, 0), 'Василий')
-        self.create_ant((0, 0), 'Игорь')
-        self.create_ant((0, 0), 'Коля')
+        self.create_group_of_ants(6)
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')
         self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'load')
@@ -66,6 +64,8 @@ class Field(Canvas):
             if friend_ant and friend_ant.stuck:
                 print("Друг в беде!", friend_ant.name, (friend_ant.i, friend_ant.j))
                 friend_hex.buttons.append(HelpButton(self, "Спасти", friend_hex, ant))
+
+        print(Spider.instances)
 
     def operate(self, event):
         """Клик левой клавишей мыши"""
@@ -146,7 +146,10 @@ class Field(Canvas):
                 hex.load = elem
                 if self.hexes_dict[(hex.i, hex.j)].visible:
                     elem.show()
-        print(class_name.instances)
+
+    def create_group_of_ants(self, number):
+        for n in range(number):
+            self.create_ant((0, 0), constants.ANTS_NAMES[n])
 
     def create_ant(self, index, name):
         ant = Ant(self, self.hexes_dict[index], name)

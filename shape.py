@@ -21,9 +21,9 @@ class Shape:
         return (self.i, self.j) == (shape.i, shape.j)
 
     def destroy_shape(self):
-        self.canvas.delete(self.obj)
-        self.instances.remove(self)
-        del self
+        self.canvas.delete(self.obj) # Удаляет картинку
+        self.instances.remove(self) # Удаляет из списка элементов
+        del self # Удаляет экземпляр класса
 
 
 class Ant(Shape):
@@ -72,7 +72,8 @@ class Ant(Shape):
     def find_and_interact(self, objects, message_format, set_stuck=False):
         for obj in objects:
             if self.has_matching_indexes_with(obj):
-                obj.show()
+                if not obj.visible:
+                    obj.show()
                 print(message_format.format(
                     self.name,
                     obj.name if hasattr(obj, 'name') else '',
