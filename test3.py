@@ -1,10 +1,11 @@
 # Нарисовать открытку с Новым годом.
 
 from tkinter import *
+from hexes import Hex
 
 window = Tk()
 window.title('модуль')
-window.geometry('500x500')
+window.geometry('500x500+1200+300')
 
 canvas = Canvas(window, width=1000, height=1000, bg='white')
 canvas.grid(row=0, column=0)
@@ -20,7 +21,9 @@ for i in range(0, 501, 10):
 
 
 def coord(event):
-    window.title(f'x={event.x}, y={event.y}')
+    window.title(f'x={event.x}, y={event.y}, {hex.is_hex(event.x, event.y)}')
+    if hex.is_hex(event.x, event.y):
+        canvas.create_oval(event.x-1, event.y-1, event.x+1, event.y+1, fill="black")
 
 
 def coord2(event):
@@ -29,6 +32,9 @@ def coord2(event):
     canvas.create_oval(x - 1, y - 1, x + 1, y + 1, outline='red')
     canvas.create_text(x, y, text=f'x={x}, y={y}', font="Verdana 8", anchor=SW)
 
+
+hex = Hex((200, 200), canvas)
+hex.center_to_six_vertex()
 
 window.bind('<Motion>', coord)
 window.bind('<Button-1>', coord2)

@@ -143,6 +143,19 @@ class Hex:
             result.append((vertex_x, vertex_y))
         return result
 
+    def is_hex(self, x, y):
+        flag = True
+        for point in range(6):
+            next_point = (point+1) % 6
+            x1, y1 = self.list_vertex[point][0], self.list_vertex[point][1]
+            x2, y2 = self.list_vertex[next_point][0], self.list_vertex[next_point][1]
+            # Произведение векторов https://stackoverflow.com/questions/3838319
+            #       /how-can-i-check-if-a-point-is-below-a-line-or-not
+            s = (x2 - x1) * (y - y1) - (y2 - y1) * (x - x1)
+            if s <= self.x:
+                flag = False
+        return flag
+
     def paint_hex(self):
         """Рисует гекс"""
         return self.canvas.create_polygon(self.list_vertex, fill=constants.GREY, outline="#004D40")

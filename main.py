@@ -32,8 +32,17 @@ window.geometry('{w}x{h}+{x}+{y}'.format(
 place_hex = Field(window)
 user_panel = Interface(place_hex)
 
-
 place_hex.bind('<Button-3>', place_hex.activate)
 place_hex.bind('<Button-1>', place_hex.operate)
+
+# Тестирование функции hex.is_hex()
+# def coord(event):
+#     hex = place_hex.hexes.hexes_dict[(0, 0)]
+#     print(hex)
+#     if hex.is_hex(event.x, event.y):
+#         place_hex.create_oval(event.x-1, event.y-1, event.x+1, event.y+1, fill="black")
+#     window.title(f'x={event.x}, y={event.y}, {hex.is_hex(event.x, event.y)}')
+#
+# place_hex.bind('<Motion>', coord)
 
 window.mainloop()
