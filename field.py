@@ -1,7 +1,7 @@
 from tkinter import Canvas
 from calculate import get_for_list
 import constants
-from shape import Shape, Berry, Web, Spider, Ant
+from shape import Berry, Web, Spider, Ant
 from interface import TakeButton, DropButton, HelpButton
 import random
 from hexes import Hexes
@@ -62,8 +62,6 @@ class Field(Canvas):
             if friend_ant and friend_ant.stuck:
                 print("Друг в беде!", friend_ant.name, (friend_ant.i, friend_ant.j))
                 friend_hex.buttons.append(HelpButton(self, "Спасти", friend_hex, ant))
-
-        print(Spider.instances)
 
     def operate(self, event):
         """Клик левой клавишей мыши"""

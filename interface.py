@@ -29,6 +29,11 @@ class UserButton(Button):
     def on_click(self):
         self.destroy()
 
+    def destroy_list(self):
+        for btn in self.btn_list:
+            btn.destroy()
+        self.btn_list.clear()
+
 
 class HelpButton(UserButton):
     def __init__(self, canvas, text, hex, selected_ant):
@@ -39,7 +44,7 @@ class HelpButton(UserButton):
         self.selected_ant.deselect()
         self.canvas.ant_help_fried(self.hex)
         self.hex.load.destroy_shape()
-        self.destroy()
+        UserButton.destroy_list(self)
 
 
 class TakeButton(UserButton):
@@ -57,7 +62,7 @@ class DropButton(UserButton):
 
     def on_click(self):
         self.canvas.ant_drops_berry(self.hex)
-        self.destroy()
+        UserButton.destroy_list(self)
 
 
 class Timer(Label):
