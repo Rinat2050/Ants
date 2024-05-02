@@ -8,12 +8,16 @@ class Interface:
         self.canvas = canvas
         self.create_timer(constants.TIME)
         self.create_progressbar(constants.TIME)
+        self.create_score(9)
 
     def create_timer(self, time):
         self.timer = Timer(self.canvas, time, 999, 70)
 
     def create_progressbar(self, time):
         self.progressbar = GameProgressbar(self.canvas, time, 999, 40)
+
+    def create_score(self, berries):
+        self.score = Score(self.canvas, 999, 110)
 
 
 class UserButton(Button):
@@ -63,6 +67,7 @@ class DropButton(UserButton):
     def on_click(self):
         self.canvas.ant_drops_berry(self.hex)
         UserButton.destroy_list(self)
+        Score.instance.update()
 
 
 class Timer(Label):
@@ -72,23 +77,39 @@ class Timer(Label):
         self.time_to_start = time
         self.time = time
         self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
-        self.update_timer()
+        self.update()
 
     def format_time(self, seconds):
         minutes, sec = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
         return "{:01d}:{:02d}".format(minutes, sec)
 
-    def update_timer(self):
+    def update(self):
         if self.time > 0:
             time_str = self.format_time(self.time)
             self.config(text=time_str)
             self.time -= 1
-            self.after(1000, self.update_timer)
+            self.after(1000, self.update)
             if self.time * 100 / self.time_to_start < 20:
                 self.config(foreground='red')
         else:
             self.config(text="Время вышло!")
+
+
+class Score(Label):
+    instance = None
+
+    def __init__(self, canvas, x, y):
+        super().__init__(canvas, font=("Helvetica", 15), foreground='blue', bg="lightgray")
+        self.canvas = canvas
+        self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
+        self.count = 0
+        self.update()
+        Score.instance = self
+
+    def update(self):
+        self.count = len(self.canvas.hexes.hexes_dict[(0, 0)].warehouse)
+        self.config(text=f'{self.count} / {constants.NUMBER_OF_BERRIES}')
 
 
 class GameProgressbar(ttk.Progressbar):
