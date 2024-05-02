@@ -12,7 +12,7 @@ OFFSET_TOP_Y_BERRY = 20
 NUMBER_OF_COBWEBS = 3
 NUMBER_OF_SPIDERS = 5
 NUMBER_OF_BERRIES = 8  # less than or equal to 20 because there are no names for berries
-TIME = 3  # seconds
+TIME = 5 * 60  # seconds
 BERRIES_NAMES = ['смородина', 'малина', 'клубника', 'земляника', 'брусника', 'рябина', 'клюква', 'ирга',
                  'калина', 'шиповник', 'голубика', 'ежевика', 'черешня', 'черника', 'бузина',
                  'вишня', 'черешня', 'жимолость', 'кизил', 'черёмуха']

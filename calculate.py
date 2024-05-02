@@ -1,7 +1,5 @@
 import constants
 from typing import Tuple
-import math
-import operator
 
 
 def index_to_coord(index: Tuple[int, int]) -> Tuple[int, int]:
@@ -36,25 +34,6 @@ def index_to_coord(index: Tuple[int, int]) -> Tuple[int, int]:
     x = i * constants.HEX_LENGTH * 1.5
     y = j * 2 * constants.HEX_h + column_y
     return (x, y)
-
-
-def compare_distance(dot1: tuple[float, float], dot2: tuple[float, float], operator_str: str, distance: float):
-    operators = {
-        '<': operator.lt,
-        '>': operator.gt,
-        '<=': operator.le,
-        '>=': operator.ge,
-        '==': operator.eq,
-        '!=': operator.ne
-    }
-
-    # If the arguments are provided as tuples, unpack them
-    dist = math.dist(dot1, dot2)
-
-    try:
-        return operators[operator_str](dist, distance)
-    except KeyError:
-        raise ValueError("Invalid comparison operator")
 
 
 def get_for_list(array, index):

@@ -1,5 +1,5 @@
 from tkinter import Canvas
-from calculate import compare_distance, get_for_list
+from calculate import get_for_list
 import constants
 from shape import Shape, Berry, Web, Spider, Ant
 from interface import TakeButton, DropButton, HelpButton
@@ -121,12 +121,6 @@ class Field(Canvas):
         for index in list_of_visible:
             self.hexes_dict[index].make_visible()
 
-    def list_of_hexes_indexes_nearby(self, shape: Shape) -> list[tuple[int, int]]:
-        x, y = shape.x, shape.y
-        hexes_nearby = [index for index, hex in self.hexes_dict.items()
-                        if compare_distance((hex.x, hex.y), (x, y), '<', constants.HEX_LENGTH * 2)]
-        return hexes_nearby
-
     def create_random_objects(self, class_name, quantity: int, *invalid_places: tuple) -> list:
         '''
         Fill up random objects. Returns: list
@@ -156,6 +150,7 @@ class Field(Canvas):
     def coord_to_index(self, event):
         x, y = event.x, event.y
         for hex in self.hexes_dict.values():
-            if compare_distance((hex.x, hex.y), (x, y), '<=', constants.HEX_h):
+            # if compare_distance((hex.x, hex.y), (x, y), '<=', constants.HEX_h):
+            if hex.click_is_inside(x, y):
                 return (hex.i, hex.j)
         return ("Гекс не найден")

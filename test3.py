@@ -21,8 +21,8 @@ for i in range(0, 501, 10):
 
 
 def coord(event):
-    window.title(f'x={event.x}, y={event.y}, {hex.is_hex(event.x, event.y)}')
-    if hex.is_hex(event.x, event.y):
+    window.title(f'x={event.x}, y={event.y}, {hex.click_is_inside(event.x, event.y)}')
+    if hex.click_is_inside(event.x, event.y):
         canvas.create_oval(event.x-1, event.y-1, event.x+1, event.y+1, fill="black")
 
 
@@ -33,6 +33,7 @@ def coord2(event):
     canvas.create_text(x, y, text=f'x={x}, y={y}', font="Verdana 8", anchor=SW)
 
 
+
 hex = Hex((200, 200), canvas)
 hex.center_to_six_vertex()
 
@@ -40,3 +41,4 @@ window.bind('<Motion>', coord)
 window.bind('<Button-1>', coord2)
 
 window.mainloop()
+
