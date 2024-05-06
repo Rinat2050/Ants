@@ -18,9 +18,9 @@ class Field(Canvas):
         self.place(x=0, y=0, anchor='nw')
         self.hexes = Hexes(constants.ROUNDS, 1, self)
         self.hexes_dict = self.hexes.hexes_dict
-        self.do_visible_hexes(self.hexes_dict[0, 0], 1)
+        self.do_visible_hexes(self.hexes_dict[0, 0], constants.VISIBLE_ROUND)
         self.create_anthill()
-        self.create_group_of_ants(6)
+        self.create_group_of_ants(constants.NUMBER_OF_ANTS)
         self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
         self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')
         self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'load')
@@ -65,6 +65,7 @@ class Field(Canvas):
 
     def operate(self, event):
         """Клик левой клавишей мыши"""
+
         for hex_start in self.hexes_dict.values():
             hex_start_ant = get_for_list(hex_start.ant, 0)
             if hex_start_ant and hex_start_ant.selected:

@@ -1,5 +1,6 @@
 from tkinter import Button, Label
 from tkinter import ttk
+from tkinter.messagebox import showwarning
 import constants
 
 
@@ -94,6 +95,7 @@ class Timer(Label):
                 self.config(foreground='red')
         else:
             self.config(text="Время вышло!")
+            self.warning = Message('Игра окончена.')
 
 
 class Score(Label):
@@ -110,7 +112,8 @@ class Score(Label):
     def update(self):
         self.count = len(self.canvas.hexes.hexes_dict[(0, 0)].warehouse)
         self.config(text=f'{self.count} / {constants.NUMBER_OF_BERRIES}')
-
+        if self.count == constants.NUMBER_OF_BERRIES:
+            self.warning = Message('Поздравляем. Вы победили!')
 
 class GameProgressbar(ttk.Progressbar):
     # втроенные цвета https://www.plus2net.com/python/tkinter-colors.php
@@ -143,3 +146,11 @@ class GameProgressbar(ttk.Progressbar):
             self.after(1000, self.start_progress)
             if value < 20:
                 self.style.configure("Horizontal.TProgressbar", background='brown2')
+
+class Message:
+    def __init__(self, text):
+        self.text = text
+        self.open_warning()
+
+    def open_warning(self):
+        showwarning(title="Предупреждение", message=f'{self.text}\nВы собрали ягод {Score.instance.count} из {constants.NUMBER_OF_BERRIES}')

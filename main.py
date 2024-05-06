@@ -1,5 +1,4 @@
-# TODO: Сделать игровой счёт: (длина списка ягод в доме / всего ягод)
-# TODO: Сделать messagebox game over
+# TODO: Warnings сообщения сделать Синглтон
 
 # После изготовления игры
 # TODO: сделать вторую версию с уменьшенным полем и уменьшенным муравейником
@@ -9,7 +8,7 @@
 from tkinter import Tk
 import constants
 from field import Field
-from interface import Interface
+from interface import Interface, Message
 
 window = Tk()
 window.title('ANTS')
