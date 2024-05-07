@@ -46,8 +46,10 @@ class Hexes:
 
         for coord_xy, hex in sorted_dict.items():
             hex.i, hex.j = i, j - j0
-            hex.paint_index()
-            # hex.paint_text_coord()      # если надо подписать координаты
+            if constants.SHOW_INDEX:
+                hex.paint_index()
+            if constants.SHOW_COORD:
+                hex.paint_text_coord()      # если надо подписать координаты
             self.fill_hexes_indexes(hex)
             x_next = next(iter_dict, '999')[0]  # последовательность заканчивается чудом
             j += 1
