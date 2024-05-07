@@ -2,7 +2,7 @@ from tkinter import Canvas
 from calculate import get_for_list
 import constants
 from shape import Berry, Ant
-from interface import TakeButton, DropButton, HelpButton
+from interface import TakeButton, DropButton, HelpButton, UserButton
 import random
 from hexes import Hexes
 
@@ -22,8 +22,7 @@ class Field(Canvas):
     def activate(self, event):
         """Клик правой клавишей мыши"""
         print('================================')
-        for hex in self.hexes_dict.values():
-            hex.del_buttons()
+
         for ant in Ant.instances:
             ant.deselect()
         index = self.coord_to_index(event)
@@ -46,16 +45,16 @@ class Field(Canvas):
         ant.select()
         if ant.carries:
             if hex.is_anthill:
-                hex.buttons.append(DropButton(self, 'Положить', hex))
+                DropButton(self, 'Положить', hex)
         else:
             if type(hex.load) is Berry:
-                hex.buttons.append(TakeButton(self, "Взять", hex))
+                TakeButton(self, "Взять", hex)
         for index in self.hexes.find_neighbors(hex):
             friend_hex = self.hexes.hexes_dict[index]
             friend_ant = get_for_list(friend_hex.ant, 0)
             if friend_ant and friend_ant.stuck:
                 print("Друг в беде!", friend_ant.name, (friend_ant.i, friend_ant.j))
-                friend_hex.buttons.append(HelpButton(self, "Спасти", friend_hex, ant))
+                HelpButton(self, "Спасти", friend_hex, ant)
 
     def operate(self, event):
         """Клик левой клавишей мыши"""
@@ -64,7 +63,8 @@ class Field(Canvas):
             hex_start_ant = get_for_list(hex_start.ant, 0)
             if hex_start_ant and hex_start_ant.selected:
                 hex_start_ant.deselect()
-                hex_start.del_buttons()
+                UserButton.delete_buttons()
+                # hex_start.del_buttons()
                 index = self.coord_to_index(event)
                 hex_finish = self.hexes_dict.get(index, None)
                 if not hex_finish:

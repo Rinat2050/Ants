@@ -116,14 +116,9 @@ class Hex:
         self.is_anthill = False
         self.load = None
         self.ant = []
-        self.buttons = []
 
     def create_warehouse(self):
         self.warehouse = []
-
-    def del_buttons(self):
-        for button in self.buttons:
-            button.destroy()
 
     def make_visible(self):
         self.visible = True

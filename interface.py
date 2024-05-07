@@ -13,22 +13,23 @@ class Interface:
 
 
 class UserButton(Button):
-    btn_list = []
+    buttons = list()
 
     def __init__(self, canvas, text, current_hex):
         super().__init__(text=text, bg='green', activebackground='green', command=self.on_click)
         self.canvas = canvas
         self.hex = current_hex
         self.place(x=self.hex.x, y=self.hex.y, anchor='n')
-        UserButton.btn_list.append(self)
+        UserButton.buttons.append(self)
 
     def on_click(self):
         self.destroy()
 
-    def destroy_list(self):
-        for btn in self.btn_list:
+    @staticmethod
+    def delete_buttons():
+        for btn in UserButton.buttons:
             btn.destroy()
-        self.btn_list.clear()
+        UserButton.buttons.clear()
 
 
 class HelpButton(UserButton):
@@ -40,7 +41,7 @@ class HelpButton(UserButton):
         self.selected_ant.deselect()
         self.canvas.ant_help_friend(self.hex)
         self.hex.load.destroy_shape()
-        UserButton.destroy_list(self)
+        UserButton.delete_buttons()
 
 
 class TakeButton(UserButton):
@@ -49,6 +50,7 @@ class TakeButton(UserButton):
 
     def on_click(self):
         self.canvas.ant_takes_berry(self.hex)
+        UserButton.delete_buttons()
         self.destroy()
 
 
@@ -58,7 +60,7 @@ class DropButton(UserButton):
 
     def on_click(self):
         self.canvas.ant_drops_berry(self.hex)
-        UserButton.destroy_list(self)
+        UserButton.delete_buttons()
         Score.instance.update()
 
 
