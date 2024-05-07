@@ -65,7 +65,7 @@ class Ant(Shape):
         print(self.name, 'перемещён', (self.i, self.j))
         self.show_hex()  # Открываем невидимый гекс
         if self.carries:  # Тащим ягоду
-            self.carries.move_berry(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
+            self.carries.transfer(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
         # if len(self.canvas.btn_list) > 0:
         #     self.canvas.btn_list.pop().destroy()
         # TODO fix this, button must be destroyed from method where button was clicked
@@ -131,7 +131,7 @@ class Berry(Shape):
         self.taken = False
         self.canvas.itemconfig(self.obj, image=self.get_image())
 
-    def move_berry(self, ant_x, ant_y, ant):
+    def transfer(self, ant_x, ant_y, ant):
         self.set_attributes(ant, 'i', 'j')
         self.canvas.coords(self.obj, ant_x, ant_y)
         print('ягодка перемещена')

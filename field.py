@@ -1,7 +1,7 @@
 from tkinter import Canvas
 from calculate import get_for_list
 import constants
-from shape import Berry, Web, Spider, Ant
+from shape import Berry, Ant
 from interface import TakeButton, DropButton, HelpButton
 import random
 from hexes import Hexes
@@ -18,12 +18,6 @@ class Field(Canvas):
         self.place(x=0, y=0, anchor='nw')
         self.hexes = Hexes(constants.ROUNDS, 1, self)
         self.hexes_dict = self.hexes.hexes_dict
-        self.do_visible_hexes(self.hexes_dict[0, 0], constants.VISIBLE_ROUND)
-        self.create_anthill()
-        self.create_group_of_ants(constants.NUMBER_OF_ANTS)
-        self.create_random_objects(Web, constants.NUMBER_OF_COBWEBS, 'is_anthill', 'load')
-        self.create_random_objects(Spider, constants.NUMBER_OF_SPIDERS, 'is_anthill', 'load')
-        self.create_random_objects(Berry, constants.NUMBER_OF_BERRIES, 'is_anthill', 'load')
 
     def activate(self, event):
         """Клик правой клавишей мыши"""

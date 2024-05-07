@@ -7,17 +7,8 @@ import constants
 class Interface:
     def __init__(self, canvas):
         self.canvas = canvas
-        self.create_score()
-        self.create_timer(constants.TIME)
-        self.create_progressbar(constants.TIME)
-
-    def create_timer(self, time):
-        self.timer = Timer(self.canvas, time, 999, 70)
-
-    def create_progressbar(self, time):
-        self.progressbar = GameProgressbar(self.canvas, time, 999, 40)
-
-    def create_score(self):
+        self.timer = Timer(self.canvas, constants.TIME, 999, 70)
+        self.progressbar = GameProgressbar(self.canvas, constants.TIME, 999, 40)
         self.score = Score(self.canvas, 999, 110)
 
 
@@ -78,8 +69,8 @@ class Timer(Label):
         self.time_to_start = time
         self.time = time
         self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
+        self.msg = None
         self.update()
-
 
     def format_time(self, seconds):
         minutes, sec = divmod(seconds, 60)
@@ -94,29 +85,33 @@ class Timer(Label):
             self.after(1000, self.update)
             if self.time * 100 / self.time_to_start < 20:
                 self.config(foreground='red')
-        else:
+        elif Score.finish is False:
+            Score.finish = True
             self.config(text="Время вышло!")
-            self.warning = Message('Игра окончена.')
+            self.msg = Message('Игра окончена.')
+            self.msg.open_warning()
 
 
 class Score(Label):
     instance = None
-    win = False
+    finish = False
 
     def __init__(self, canvas, x, y):
         super().__init__(canvas, font=("Helvetica", 15), foreground='blue', bg="lightgray")
         self.canvas = canvas
         self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
-        self.count = 0
-        self.update()
+        self.count = len(self.canvas.hexes.hexes_dict[(0, 0)].warehouse)
+        self.config(text=f'{self.count} / {constants.NUMBER_OF_BERRIES}')
+        self.msg = None
         Score.instance = self
 
     def update(self):
         self.count = len(self.canvas.hexes.hexes_dict[(0, 0)].warehouse)
         self.config(text=f'{self.count} / {constants.NUMBER_OF_BERRIES}')
-        if self.count == constants.NUMBER_OF_BERRIES:
-            self.warning = Message('Поздравляем! Вы победили!')
-            Score.win = True
+        if self.count == constants.NUMBER_OF_BERRIES and Score.finish is False:
+            Score.finish = True
+            self.msg = Message('Поздравляем! Вы победили!')
+            self.msg.open_warning()
 
 
 class GameProgressbar(ttk.Progressbar):
@@ -140,7 +135,6 @@ class GameProgressbar(ttk.Progressbar):
         self.time_to_start = time
         self.time = time
         self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
-        self.start_progress()
 
     def start_progress(self):
         if self.time >= 0:
@@ -155,10 +149,9 @@ class GameProgressbar(ttk.Progressbar):
 class Message:
     def __init__(self, text):
         self.text = text
-        self.open_warning()
 
     def open_warning(self):
         showinfo(title="Конец",
-                message=f'{self.text}\n'
-                        f'Собрано ягод: {Score.instance.count} из {constants.NUMBER_OF_BERRIES}\n'
-                    )
+                 message=f'{self.text}\n'
+                         f'Собрано ягод: {Score.instance.count} из {constants.NUMBER_OF_BERRIES}\n'
+                 )
