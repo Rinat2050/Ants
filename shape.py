@@ -134,7 +134,7 @@ class Berry(Shape):
     def transfer(self, ant_x, ant_y, ant):
         self.set_attributes(ant, 'i', 'j')
         self.canvas.coords(self.obj, ant_x, ant_y)
-        print('ягодка перемещена')
+        print(f'{self.name.capitalize()} перемещена')
 
 
 class Web(Shape):

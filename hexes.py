@@ -60,7 +60,8 @@ class Hexes:
                 if i <= 0:  # если столбы начали укорачиваться - оставляем j
                     j0 += 1
 
-    def fill_hexes_indexes(self, hex):
+    @staticmethod
+    def fill_hexes_indexes(hex):
         """Наполняет словарь индекс-гекс"""
         Hex.hexes_indexes[(hex.i, hex.j)] = hex
 

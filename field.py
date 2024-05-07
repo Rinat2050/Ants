@@ -1,7 +1,7 @@
 from tkinter import Canvas
 from calculate import get_for_list
 import constants
-from shape import Berry, Ant
+from shape import Berry, Ant, Spider, Web
 from interface import TakeButton, DropButton, HelpButton, UserButton
 import random
 from hexes import Hexes
@@ -64,13 +64,15 @@ class Field(Canvas):
             if hex_start_ant and hex_start_ant.selected:
                 hex_start_ant.deselect()
                 UserButton.delete_buttons()
-                # hex_start.del_buttons()
                 index = self.coord_to_index(event)
                 hex_finish = self.hexes_dict.get(index, None)
                 if not hex_finish:
                     return
                 hex_finish_ant = get_for_list(hex_finish.ant, 0)
                 if not hex_finish.is_anthill and hex_finish_ant:
+                    return
+                if (type(hex_finish.load) in (Spider, Web)) and hex_finish.visible:
+                    print('--не пойду! Там враг!')
                     return
                 if (hex_finish.i, hex_finish.j) in self.hexes.find_neighbors(hex_start):
                     ant_traveler = hex_start_ant
@@ -79,27 +81,24 @@ class Field(Canvas):
                     hex_finish.ant.append(ant_traveler)
                     break
 
-    def ant_takes_berry(self, hex):
+    @staticmethod
+    def ant_takes_berry(hex):
         hex.ant[0].deselect()
         hex.ant[0].carries = hex.load
         hex.load = None
         hex.ant[0].carries.take()
-        print(hex.ant[0].name, 'взял ягоду')
+        print(hex.ant[0].name, f'взял {hex.ant[0].carries.name[:-1]}у')
 
-    def ant_drops_berry(self, hex):
+    @staticmethod
+    def ant_drops_berry(hex):
         hex.ant[0].deselect()
         hex.warehouse.append(hex.ant[0].carries)
         hex.warehouse[-1].throw()
         hex.ant[0].carries = None
-        print(hex.ant[0].name, 'положил ягоду')
+        print(hex.ant[0].name, f'положил {hex.ant[0].carries.name[:-1]}у')
 
-    def ant_direction(self, event, ant):
-        # Не работает как надо. Деректива должна автоматом: сходить или снять паутину рядом
-        # if not self.hexes_dict[ant.i, ant.j].enemy:  # enemy не работает. Паутина становится врагом после появления :(
-        #     ant.move_obj(event)
-        print('--не пойду! Там враг!')
-
-    def ant_help_friend(self, hex_friend):
+    @staticmethod
+    def ant_help_friend(hex_friend):
         get_for_list(hex_friend.ant, 0).stuck = False
         print(get_for_list(hex_friend.ant, 0).name, 'спасён!')
 
