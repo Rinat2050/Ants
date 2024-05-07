@@ -99,7 +99,7 @@ class Field(Canvas):
         #     ant.move_obj(event)
         print('--не пойду! Там враг!')
 
-    def ant_help_fried(self, hex_friend):
+    def ant_help_friend(self, hex_friend):
         get_for_list(hex_friend.ant, 0).stuck = False
         print(get_for_list(hex_friend.ant, 0).name, 'спасён!')
 

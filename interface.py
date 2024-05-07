@@ -7,19 +7,19 @@ import constants
 class Interface:
     def __init__(self, canvas):
         self.canvas = canvas
-        self.timer = Timer(self.canvas, constants.TIME, 999, 70)
-        self.progressbar = GameProgressbar(self.canvas, constants.TIME, 999, 40)
-        self.score = Score(self.canvas, 999, 110)
+        self.timer = Timer(self.canvas, constants.TIME, constants.WIDTH_WINDOW // 2, 70)
+        self.progressbar = GameProgressbar(self.canvas, constants.TIME, constants.WIDTH_WINDOW // 2, 40)
+        self.score = Score(self.canvas, constants.WIDTH_WINDOW // 2, 110)
 
 
 class UserButton(Button):
     btn_list = []
 
-    def __init__(self, canvas, text, hex):
+    def __init__(self, canvas, text, current_hex):
         super().__init__(text=text, bg='green', activebackground='green', command=self.on_click)
         self.canvas = canvas
-        self.hex = hex
-        self.place(x=hex.x, y=hex.y, anchor='n')
+        self.hex = current_hex
+        self.place(x=self.hex.x, y=self.hex.y, anchor='n')
         UserButton.btn_list.append(self)
 
     def on_click(self):
@@ -32,20 +32,20 @@ class UserButton(Button):
 
 
 class HelpButton(UserButton):
-    def __init__(self, canvas, text, hex, selected_ant):
-        super().__init__(canvas, text, hex)
+    def __init__(self, canvas, text, current_hex, selected_ant):
+        super().__init__(canvas, text, current_hex)
         self.selected_ant = selected_ant
 
     def on_click(self):
         self.selected_ant.deselect()
-        self.canvas.ant_help_fried(self.hex)
+        self.canvas.ant_help_friend(self.hex)
         self.hex.load.destroy_shape()
         UserButton.destroy_list(self)
 
 
 class TakeButton(UserButton):
-    def __init__(self, canvas, text, hex):
-        super().__init__(canvas, text, hex)
+    def __init__(self, canvas, text, current_hex):
+        super().__init__(canvas, text, current_hex)
 
     def on_click(self):
         self.canvas.ant_takes_berry(self.hex)
@@ -53,8 +53,8 @@ class TakeButton(UserButton):
 
 
 class DropButton(UserButton):
-    def __init__(self, canvas, text, hex):
-        super().__init__(canvas, text, hex)
+    def __init__(self, canvas, text, current_hex):
+        super().__init__(canvas, text, current_hex)
 
     def on_click(self):
         self.canvas.ant_drops_berry(self.hex)
@@ -68,11 +68,13 @@ class Timer(Label):
         self.canvas = canvas
         self.time_to_start = time
         self.time = time
-        self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
+        self.x, self.y = x, y
+        self.place(x=self.x, y=self.y, anchor='n')
         self.msg = None
         self.update()
 
-    def format_time(self, seconds):
+    @staticmethod
+    def format_time(seconds):
         minutes, sec = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
         return "{:01d}:{:02d}".format(minutes, sec)
@@ -99,7 +101,8 @@ class Score(Label):
     def __init__(self, canvas, x, y):
         super().__init__(canvas, font=("Helvetica", 15), foreground='blue', bg="lightgray")
         self.canvas = canvas
-        self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
+        self.x, self.y = x, y
+        self.place(x=self.x, y=self.y, anchor='n')
         self.count = len(self.canvas.hexes.hexes_dict[(0, 0)].warehouse)
         self.config(text=f'{self.count} / {constants.NUMBER_OF_BERRIES}')
         self.msg = None
@@ -115,7 +118,7 @@ class Score(Label):
 
 
 class GameProgressbar(ttk.Progressbar):
-    # втроенные цвета https://www.plus2net.com/python/tkinter-colors.php
+    # встроенные цвета https://www.plus2net.com/python/tkinter-colors.php
     def __init__(self, canvas, time, x, y):
         super().__init__(
             canvas,
@@ -129,12 +132,13 @@ class GameProgressbar(ttk.Progressbar):
                              background=constants.GREEN,  # цвет полосы
                              troughcolor="lightgray",  # цвет фона
                              bordercolor="darkgray",  # цвет всех рамок
-                             lightcolor="green",  # цвет вверха полосы
+                             lightcolor="green",  # цвет верха полосы
                              darkcolor="green")  # цвет низа полосы
         self.canvas = canvas
         self.time_to_start = time
         self.time = time
-        self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
+        self.x, self.y = x, y
+        self.place(x=self.x, y=self.y, anchor='n')
 
     def start_progress(self):
         if self.time >= 0:
