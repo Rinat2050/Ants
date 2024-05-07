@@ -11,14 +11,14 @@ GREY = '#A9A9A9'
 OFFSET_TOP_Y_BERRY = 20
 NUMBER_OF_COBWEBS = 0
 NUMBER_OF_SPIDERS = 0
-NUMBER_OF_BERRIES = 3  # less than or equal to 20 because there are no names for berries
+NUMBER_OF_BERRIES = 1  # less than or equal to 20 because there are no names for berries
 NUMBER_OF_ANTS = 1
-TIME = 50  # seconds
+TIME = 5  # seconds 5*60
 BERRIES_NAMES = ['смородина', 'малина', 'клубника', 'земляника', 'брусника', 'рябина', 'клюква', 'ирга',
                  'калина', 'шиповник', 'голубика', 'ежевика', 'черешня', 'черника', 'бузина',
                  'вишня', 'черешня', 'жимолость', 'кизил', 'черёмуха']
 ANTS_NAMES = ['Игорь', 'Василий', 'Иван', 'Рамиль', 'Фаррух', 'Шестой']
-ROUNDS = 4  # Количество кругов поля хексов. Оптимально = 4
+ROUNDS = 2  # Количество кругов поля хексов. Оптимально = 4
 VISIBLE_ROUND = 1
 DELAY = 0  # Задержка отрисовки хексов
 

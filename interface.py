@@ -1,15 +1,15 @@
 from tkinter import Button, Label
 from tkinter import ttk
-from tkinter.messagebox import showwarning
+from tkinter.messagebox import showinfo
 import constants
 
 
 class Interface:
     def __init__(self, canvas):
         self.canvas = canvas
+        self.create_score()
         self.create_timer(constants.TIME)
         self.create_progressbar(constants.TIME)
-        self.create_score(9)
 
     def create_timer(self, time):
         self.timer = Timer(self.canvas, time, 999, 70)
@@ -17,7 +17,7 @@ class Interface:
     def create_progressbar(self, time):
         self.progressbar = GameProgressbar(self.canvas, time, 999, 40)
 
-    def create_score(self, berries):
+    def create_score(self):
         self.score = Score(self.canvas, 999, 110)
 
 
@@ -80,6 +80,7 @@ class Timer(Label):
         self.place(x=constants.WIDTH_WINDOW // 2, y=y, anchor='n')
         self.update()
 
+
     def format_time(self, seconds):
         minutes, sec = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
@@ -100,6 +101,7 @@ class Timer(Label):
 
 class Score(Label):
     instance = None
+    win = False
 
     def __init__(self, canvas, x, y):
         super().__init__(canvas, font=("Helvetica", 15), foreground='blue', bg="lightgray")
@@ -113,7 +115,9 @@ class Score(Label):
         self.count = len(self.canvas.hexes.hexes_dict[(0, 0)].warehouse)
         self.config(text=f'{self.count} / {constants.NUMBER_OF_BERRIES}')
         if self.count == constants.NUMBER_OF_BERRIES:
-            self.warning = Message('Поздравляем. Вы победили!')
+            self.warning = Message('Поздравляем! Вы победили!')
+            Score.win = True
+
 
 class GameProgressbar(ttk.Progressbar):
     # втроенные цвета https://www.plus2net.com/python/tkinter-colors.php
@@ -147,10 +151,14 @@ class GameProgressbar(ttk.Progressbar):
             if value < 20:
                 self.style.configure("Horizontal.TProgressbar", background='brown2')
 
+
 class Message:
     def __init__(self, text):
         self.text = text
         self.open_warning()
 
     def open_warning(self):
-        showwarning(title="Предупреждение", message=f'{self.text}\nВы собрали ягод {Score.instance.count} из {constants.NUMBER_OF_BERRIES}')
+        showinfo(title="Конец",
+                message=f'{self.text}\n'
+                        f'Собрано ягод: {Score.instance.count} из {constants.NUMBER_OF_BERRIES}\n'
+                    )
