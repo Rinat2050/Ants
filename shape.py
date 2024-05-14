@@ -4,7 +4,6 @@ import constants
 
 class Shape:
     instances = []
-    count = 0
 
     def __init__(self, canvas, hex):
         self.canvas = canvas
@@ -28,7 +27,6 @@ class Shape:
 
 class Ant(Shape):
     instances = []
-    count = 0
 
     def __init__(self, canvas, hex, name):
         super().__init__(canvas, hex)
@@ -66,9 +64,6 @@ class Ant(Shape):
         self.show_hex()  # Открываем невидимый гекс
         if self.carries:  # Тащим ягоду
             self.carries.transfer(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
-        # if len(self.canvas.btn_list) > 0:
-        #     self.canvas.btn_list.pop().destroy()
-        # TODO fix this, button must be destroyed from method where button was clicked
 
     def find_and_interact(self, objects, message_format, set_stuck=False):
         for obj in objects:
@@ -91,8 +86,8 @@ class Ant(Shape):
             hex.make_visible()
             print("стал видимым гекс: ", (hex.i, hex.j))
         self.find_and_interact(Berry.instances, "{} нашёл {}", set_stuck=False)
-        self.find_and_interact(Web.instances, "{} нашёл паутину :( {}", set_stuck=True)
-        self.find_and_interact(Spider.instances, "{} нашёл паука :( {}", set_stuck=True)
+        self.find_and_interact(Web.instances, "{} попал в паутину {}", set_stuck=True)
+        self.find_and_interact(Spider.instances, "{} захвачен пауком {}", set_stuck=True)
 
 
 class Berry(Shape):
