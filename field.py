@@ -94,8 +94,9 @@ class Field(Canvas):
         hex.ant[0].deselect()
         hex.warehouse.append(hex.ant[0].carries)
         hex.warehouse[-1].throw()
-        hex.ant[0].carries = None
         print(hex.ant[0].name, f'положил {hex.ant[0].carries.name[:-1]}у')
+        hex.ant[0].carries = None
+
 
     @staticmethod
     def ant_help_friend(hex_friend):
