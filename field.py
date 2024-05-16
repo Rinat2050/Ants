@@ -26,30 +26,30 @@ class Field(Canvas):
         for ant in Ant.instances:
             ant.deselect()
         index = self.coord_to_index(event)
-        hex = self.hexes_dict.get(index, None)
-        if hex is None:
+        hex_act = self.hexes_dict.get(index, None)
+        if hex_act is None:
             print("Нет гекса")
             return None
-        if get_for_list(hex.ant, 0):
-            self.select_obj(hex)
+        if get_for_list(hex_act.ant, 0):
+            self.select_obj(hex_act)
         else:
             print("Гекс без муравья")
 
-    def select_obj(self, hex):
+    def select_obj(self, hex_selected):
         """Действия муравья"""
-        ant = get_for_list(hex.ant, 0)
-        print(ant.name, "выбран", (hex.i, hex.j))
+        ant = get_for_list(hex_selected.ant, 0)
+        print(ant.name, "выбран", (hex_selected.i, hex_selected.j))
         if ant.stuck:
             print('Я застакан :(')
             return
         ant.select()
         if ant.carries:
-            if hex.is_anthill:
-                DropButton(self, 'Положить', hex)
+            if hex_selected.is_anthill:
+                DropButton(self, 'Положить', hex_selected)
         else:
-            if type(hex.load) is Berry:
-                TakeButton(self, "Взять", hex)
-        for index in self.hexes.find_neighbors(hex):
+            if type(hex_selected.load) is Berry:
+                TakeButton(self, "Взять", hex_selected)
+        for index in self.hexes.find_neighbors(hex_selected):
             friend_hex = self.hexes.hexes_dict[index]
             friend_ant = get_for_list(friend_hex.ant, 0)
             if friend_ant and friend_ant.stuck:
@@ -82,21 +82,20 @@ class Field(Canvas):
                     break
 
     @staticmethod
-    def ant_takes_berry(hex):
-        hex.ant[0].deselect()
-        hex.ant[0].carries = hex.load
-        hex.load = None
-        hex.ant[0].carries.take()
-        print(hex.ant[0].name, f'взял {hex.ant[0].carries.name[:-1]}у')
+    def ant_takes_berry(hex_with_berry):
+        hex_with_berry.ant[0].deselect()
+        hex_with_berry.ant[0].carries = hex_with_berry.load
+        hex_with_berry.load = None
+        hex_with_berry.ant[0].carries.take()
+        print(hex_with_berry.ant[0].name, f'взял {hex_with_berry.ant[0].carries.name[:-1]}у')
 
     @staticmethod
-    def ant_drops_berry(hex):
-        hex.ant[0].deselect()
-        hex.warehouse.append(hex.ant[0].carries)
-        hex.warehouse[-1].throw()
-        print(hex.ant[0].name, f'положил {hex.ant[0].carries.name[:-1]}у')
-        hex.ant[0].carries = None
-
+    def ant_drops_berry(hex_taker):
+        hex_taker.ant[0].deselect()
+        hex_taker.warehouse.append(hex_taker.ant[0].carries)
+        hex_taker.warehouse[-1].throw()
+        print(hex_taker.ant[0].name, f'положил {hex_taker.ant[0].carries.name[:-1]}у')
+        hex_taker.ant[0].carries = None
 
     @staticmethod
     def ant_help_friend(hex_friend):
@@ -107,28 +106,26 @@ class Field(Canvas):
         for index in ((0, 0),):
             self.itemconfig(self.hexes_dict.get(index).obj, fill=constants.BROWN)
             self.hexes_dict.get(index).is_anthill = True
-            self.hexes_dict.get(index).create_warehouse()
+            self.hexes_dict.get(index).warehouse = []
 
-    def do_visible_hexes(self, hex_in_center, round=0):
-        list_of_visible = self.hexes.find_neighbors_round(hex_in_center, round)
+    def do_visible_hexes(self, hex_in_center, circle=0):
+        list_of_visible = self.hexes.find_neighbors_round(hex_in_center, circle)
         for index in list_of_visible:
             self.hexes_dict[index].make_visible()
 
-    def create_random_objects(self, class_name, quantity: int, *invalid_places: tuple) -> list:
-        '''
-        Fill up random objects. Returns: list
-        '''
+    def create_random_objects(self, class_name, quantity: int, *invalid_places):
+        """Fill up random objects. Returns: list"""
         hexes_indexes = set([indexes for indexes in self.hexes_dict.keys()])
-        for atribute in invalid_places:
-            for hex in self.hexes_dict.values():
-                if hex.__dict__[atribute]:
-                    hexes_indexes.discard((hex.i, hex.j))
+        for attribute in invalid_places:
+            for hex_elem in self.hexes_dict.values():
+                if hex_elem.__dict__[attribute]:
+                    hexes_indexes.discard((hex_elem.i, hex_elem.j))
         indexes_of_objects_hex = random.sample(list(hexes_indexes), quantity)
-        for hex in self.hexes_dict.values():
-            if (hex.i, hex.j) in indexes_of_objects_hex:
-                elem = class_name(self, hex)
-                hex.load = elem
-                if self.hexes_dict[(hex.i, hex.j)].visible:
+        for hex_elem in self.hexes_dict.values():
+            if (hex_elem.i, hex_elem.j) in indexes_of_objects_hex:
+                elem = class_name(self, hex_elem)
+                hex_elem.load = elem
+                if self.hexes_dict[(hex_elem.i, hex_elem.j)].visible:
                     elem.show()
 
     def create_group_of_ants(self, number):
@@ -142,8 +139,7 @@ class Field(Canvas):
 
     def coord_to_index(self, event):
         x, y = event.x, event.y
-        for hex in self.hexes_dict.values():
-            # if compare_distance((hex.x, hex.y), (x, y), '<=', constants.HEX_h):
-            if hex.click_is_inside(x, y):
-                return (hex.i, hex.j)
-        return ("Гекс не найден")
+        for hex_elem in self.hexes_dict.values():
+            if hex_elem.click_is_inside(x, y):
+                return hex_elem.i, hex_elem.j
+        return "Гекс не найден"

@@ -1,7 +1,6 @@
 # После изготовления игры
 # TODO: сделать вторую версию с уменьшенным полем и уменьшенным муравейником
 # TODO: сделать версию с пчёлами Улей
-# TODO: find_and_interact не работает id
 
 from tkinter import Tk
 import constants

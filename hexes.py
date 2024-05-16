@@ -27,7 +27,7 @@ class Hexes:
                 vertex_y = round(self.y0 + distance_between_centers * sin(radians))
                 Hex((vertex_x, vertex_y), self.canvas)
                 list_center.append((vertex_x, vertex_y))
-            # Заполение промежутков
+            # Заполнение промежутков
             for ver in range(len(list_center)):
                 x1, y1 = list_center[ver % len(list_center)]
                 x2, y2 = list_center[(ver + 1) % len(list_center)]
@@ -44,13 +44,13 @@ class Hexes:
         j = 0
         j0 = 0
 
-        for coord_xy, hex in sorted_dict.items():
-            hex.i, hex.j = i, j - j0
+        for coord_xy, hex_elem in sorted_dict.items():
+            hex_elem.i, hex_elem.j = i, j - j0
             if constants.SHOW_INDEX:
-                hex.paint_index()
+                hex_elem.paint_index()
             if constants.SHOW_COORD:
-                hex.paint_text_coord()      # если надо подписать координаты
-            self.fill_hexes_indexes(hex)
+                hex_elem.paint_text_coord()  # если надо подписать координаты
+            self.fill_hexes_indexes(hex_elem)
             x_next = next(iter_dict, '999')[0]  # последовательность заканчивается чудом
             j += 1
             if x_next != x_current:  # идём по столбам
@@ -61,9 +61,9 @@ class Hexes:
                     j0 += 1
 
     @staticmethod
-    def fill_hexes_indexes(hex):
+    def fill_hexes_indexes(hexagon):
         """Наполняет словарь индекс-гекс"""
-        Hex.hexes_indexes[(hex.i, hex.j)] = hex
+        Hex.hexes_indexes[(hexagon.i, hexagon.j)] = hexagon
 
     @staticmethod
     def calculating_intermediate_vertices(coord_1, coord_2, count_med_ver) -> list:
@@ -77,11 +77,12 @@ class Hexes:
             result.append((x, y))
         return result
 
-    def find_neighbors(self, hex) -> list[tuple]:
+    @staticmethod
+    def find_neighbors(hexagon) -> list[tuple]:
         """Поиск координат окружающих гексов"""
         neighbors = []
-        i = hex.i
-        j = hex.j
+        i = hexagon.i
+        j = hexagon.j
         base_neighbors = [(0, -1), (1, -1), (1, 0), (0, 1), (-1, 1), (-1, 0)]
         for index in range(len(base_neighbors)):
             i_new, j_new = i + base_neighbors[index][0], j + base_neighbors[index][1]
@@ -89,13 +90,13 @@ class Hexes:
                 neighbors.append((i_new, j_new))
         return neighbors
 
-    def find_neighbors_round(self, hex, round=0) -> set[tuple]:
+    def find_neighbors_round(self, hexagon, circle=0) -> set[tuple]:
         """Поиск координат окружающих колец гексов"""
         neighbors = set()
-        neighbors.add((hex.i, hex.j))
+        neighbors.add((hexagon.i, hexagon.j))
         new_neighbors = set()
-        new_neighbors.add((hex.i, hex.j))
-        for i in range(round):
+        new_neighbors.add((hexagon.i, hexagon.j))
+        for i in range(circle):
             for neighbor in neighbors:
                 new_neighbors.update(set(self.find_neighbors(self.hexes_dict[neighbor])))
             neighbors = new_neighbors.copy()
@@ -120,9 +121,6 @@ class Hex:
         self.load = None
         self.ant = []
 
-    def create_warehouse(self):
-        self.warehouse = []
-
     def make_visible(self):
         self.visible = True
         self.canvas.itemconfig(self.obj, fill=constants.GREEN)
@@ -132,7 +130,7 @@ class Hex:
         self.canvas.itemconfig(self.obj, fill=constants.GREY)
 
     def center_to_six_vertex(self):
-        """Преобразует центр в список 6-ти вершин"""
+        """Преобразует центр в список шести вершин"""
         result = []
         for i in range(6):
             angle_radians = i * 2 * pi / 6

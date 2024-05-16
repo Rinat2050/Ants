@@ -5,11 +5,12 @@ import constants
 class Shape:
     instances = []
 
-    def __init__(self, canvas, hex):
+    def __init__(self, canvas, hexagon):
         self.canvas = canvas
-        self.native_hex = hex
-        self.i, self.j = hex.i, hex.j
+        self.native_hex = hexagon
+        self.i, self.j = hexagon.i, hexagon.j
         self.x, self.y = self.native_hex.x, self.native_hex.y
+        self.obj = None
 
     def set_attributes(self, other, *attrs):
         for attr in attrs:
@@ -28,8 +29,8 @@ class Shape:
 class Ant(Shape):
     instances = []
 
-    def __init__(self, canvas, hex, name):
-        super().__init__(canvas, hex)
+    def __init__(self, canvas, hexagon, name):
+        super().__init__(canvas, hexagon)
         self.cell_size = constants.ANT_CELL_SIZE
         self.color_selected = ''
         self.name = name
@@ -57,8 +58,8 @@ class Ant(Shape):
         self.selected = False
         self.canvas.itemconfig(self.obj, image=self.get_image())
 
-    def move(self, hex):
-        self.set_attributes(hex, 'i', 'j', 'x', 'y')
+    def move(self, hexagon):
+        self.set_attributes(hexagon, 'i', 'j', 'x', 'y')
         self.canvas.coords(self.obj, self.x, self.y)
         print(self.name, 'перемещён', (self.i, self.j))
         self.show_hex()  # Открываем невидимый гекс
@@ -66,6 +67,7 @@ class Ant(Shape):
             self.carries.transfer(self.x, self.y - constants.OFFSET_TOP_Y_BERRY, self)
 
     def find_and_interact(self, objects, message_format, set_stuck=False):
+        """Выводит сообщение и может стакать"""
         for obj in objects:
             if self.has_matching_indexes_with(obj):
                 if not obj.visible:
@@ -77,25 +79,24 @@ class Ant(Shape):
                 )
                 if set_stuck:
                     self.stuck = True
-                    print('Застакан муравей')
                 break
 
     def show_hex(self):
-        hex = self.canvas.hexes_dict.get((self.i, self.j))
-        if not hex.visible:
-            hex.make_visible()
-            print("стал видимым гекс: ", (hex.i, hex.j))
+        hexagon = self.canvas.hexes_dict.get((self.i, self.j))
+        if not hexagon.visible:
+            hexagon.make_visible()
+            print("стал видимым гекс: ", (hexagon.i, hexagon.j))
         self.find_and_interact(Berry.instances, "{} нашёл {}", set_stuck=False)
-        self.find_and_interact(Web.instances, "{} попал в паутину {}", set_stuck=True)
-        self.find_and_interact(Spider.instances, "{} захвачен пауком {}", set_stuck=True)
+        self.find_and_interact(Web.instances, "{} попал в паутину {}{}", set_stuck=True)
+        self.find_and_interact(Spider.instances, "{} захвачен пауком {}{}", set_stuck=True)
 
 
 class Berry(Shape):
     instances = []
     count = 0
 
-    def __init__(self, canvas, hex):
-        super().__init__(canvas, hex)
+    def __init__(self, canvas, hexagon):
+        super().__init__(canvas, hexagon)
         self.obj = None
         self.visible = False
         self.taken = False
@@ -136,8 +137,8 @@ class Web(Shape):
     instances = []
     count = 0
 
-    def __init__(self, canvas, hex):
-        super().__init__(canvas, hex)
+    def __init__(self, canvas, hexagon):
+        super().__init__(canvas, hexagon)
         Web.count += 1
         self.id = self.count
         self.visible = False
@@ -163,8 +164,8 @@ class Spider(Shape):
     instances = []
     count = 0
 
-    def __init__(self, canvas, hex):
-        super().__init__(canvas, hex)
+    def __init__(self, canvas, hexagon):
+        super().__init__(canvas, hexagon)
         Spider.count += 1
         self.id = self.count
         self.visible = False
